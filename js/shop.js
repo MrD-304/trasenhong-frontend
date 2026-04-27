@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  const API_URL = "https://trasenhong-backend-production.up.railway.app";
+  const API_URL = "https://trasenhong-backend-production.up.railway.app/api";
   const PAGE_SIZE = 9;
 
   const state = {
