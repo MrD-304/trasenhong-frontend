@@ -1,5 +1,4 @@
-
-const API_URL = "https://your-backend.up.railway.app/api";
+const API_URL = "https://trasenhong-backend-production.up.railway.app";
 
 const api = {
   async getProducts(params = {}) {
@@ -31,7 +30,10 @@ const api = {
     const res = await fetch(`${API_URL}/ghn/fee`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ to_district_id: district_id, to_ward_code: ward_code }),
+      body: JSON.stringify({
+        to_district_id: district_id,
+        to_ward_code: ward_code,
+      }),
     });
     return res.json();
   },
@@ -57,13 +59,21 @@ const api = {
   getImageUrl(path) {
     if (!path) return "";
     if (path.startsWith("http")) return path;
-    return API_URL.replace('/api', '') + path;
+    return API_URL.replace("/api", "") + path;
   },
 
-  setToken(token) { localStorage.setItem("tsh_token", token); },
-  getToken() { return localStorage.getItem("tsh_token"); },
-  removeToken() { localStorage.removeItem("tsh_token"); },
-  isLoggedIn() { return !!this.getToken(); },
+  setToken(token) {
+    localStorage.setItem("tsh_token", token);
+  },
+  getToken() {
+    return localStorage.getItem("tsh_token");
+  },
+  removeToken() {
+    localStorage.removeItem("tsh_token");
+  },
+  isLoggedIn() {
+    return !!this.getToken();
+  },
 
   async authFetch(url, options = {}) {
     const token = this.getToken();

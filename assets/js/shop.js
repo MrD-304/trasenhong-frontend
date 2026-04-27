@@ -1,18 +1,17 @@
-
 (function () {
   "use strict";
 
-  const API_URL  = "https://your-backend.up.railway.app/api";
+  const API_URL = "https://trasenhong-backend-production.up.railway.app";
   const PAGE_SIZE = 9;
 
   const state = {
     category: "all",
-    tag:      "all",
+    tag: "all",
     maxPrice: 1000000,
-    search:   "",
-    sort:     "default",
-    page:     1,
-    total:    0,
+    search: "",
+    sort: "default",
+    page: 1,
+    total: 0,
   };
 
   let productsCache = [];
@@ -20,22 +19,41 @@
 
   const $ = (id) => document.getElementById(id);
 
-  const productGrid   = $("productGrid");
-  const noResults     = $("noResults");
-  const resultCount   = $("resultCount");
-  const pagination    = $("pagination");
+  const productGrid = $("productGrid");
+  const noResults = $("noResults");
+  const resultCount = $("resultCount");
+  const pagination = $("pagination");
   const activeFilters = $("activeFilters");
-  const cartCount     = $("cartCount");
-  const cartItems     = $("cartItems");
-  const cartFooter    = $("cartFooter");
-  const cartSubtotal  = $("cartSubtotal");
-  const cartEmpty     = $("cartEmpty");
-  const toast         = $("toast");
+  const cartCount = $("cartCount");
+  const cartItems = $("cartItems");
+  const cartFooter = $("cartFooter");
+  const cartSubtotal = $("cartSubtotal");
+  const cartEmpty = $("cartEmpty");
+  const toast = $("toast");
 
-  const fmt     = (n)    => n.toLocaleString("vi-VN") + "₫";
-  const stars   = (r)    => "★".repeat(r) + "☆".repeat(5 - r);
-  const catName = (slug) => ({ "tra-moc": "Trà Mộc", "tra-tui-loc": "Trà Túi Lọc", "qua-tang": "Bộ Quà Tặng", "thanh-phan": "Thành Phần" })[slug] || slug;
-  const emojis  = ["🍵","🌿","🎁","🌸","🫖","🌺","🏆","🫙","🥢","💚","🧧","🍯"];
+  const fmt = (n) => n.toLocaleString("vi-VN") + "₫";
+  const stars = (r) => "★".repeat(r) + "☆".repeat(5 - r);
+  const catName = (slug) =>
+    ({
+      "tra-moc": "Trà Mộc",
+      "tra-tui-loc": "Trà Túi Lọc",
+      "qua-tang": "Bộ Quà Tặng",
+      "thanh-phan": "Thành Phần",
+    })[slug] || slug;
+  const emojis = [
+    "🍵",
+    "🌿",
+    "🎁",
+    "🌸",
+    "🫖",
+    "🌺",
+    "🏆",
+    "🫙",
+    "🥢",
+    "💚",
+    "🧧",
+    "🍯",
+  ];
   const getEmoji = (id) => emojis[(id - 1) % emojis.length] || "🍵";
 
   function showLoading() {
@@ -58,21 +76,21 @@
   async function fetchProducts() {
     showLoading();
     const params = new URLSearchParams();
-    params.set("page",  state.page);
+    params.set("page", state.page);
     params.set("limit", PAGE_SIZE);
     if (state.category !== "all") params.set("category", state.category);
-    if (state.tag      !== "all") params.set("tag",      state.tag);
-    if (state.search)              params.set("search",   state.search);
+    if (state.tag !== "all") params.set("tag", state.tag);
+    if (state.search) params.set("search", state.search);
     if (state.maxPrice < 1000000) params.set("maxPrice", state.maxPrice);
-    if (state.sort     !== "default") params.set("sort", state.sort);
+    if (state.sort !== "default") params.set("sort", state.sort);
 
     try {
-      const res  = await fetch(`${API_URL}/products?${params}`);
+      const res = await fetch(`${API_URL}/products?${params}`);
       const data = await res.json();
       if (!data.success) throw new Error(data.message);
 
       productsCache = data.rows;
-      state.total   = data.total;
+      state.total = data.total;
       render(data.rows, data.total);
       renderActiveFilters();
       updateCounts();
@@ -84,7 +102,7 @@
 
   async function updateCounts() {
     try {
-      const res  = await fetch(`${API_URL}/products/categories`);
+      const res = await fetch(`${API_URL}/products/categories`);
       const data = await res.json();
       if (!data.success) return;
 
@@ -94,7 +112,9 @@
       for (const cat of data.categories) {
         const el = $(`count-${cat.slug}`);
         if (!el) continue;
-        const r = await fetch(`${API_URL}/products?category=${cat.slug}&limit=1`);
+        const r = await fetch(
+          `${API_URL}/products?category=${cat.slug}&limit=1`,
+        );
         const d = await r.json();
         el.textContent = d.total || 0;
       }
@@ -102,16 +122,22 @@
   }
 
   function renderCard(p) {
-    const tags     = Array.isArray(p.tags) ? p.tags : [];
+    const tags = Array.isArray(p.tags) ? p.tags : [];
     const origPrice = p.original_price;
-    const discount  = origPrice ? Math.round((1 - p.price / origPrice) * 100) : 0;
+    const discount = origPrice
+      ? Math.round((1 - p.price / origPrice) * 100)
+      : 0;
 
-    const badges = tags.map((t) => {
-      if (t === "bestseller") return `<span class="badge badge--ban-chay">🔥 Bán chạy</span>`;
-      if (t === "new")        return `<span class="badge badge--moi">✨ Mới</span>`;
-      if (t === "sale")       return `<span class="badge badge--giam-gia">💚 Giảm</span>`;
-      return "";
-    }).join("");
+    const badges = tags
+      .map((t) => {
+        if (t === "bestseller")
+          return `<span class="badge badge--ban-chay">🔥 Bán chạy</span>`;
+        if (t === "new") return `<span class="badge badge--moi">✨ Mới</span>`;
+        if (t === "sale")
+          return `<span class="badge badge--giam-gia">💚 Giảm</span>`;
+        return "";
+      })
+      .join("");
 
     const imgHtml = p.images?.length
       ? `<img class="product-card__img" src="${p.images[0]}" alt="${p.name}" loading="lazy">`
@@ -164,7 +190,10 @@
 
   function renderPagination(total) {
     const pages = Math.ceil(total / PAGE_SIZE);
-    if (pages <= 1) { pagination.innerHTML = ""; return; }
+    if (pages <= 1) {
+      pagination.innerHTML = "";
+      return;
+    }
     let html = `<button class="page-btn page-btn--arrow" ${state.page === 1 ? "disabled" : ""} data-page="${state.page - 1}">‹</button>`;
     for (let i = 1; i <= pages; i++) {
       html += `<button class="page-btn ${i === state.page ? "active" : ""}" data-page="${i}">${i}</button>`;
@@ -175,18 +204,28 @@
 
   function renderActiveFilters() {
     const tags = [];
-    if (state.category !== "all") tags.push({ label: `Danh mục: ${catName(state.category)}`, key: "category" });
-    if (state.tag      !== "all") tags.push({ label: `Nhãn: ${state.tag}`, key: "tag" });
-    if (state.maxPrice < 1000000) tags.push({ label: `Giá ≤ ${fmt(state.maxPrice)}`, key: "price" });
-    if (state.search)              tags.push({ label: `Tìm: "${state.search}"`, key: "search" });
-    activeFilters.innerHTML = tags.map((t) =>
-      `<span class="active-filter-tag">${t.label}<button aria-label="Xóa" data-remove="${t.key}">✕</button></span>`
-    ).join("");
+    if (state.category !== "all")
+      tags.push({
+        label: `Danh mục: ${catName(state.category)}`,
+        key: "category",
+      });
+    if (state.tag !== "all")
+      tags.push({ label: `Nhãn: ${state.tag}`, key: "tag" });
+    if (state.maxPrice < 1000000)
+      tags.push({ label: `Giá ≤ ${fmt(state.maxPrice)}`, key: "price" });
+    if (state.search)
+      tags.push({ label: `Tìm: "${state.search}"`, key: "search" });
+    activeFilters.innerHTML = tags
+      .map(
+        (t) =>
+          `<span class="active-filter-tag">${t.label}<button aria-label="Xóa" data-remove="${t.key}">✕</button></span>`,
+      )
+      .join("");
   }
 
   function showToast(msg, type = "success") {
     toast.textContent = msg;
-    toast.className   = `toast toast--${type} show`;
+    toast.className = `toast toast--${type} show`;
     setTimeout(() => toast.classList.remove("show"), 2800);
   }
 
@@ -202,7 +241,13 @@
     if (existing) {
       existing.qty++;
     } else {
-      cart.push({ id, qty: 1, name: p.name, price: p.price, emoji: getEmoji(p.id) });
+      cart.push({
+        id,
+        qty: 1,
+        name: p.name,
+        price: p.price,
+        emoji: getEmoji(p.id),
+      });
     }
     saveCart();
     showToast(`✅ Đã thêm "${p.name}" vào giỏ hàng`);
@@ -222,7 +267,9 @@
     }
 
     if (cartEmpty.parentNode) cartEmpty.remove();
-    cartItems.innerHTML = cart.map((item) => `
+    cartItems.innerHTML = cart
+      .map(
+        (item) => `
       <div class="cart-item">
         <div class="cart-item__thumb">${item.emoji || "🍵"}</div>
         <div class="cart-item__info">
@@ -235,7 +282,9 @@
             <button class="cart-item__remove" data-rem="${item.id}"><i class="fa-solid fa-trash"></i></button>
           </div>
         </div>
-      </div>`).join("");
+      </div>`,
+      )
+      .join("");
 
     const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
     cartSubtotal.textContent = fmt(subtotal);
@@ -246,7 +295,9 @@
     const p = productsCache.find((x) => x.id === id);
     if (!p) return;
     const origPrice = p.original_price;
-    const discount  = origPrice ? Math.round((1 - p.price / origPrice) * 100) : 0;
+    const discount = origPrice
+      ? Math.round((1 - p.price / origPrice) * 100)
+      : 0;
 
     $("modalContent").innerHTML = `
       <div class="modal-img-wrap">${
@@ -283,8 +334,14 @@
     $("quickViewOverlay").hidden = false;
     document.body.style.overflow = "hidden";
 
-    $("qtyDec").onclick = () => { const i = $("qtyInput"); i.value = Math.max(1, +i.value - 1); };
-    $("qtyInc").onclick = () => { const i = $("qtyInput"); i.value = Math.min(p.stock || 99, +i.value + 1); };
+    $("qtyDec").onclick = () => {
+      const i = $("qtyInput");
+      i.value = Math.max(1, +i.value - 1);
+    };
+    $("qtyInc").onclick = () => {
+      const i = $("qtyInput");
+      i.value = Math.min(p.stock || 99, +i.value + 1);
+    };
     $("modalAddBtn").onclick = () => {
       const qty = +$("qtyInput").value;
       for (let i = 0; i < qty; i++) addToCart(id);
@@ -293,7 +350,7 @@
     };
   }
 
-  function openCart()  {
+  function openCart() {
     $("cartDrawer").classList.add("open");
     $("cartOverlay").classList.add("open");
     $("cartDrawer").setAttribute("aria-hidden", "false");
@@ -307,39 +364,82 @@
   }
 
   document.addEventListener("click", (e) => {
-    const t       = e.target.closest("[data-add]");
-    const q       = e.target.closest("[data-quick]");
-    const w       = e.target.closest("[data-wish]");
-    const pg      = e.target.closest("[data-page]");
-    const rm      = e.target.closest("[data-rem]");
-    const inc     = e.target.closest("[data-inc]");
-    const dec     = e.target.closest("[data-dec]");
+    const t = e.target.closest("[data-add]");
+    const q = e.target.closest("[data-quick]");
+    const w = e.target.closest("[data-wish]");
+    const pg = e.target.closest("[data-page]");
+    const rm = e.target.closest("[data-rem]");
+    const inc = e.target.closest("[data-inc]");
+    const dec = e.target.closest("[data-dec]");
     const rmFilter = e.target.closest("[data-remove]");
 
-    if (t)  { e.stopPropagation(); addToCart(+t.dataset.add); }
-    if (q)  { e.stopPropagation(); openModal(+q.dataset.quick); }
-    if (w)  {
+    if (t) {
+      e.stopPropagation();
+      addToCart(+t.dataset.add);
+    }
+    if (q) {
+      e.stopPropagation();
+      openModal(+q.dataset.quick);
+    }
+    if (w) {
       e.stopPropagation();
       w.classList.toggle("active");
-      w.querySelector("i").className = w.classList.contains("active") ? "fa-solid fa-heart" : "fa-regular fa-heart";
+      w.querySelector("i").className = w.classList.contains("active")
+        ? "fa-solid fa-heart"
+        : "fa-regular fa-heart";
     }
     if (pg && !e.target.disabled) {
       state.page = +pg.dataset.page;
       fetchProducts();
       window.scrollTo({ top: $("shop").offsetTop - 100, behavior: "smooth" });
     }
-    if (rm)  { cart = cart.filter((i) => i.id !== +rm.dataset.rem); saveCart(); }
-    if (inc) { const item = cart.find((i) => i.id === +inc.dataset.inc); if (item) { item.qty++; saveCart(); } }
+    if (rm) {
+      cart = cart.filter((i) => i.id !== +rm.dataset.rem);
+      saveCart();
+    }
+    if (inc) {
+      const item = cart.find((i) => i.id === +inc.dataset.inc);
+      if (item) {
+        item.qty++;
+        saveCart();
+      }
+    }
     if (dec) {
       const item = cart.find((i) => i.id === +dec.dataset.dec);
-      if (item) { item.qty > 1 ? item.qty-- : (cart = cart.filter((i) => i.id !== item.id)); saveCart(); }
+      if (item) {
+        item.qty > 1
+          ? item.qty--
+          : (cart = cart.filter((i) => i.id !== item.id));
+        saveCart();
+      }
     }
     if (rmFilter) {
       const key = rmFilter.dataset.remove;
-      if (key === "category") { state.category = "all"; document.querySelectorAll(".category-btn").forEach((b) => b.classList.toggle("active", b.dataset.category === "all")); }
-      if (key === "tag")      { state.tag = "all"; document.querySelectorAll(".tag-filter").forEach((b) => b.classList.toggle("active", b.dataset.tag === "all")); }
-      if (key === "price")    { state.maxPrice = 1000000; $("priceRange").value = 1000000; $("priceDisplay").textContent = "1.000.000₫"; }
-      if (key === "search")   { state.search = ""; $("searchInput").value = ""; }
+      if (key === "category") {
+        state.category = "all";
+        document
+          .querySelectorAll(".category-btn")
+          .forEach((b) =>
+            b.classList.toggle("active", b.dataset.category === "all"),
+          );
+      }
+      if (key === "tag") {
+        state.tag = "all";
+        document
+          .querySelectorAll(".tag-filter")
+          .forEach((b) =>
+            b.classList.toggle("active", b.dataset.tag === "all"),
+          );
+      }
+      if (key === "price") {
+        state.maxPrice = 1000000;
+        $("priceRange").value = 1000000;
+        $("priceDisplay").textContent = "1.000.000₫";
+      }
+      if (key === "search") {
+        state.search = "";
+        $("searchInput").value = "";
+      }
       state.page = 1;
       fetchProducts();
     }
@@ -347,20 +447,25 @@
 
   document.querySelectorAll(".category-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
-      document.querySelectorAll(".category-btn").forEach((b) => { b.classList.remove("active"); b.setAttribute("aria-pressed", "false"); });
+      document.querySelectorAll(".category-btn").forEach((b) => {
+        b.classList.remove("active");
+        b.setAttribute("aria-pressed", "false");
+      });
       btn.classList.add("active");
       btn.setAttribute("aria-pressed", "true");
       state.category = btn.dataset.category;
-      state.page     = 1;
+      state.page = 1;
       fetchProducts();
     });
   });
 
   document.querySelectorAll(".tag-filter").forEach((btn) => {
     btn.addEventListener("click", () => {
-      document.querySelectorAll(".tag-filter").forEach((b) => b.classList.remove("active"));
+      document
+        .querySelectorAll(".tag-filter")
+        .forEach((b) => b.classList.remove("active"));
       btn.classList.add("active");
-      state.tag  = btn.dataset.tag;
+      state.tag = btn.dataset.tag;
       state.page = 1;
       fetchProducts();
     });
@@ -368,10 +473,12 @@
 
   document.querySelectorAll(".price-quick").forEach((btn) => {
     btn.addEventListener("click", () => {
-      document.querySelectorAll(".price-quick").forEach((b) => b.classList.remove("active"));
+      document
+        .querySelectorAll(".price-quick")
+        .forEach((b) => b.classList.remove("active"));
       btn.classList.add("active");
       state.maxPrice = +btn.dataset.max;
-      $("priceRange").value       = state.maxPrice;
+      $("priceRange").value = state.maxPrice;
       $("priceDisplay").textContent = fmt(state.maxPrice);
       state.page = 1;
       fetchProducts();
@@ -390,7 +497,7 @@
     clearTimeout(searchTimer);
     searchTimer = setTimeout(() => {
       state.search = e.target.value.trim();
-      state.page   = 1;
+      state.page = 1;
       fetchProducts();
     }, 400);
   });
@@ -402,26 +509,40 @@
   });
 
   $("resetFilter").addEventListener("click", () => {
-    state.category = "all"; state.tag = "all"; state.maxPrice = 1000000;
-    state.search   = "";    state.sort = "default"; state.page = 1;
-    $("priceRange").value        = 1000000;
+    state.category = "all";
+    state.tag = "all";
+    state.maxPrice = 1000000;
+    state.search = "";
+    state.sort = "default";
+    state.page = 1;
+    $("priceRange").value = 1000000;
     $("priceDisplay").textContent = "1.000.000₫";
-    $("searchInput").value        = "";
-    $("sortSelect").value         = "default";
-    document.querySelectorAll(".category-btn").forEach((b) => b.classList.toggle("active", b.dataset.category === "all"));
-    document.querySelectorAll(".tag-filter").forEach((b) => b.classList.toggle("active", b.dataset.tag === "all"));
+    $("searchInput").value = "";
+    $("sortSelect").value = "default";
+    document
+      .querySelectorAll(".category-btn")
+      .forEach((b) =>
+        b.classList.toggle("active", b.dataset.category === "all"),
+      );
+    document
+      .querySelectorAll(".tag-filter")
+      .forEach((b) => b.classList.toggle("active", b.dataset.tag === "all"));
     fetchProducts();
   });
 
   $("gridView").addEventListener("click", () => {
     productGrid.classList.remove("list-mode");
-    $("gridView").classList.add("active"); $("listView").classList.remove("active");
-    $("gridView").setAttribute("aria-pressed", "true"); $("listView").setAttribute("aria-pressed", "false");
+    $("gridView").classList.add("active");
+    $("listView").classList.remove("active");
+    $("gridView").setAttribute("aria-pressed", "true");
+    $("listView").setAttribute("aria-pressed", "false");
   });
   $("listView").addEventListener("click", () => {
     productGrid.classList.add("list-mode");
-    $("listView").classList.add("active"); $("gridView").classList.remove("active");
-    $("listView").setAttribute("aria-pressed", "true"); $("gridView").setAttribute("aria-pressed", "false");
+    $("listView").classList.add("active");
+    $("gridView").classList.remove("active");
+    $("listView").setAttribute("aria-pressed", "true");
+    $("gridView").setAttribute("aria-pressed", "false");
   });
 
   $("cartToggle").addEventListener("click", openCart);
@@ -429,14 +550,20 @@
   $("cartOverlay").addEventListener("click", closeCart);
   $("continueShop")?.addEventListener("click", closeCart);
 
-  $("modalClose").addEventListener("click", () => { $("quickViewOverlay").hidden = true; document.body.style.overflow = ""; });
+  $("modalClose").addEventListener("click", () => {
+    $("quickViewOverlay").hidden = true;
+    document.body.style.overflow = "";
+  });
   $("quickViewOverlay").addEventListener("click", (e) => {
-    if (e.target === $("quickViewOverlay")) { $("quickViewOverlay").hidden = true; document.body.style.overflow = ""; }
+    if (e.target === $("quickViewOverlay")) {
+      $("quickViewOverlay").hidden = true;
+      document.body.style.overflow = "";
+    }
   });
 
-  const filterToggle   = $("filterToggle");
-  const shopSidebar    = $("shopSidebar");
-  const sidebarClose   = $("sidebarClose");
+  const filterToggle = $("filterToggle");
+  const shopSidebar = $("shopSidebar");
+  const sidebarClose = $("sidebarClose");
   const sidebarOverlay = $("sidebarOverlay");
 
   const closeSidebar = () => {
@@ -457,7 +584,10 @@
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
-      if (!$("quickViewOverlay").hidden) { $("quickViewOverlay").hidden = true; document.body.style.overflow = ""; }
+      if (!$("quickViewOverlay").hidden) {
+        $("quickViewOverlay").hidden = true;
+        document.body.style.overflow = "";
+      }
       if ($("cartDrawer").classList.contains("open")) closeCart();
       if (shopSidebar.classList.contains("open")) closeSidebar();
     }
@@ -466,7 +596,11 @@
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get("cat")) {
     state.category = urlParams.get("cat");
-    document.querySelectorAll(".category-btn").forEach((b) => b.classList.toggle("active", b.dataset.category === state.category));
+    document
+      .querySelectorAll(".category-btn")
+      .forEach((b) =>
+        b.classList.toggle("active", b.dataset.category === state.category),
+      );
   }
 
   fetchProducts();
