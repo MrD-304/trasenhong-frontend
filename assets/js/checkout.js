@@ -1,0 +1,345 @@
+
+
+(function () {
+  "use strict";
+
+  const API_URL      = "https://your-backend.up.railway.app/api";
+  const FREE_SHIP_MIN = 200000;
+  const SHIP_FEE      = 30000;
+
+  const EMAILJS_SERVICE_ID  = "service_wg68jbu";
+  const EMAILJS_TEMPLATE_ID = "template_itum6cx";
+  const EMAILJS_PUBLIC_KEY  = "BptJ9xxzyF5SdCKDw";
+
+  let cart         = JSON.parse(localStorage.getItem("tsh_cart") || "[]");
+  let promoDiscount = 0;
+  let promoCode     = "";
+  let promoType     = "percent";
+  let productsMap   = {};
+  let ghnShippingFee = null;
+
+  const $ = (id) => document.getElementById(id);
+  const fmt = (n) => n.toLocaleString("vi-VN") + "₫";
+
+  const FALLBACK_EMOJIS = ["🍵","🌿","🎁","🌸","🫖","🌺","🏆","🫙","🥢","💚","🧧","🍯"];
+  const getEmoji = (id) => FALLBACK_EMOJIS[(id - 1) % FALLBACK_EMOJIS.length] || "🍵";
+
+  function calcSubtotal() {
+    return cart.reduce((s, i) => {
+      const p = productsMap[i.id];
+      return s + (p ? p.price * i.qty : 0);
+    }, 0);
+  }
+
+  function loadCartProducts() {
+    cart.forEach((i) => {
+      productsMap[i.id] = {
+        name:  i.name  || "Sản phẩm",
+        price: i.price || 0,
+        image: i.image || null,
+        emoji: getEmoji(i.id),
+      };
+    });
+    renderSummary();
+  }
+
+  function renderSummary() {
+    const items      = $("summaryItems");
+    const empty      = $("summaryEmpty");
+    const subtotalEl = $("summarySubtotal");
+    const shippingEl = $("summaryShipping");
+    const discountEl = $("summaryDiscount");
+    const totalEl    = $("summaryTotal");
+
+    if (!items) return;
+
+    if (cart.length === 0) {
+      items.innerHTML = "";
+      if (empty) items.appendChild(empty);
+      if (subtotalEl) subtotalEl.textContent = "0₫";
+      if (totalEl)    totalEl.textContent    = "0₫";
+      return;
+    }
+
+    empty?.remove();
+    items.innerHTML = cart.map((i) => {
+      const p = productsMap[i.id];
+      if (!p) return "";
+      const imgHtml = p.image
+        ? `<img src="${p.image}" alt="${p.name}" style="width:40px;height:40px;object-fit:cover;border-radius:8px">`
+        : `<div class="co-summary__item-emoji">${p.emoji}</div>`;
+      return `
+        <div class="co-summary__item">
+          ${imgHtml}
+          <div class="co-summary__item-info">
+            <p class="co-summary__item-name">${p.name}</p>
+            <p class="co-summary__item-qty">x${i.qty}</p>
+          </div>
+          <span class="co-summary__item-price">${fmt(p.price * i.qty)}</span>
+        </div>`;
+    }).join("");
+
+    const subtotal   = calcSubtotal();
+    const shipping   = subtotal >= FREE_SHIP_MIN ? 0 : (ghnShippingFee !== null ? ghnShippingFee : SHIP_FEE);
+    const discountAmt = promoType === "percent"
+      ? Math.round((subtotal * promoDiscount) / 100)
+      : promoDiscount;
+    const total = subtotal - discountAmt + shipping;
+
+    if (subtotalEl) subtotalEl.textContent = fmt(subtotal);
+    if (shippingEl) {
+      shippingEl.textContent = shipping === 0 ? "Miễn phí" : fmt(shipping);
+      shippingEl.className   = shipping === 0 ? "co-free" : "";
+    }
+    if (discountEl) {
+      discountEl.textContent = discountAmt > 0 ? `-${fmt(discountAmt)}` : "—";
+      discountEl.closest?.(".co-summary__row")?.style.setProperty("display", discountAmt > 0 ? "" : "none");
+    }
+    if (totalEl) totalEl.textContent = fmt(total);
+  }
+
+  async function fetchGhnFee(district_id, ward_code) {
+    if (!district_id || !ward_code) return;
+    try {
+      const totalWeight = cart.reduce((s, i) => {
+        const p = productsMap[i.id];
+        return s + (p ? 300 * i.qty : 0);
+      }, 0);
+      const density = 0.3;
+      const vol = totalWeight / density;
+      const r   = Math.cbrt(vol || 1);
+      const length = Math.max(Math.ceil(r * 1.6), 10);
+      const width  = Math.max(Math.ceil(r), 10);
+      const height = Math.max(Math.ceil(r * 0.625), 5);
+      const convertWeight = Math.round(((length * width * height) / 5000) * 1000);
+      const weight = Math.max(totalWeight, convertWeight);
+
+      const params = new URLSearchParams({ to_district_id: district_id, to_ward_code: ward_code, weight, length, width, height });
+      const res  = await fetch(`${API_URL}/ghn/fee?${params}`);
+      const data = await res.json();
+      if (data.success && data.total) {
+        ghnShippingFee = data.total;
+        renderSummary();
+      }
+    } catch (err) {
+      console.warn("[checkout] Không lấy được phí GHN:", err);
+    }
+  }
+
+  document.querySelectorAll(".co-pay-option").forEach((opt) => {
+    opt.addEventListener("click", () => {
+      document.querySelectorAll(".co-pay-option").forEach((o) => o.classList.remove("co-pay-option--active"));
+      opt.classList.add("co-pay-option--active");
+      opt.querySelector("input").checked = true;
+    });
+  });
+
+  const LOCAL_PROMOS = { TRASENHONG10: 10, WELCOME20: 20, TSH15: 15 };
+
+  async function applyPromoCode(code) {
+    const promoMsg = $("promoMsg");
+    try {
+      const res  = await fetch(`${API_URL}/promo/validate`, {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify({ code, subtotal: calcSubtotal() }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        promoDiscount = data.discount;
+        promoCode     = code;
+        promoType     = data.type || "percent";
+        const label   = promoType === "percent" ? `Giảm ${promoDiscount}%` : `Giảm ${fmt(promoDiscount)}`;
+        promoMsg.textContent = `✅ Áp dụng thành công! ${label}`;
+        promoMsg.className   = "co-promo__msg success";
+        renderSummary();
+        return;
+      }
+      promoDiscount        = 0;
+      promoCode            = "";
+      promoMsg.textContent = `❌ ${data.message || "Mã không hợp lệ hoặc đã hết hạn."}`;
+      promoMsg.className   = "co-promo__msg error";
+    } catch {
+      if (LOCAL_PROMOS[code]) {
+        promoDiscount        = LOCAL_PROMOS[code];
+        promoCode            = code;
+        promoType            = "percent";
+        promoMsg.textContent = `✅ Áp dụng thành công! Giảm ${promoDiscount}%`;
+        promoMsg.className   = "co-promo__msg success";
+        renderSummary();
+      } else {
+        promoDiscount        = 0;
+        promoCode            = "";
+        promoMsg.textContent = "❌ Không thể kết nối server.";
+        promoMsg.className   = "co-promo__msg error";
+      }
+    }
+  }
+
+  $("applyPromo")?.addEventListener("click", () => {
+    const code = $("promoCode").value.trim().toUpperCase();
+    if (!code) return;
+    applyPromoCode(code);
+  });
+
+  const validators = {
+    firstName: (v) => v.trim().length >= 1,
+    lastName:  (v) => v.trim().length >= 1,
+    phone:     (v) => /^[0-9\s+\-]{9,15}$/.test(v.trim()),
+    email:     (v) => !v || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
+    address:   (v) => v.trim().length >= 5,
+    province:  (v) => v !== "",
+  };
+
+  function validateField(name, value) {
+    return validators[name] ? validators[name](value) : true;
+  }
+
+  function markField(name, valid) {
+    const input = document.querySelector(`[name="${name}"]`);
+    if (!input) return;
+    input.closest(".co-field")?.classList.toggle("error", !valid);
+  }
+
+  Object.keys(validators).forEach((name) => {
+    const el = document.querySelector(`[name="${name}"]`);
+    if (!el) return;
+    el.addEventListener("blur",  () => markField(name, validateField(name, el.value)));
+    el.addEventListener("input", () => {
+      if (el.closest(".co-field")?.classList.contains("error")) {
+        markField(name, validateField(name, el.value));
+      }
+    });
+  });
+
+  function collectFormData() {
+    const g = (name) => document.querySelector(`[name="${name}"]`)?.value?.trim() || "";
+    const payment_method = document.querySelector(".co-pay-option--active input")?.value || "cod";
+    return {
+      full_name:   `${g("lastName")} ${g("firstName")}`,
+      phone:       g("phone"),
+      email:       g("email") || null,
+      address:     g("address"),
+      province:    g("province"),
+      district:    g("district") || null,
+      ward:        g("ward") || null,
+      ward_code:   g("wardCode") || null,
+      district_id: g("districtId") ? Number(g("districtId")) : null,
+      note:        g("note") || null,
+      payment_method,
+      promo_code:  promoCode || null,
+      items:       cart.map((i) => ({ product_id: i.id, quantity: i.qty })),
+    };
+  }
+
+  async function sendConfirmationEmail(orderData, responseData) {
+    if (!orderData.email) return;
+    try {
+      emailjs.init(EMAILJS_PUBLIC_KEY);
+
+      const paymentLabel = {
+        cod:           "Thanh toán khi nhận hàng (COD)",
+        bank_transfer: "Chuyển khoản ngân hàng",
+        momo:          "Ví MoMo",
+      }[orderData.payment_method] || orderData.payment_method;
+
+      const itemsText = cart.map((i) => {
+        const p = productsMap[i.id];
+        return p ? `${p.name} x${i.qty} = ${fmt(p.price * i.qty)}` : "";
+      }).filter(Boolean).join("\n");
+
+      const subtotal    = calcSubtotal();
+      const shipping    = ghnShippingFee !== null ? ghnShippingFee : (subtotal >= FREE_SHIP_MIN ? 0 : SHIP_FEE);
+      const discountAmt = promoType === "percent" ? Math.round((subtotal * promoDiscount) / 100) : promoDiscount;
+      const total       = subtotal - discountAmt + shipping;
+      const ghnCode     = responseData?.ghn?.order_code || responseData?.order?.ghn_order_code || "";
+
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+        to_email:       orderData.email,
+        to_name:        orderData.full_name,
+        order_code:     responseData.order_code,
+        items:          itemsText,
+        subtotal:       fmt(subtotal),
+        shipping_fee:   shipping === 0 ? "Miễn phí" : fmt(shipping),
+        discount:       discountAmt > 0 ? `-${fmt(discountAmt)}` : "Không có",
+        total:          fmt(total),
+        address:        [orderData.address, orderData.ward, orderData.district, orderData.province].filter(Boolean).join(", "),
+        payment_method: paymentLabel,
+        ghn_code:       ghnCode || "Đang cập nhật",
+        note:           orderData.note || "Không có",
+      });
+    } catch (err) {
+      console.warn("[email] Gửi EmailJS thất bại:", err);
+    }
+  }
+
+  $("submitOrder")?.addEventListener("click", async () => {
+    if (cart.length === 0) {
+      alert("Giỏ hàng của bạn đang trống. Vui lòng thêm sản phẩm trước khi đặt hàng.");
+      return;
+    }
+
+    let isValid = true;
+    Object.keys(validators).forEach((name) => {
+      const el = document.querySelector(`[name="${name}"]`);
+      if (!el) return;
+      const valid = validateField(name, el.value);
+      markField(name, valid);
+      if (!valid) isValid = false;
+    });
+
+    if (!isValid) {
+      document.querySelector(".co-field.error")?.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+
+    const btn = $("submitOrder");
+    btn.disabled     = true;
+    btn.textContent  = "Đang xử lý…";
+
+    const orderPayload = collectFormData();
+
+    try {
+      const res  = await fetch(`${API_URL}/orders`, {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify(orderPayload),
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data.success) throw new Error(data.message || `HTTP ${res.status}`);
+
+      const orderCode = data.order_code || data.order?.order_code || "TSH" + Date.now().toString().slice(-6);
+
+      sendConfirmationEmail(orderPayload, data);
+
+      $("successOrderId").textContent = `Mã đơn hàng: #${orderCode}`;
+      $("coSuccessOverlay").hidden    = false;
+      document.body.style.overflow   = "hidden";
+      localStorage.removeItem("tsh_cart");
+      cart = [];
+    } catch (err) {
+      console.error("[checkout] Đặt hàng thất bại:", err);
+      alert(`Đặt hàng thất bại: ${err.message}\nVui lòng thử lại hoặc liên hệ hỗ trợ.`);
+      /* BUG FIX: bản gốc reset text thành "Đặt hàng" nhưng nút có text "Xác Nhận Đặt Hàng →" */
+      btn.disabled    = false;
+      btn.textContent = "Xác Nhận Đặt Hàng →";
+    }
+  });
+
+  $("coSuccessOverlay")?.addEventListener("click", (e) => {
+    if (e.target === $("coSuccessOverlay")) {
+      $("coSuccessOverlay").hidden = false;
+    }
+  });
+
+  document.addEventListener("change", (e) => {
+    if (e.target.name === "ward" || e.target.name === "wardCode") {
+      const districtId = document.querySelector("[name=districtId]")?.value;
+      const wardCode   = document.querySelector("[name=wardCode]")?.value;
+      if (districtId && wardCode) fetchGhnFee(districtId, wardCode);
+    }
+  });
+
+  loadCartProducts();
+})();

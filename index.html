@@ -1,0 +1,802 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trà Sen Hồng – Trà Mộc Thiên Nhiên Thuần Việt</title>
+    <meta
+      name="description"
+      content="Trà Sen Hồng – Thương hiệu trà mộc từ lá tươi sấy khô đóng hộp, thuần tự nhiên, không phụ gia. Mang hương vị trà xanh Việt Nam đến mọi gia đình."
+    />
+    <link rel="canonical" href="https://trasenhong.vn/" />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:title"
+      content="Trà Sen Hồng – Trà Mộc Thiên Nhiên Thuần Việt"
+    />
+    <meta
+      property="og:description"
+      content="Trà mộc từ lá tươi sấy khô, thuần tự nhiên, đóng hộp cao cấp."
+    />
+    <link rel="icon" type="image/png" href="./assets/icon/lono_notext.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="css/main.css" />
+    <style>
+      /* ── Products section override ── */
+      .hp-products {
+        background: #1a2e1a;
+        padding: 80px 0;
+      }
+      .hp-products .section-label {
+        color: var(--clr-primary);
+      }
+      .hp-products .section-heading {
+        color: #fff;
+      }
+      .hp-products .section-subtext {
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      .hp-product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 24px;
+        margin-top: 40px;
+        align-items: stretch;
+      }
+      .hp-card {
+        background: #fff;
+        border-radius: 20px;
+        overflow: hidden;
+        transition:
+          transform 0.3s,
+          box-shadow 0.3s;
+        cursor: pointer;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+      }
+      .hp-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 48px rgba(0, 0, 0, 0.2);
+      }
+      .hp-card__img-wrap {
+        width: 100%;
+        height: 220px;
+        overflow: hidden;
+        background: #f0f7f0;
+        position: relative;
+        flex-shrink: 0;
+      }
+      .hp-card__img-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        transition: transform 0.4s;
+        display: block;
+      }
+      .hp-card:hover .hp-card__img-wrap img {
+        transform: scale(1.07);
+      }
+      .hp-card__emoji {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4rem;
+      }
+      .hp-card__body {
+        padding: 16px 16px 14px;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+      }
+      .hp-card__cat {
+        font-size: 0.7rem;
+        color: var(--clr-primary);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.09em;
+        margin-bottom: 6px;
+      }
+      .hp-card__name {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #1a2e1a;
+        margin-bottom: 10px;
+        line-height: 1.4;
+        flex: 1;
+      }
+      .hp-card__price {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 14px;
+        flex-wrap: wrap;
+      }
+      .hp-card__price-cur {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--clr-primary);
+      }
+      .hp-card__price-old {
+        font-size: 0.82rem;
+        color: #bbb;
+        text-decoration: line-through;
+      }
+      .hp-card__btn {
+        display: block;
+        width: 100%;
+        padding: 11px;
+        background: var(--clr-primary);
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        font-size: 0.92rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          transform 0.15s;
+        letter-spacing: 0.02em;
+      }
+      .hp-card__btn:hover {
+        background: #5a9e28;
+        transform: scale(1.02);
+      }
+      .hp-products-loading {
+        text-align: center;
+        color: rgba(255, 255, 255, 0.5);
+        padding: 60px 0;
+        font-size: 1.1rem;
+      }
+
+      /* ── Reviews ── */
+      .reviews-section {
+        padding: 80px 0;
+        background: #f8fdf4;
+      }
+      .review-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 24px;
+        margin-top: 40px;
+      }
+      .review-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 28px 24px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        border-left: 4px solid var(--clr-primary);
+      }
+      .review-card__stars {
+        color: #f5a623;
+        font-size: 1.1rem;
+        margin-bottom: 8px;
+      }
+      .review-card__text {
+        color: #444;
+        font-style: italic;
+        line-height: 1.7;
+        margin-bottom: 16px;
+        font-size: 0.95rem;
+      }
+      .review-card__author {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .review-card__avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: var(--clr-primary);
+        color: #fff;
+        font-weight: 700;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .review-card__name {
+        font-weight: 700;
+        color: #1a2e1a;
+        font-size: 0.9rem;
+      }
+      .review-card__loc {
+        font-size: 0.8rem;
+        color: #888;
+      }
+      .reviews-loading {
+        text-align: center;
+        color: #999;
+        padding: 40px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-loader" aria-hidden="true">
+      <div class="loader__logo">🌿 Trà Sen Hồng</div>
+      <div class="loader__bar-wrap"><div class="loader__bar"></div></div>
+    </div>
+
+    <div class="scroll-progress" aria-hidden="true"></div>
+    <button class="back-to-top" aria-label="Lên đầu trang">↑</button>
+
+    <header class="navbar transparent" role="banner">
+      <div class="container navbar__inner">
+        <a
+          href="index.html"
+          class="navbar__logo"
+          aria-label="Trà Sen Hồng – Trang chủ"
+        >
+          <img
+            src="./assets/icon/logo.png"
+            class="navbar__logo-img"
+            alt="Logo Trà Sen Hồng"
+          />
+          <div class="navbar__logo-text">
+            <span class="navbar__logo-name">Trà Sen Hồng</span>
+            <span class="navbar__logo-tagline">Trà Việt</span>
+          </div>
+        </a>
+        <nav class="navbar__menu" aria-label="Menu chính">
+          <a href="index.html" class="navbar__link active">Trang Chủ</a>
+          <a href="about.html" class="navbar__link">Về Chúng Tôi</a>
+          <a href="shop.html" class="navbar__link">Cửa Hàng</a>
+          <a href="contact.html" class="navbar__link">Liên Hệ</a>
+          <a href="shop.html" class="navbar__link navbar__cta ripple-wrap"
+            >Mua Ngay</a
+          >
+        </nav>
+        <button
+          class="navbar__hamburger"
+          aria-label="Mở menu"
+          aria-expanded="false"
+          aria-controls="mobile-drawer"
+        >
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+      </div>
+      <nav class="navbar__drawer" id="mobile-drawer" aria-label="Menu di động">
+        <a href="index.html" class="navbar__link">Trang Chủ</a>
+        <a href="about.html" class="navbar__link">Về Chúng Tôi</a>
+        <a href="shop.html" class="navbar__link">Cửa Hàng</a>
+        <a href="contact.html" class="navbar__link">Liên Hệ</a>
+        <a
+          href="shop.html"
+          class="navbar__link"
+          style="color: var(--clr-primary)"
+          >🛒 Mua Ngay</a
+        >
+      </nav>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero" id="hero" aria-label="Giới thiệu Trà Sen Hồng">
+      <div class="hero__video-wrap">
+        <video
+          class="hero__video"
+          src="assets/vid/qc_background.mp4"
+          autoplay
+          muted
+          loop
+          playsinline
+          poster="assets/pic/backgr_main.jpg"
+          aria-hidden="true"
+        ></video>
+      </div>
+      <div class="hero__overlay" aria-hidden="true"></div>
+      <div class="container">
+        <div class="hero__content">
+          <p class="hero__eyebrow">
+            <span class="hero__eyebrow-line"></span>
+            THUẦN TỰ NHIÊN • TINH HOA TỪ SEN
+          </p>
+          <h1 class="hero__title">
+            Thưởng Thức Trà<br />
+            <em>Từ Vẻ Đẹp Cây Sen</em>
+          </h1>
+          <p class="hero__desc">
+            Từ những phần tinh túy nhất của cây sen – lá, hoa đến hạt – từng
+            nguyên liệu đều được chọn lựa kỹ lưỡng và kết hợp với thảo mộc tự
+            nhiên. Đảm bảo an toàn mà vẫn giữ được tinh túy từ thiên nhiên.
+          </p>
+          <div class="hero__actions">
+            <a href="shop.html" class="btn btn-primary ripple-wrap"
+              >🛒 Mua Sản Phẩm</a
+            >
+            <a href="#about" class="btn btn-outline">Tìm Hiểu Thêm</a>
+          </div>
+        </div>
+      </div>
+      <div class="hero__badges" aria-hidden="true">
+        <div class="hero__badge">
+          <div class="hero__badge-text">
+            <span class="hero__badge-num">100%</span>
+            <span class="hero__badge-label">Tự nhiên</span>
+          </div>
+        </div>
+        <div class="hero__badge">
+          <div class="hero__badge-text">
+            <span class="hero__badge-num">300+</span>
+            <span class="hero__badge-label">Đơn giao</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero__scroll-cue" aria-hidden="true">
+        <div class="hero__scroll-mouse"></div>
+        <span>Cuộn xuống</span>
+      </div>
+    </section>
+
+    <!-- ABOUT SNIPPET -->
+    <section class="about section" id="about" aria-labelledby="about-heading">
+      <div class="container">
+        <div class="about__inner">
+          <div
+            class="about__image-wrap parallax-img-wrap"
+            data-parallax-speed="0.05"
+            data-reveal="left"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=700&auto=format&fit=crop"
+              alt="Vườn trà xanh của Trà Sen Hồng"
+              loading="lazy"
+              width="700"
+              height="875"
+            />
+            <div class="about__image-badge float-anim">
+              <strong>5+</strong>
+              <span>Năm kinh nghiệm</span>
+            </div>
+          </div>
+          <div class="about__content" data-reveal="right">
+            <p class="section-label">Về Chúng Tôi</p>
+            <h2 class="section-heading" id="about-heading">
+              Câu Chuyện Của<br /><span>Trà Sen Hồng</span>
+            </h2>
+            <p class="about__desc">
+              Trà Sen Hồng được thành lập với tâm huyết mang đến cho người Việt
+              những sản phẩm trà mộc chất lượng cao, thuần tự nhiên. Chúng tôi
+              lựa chọn từng nguyên liệu tươi, với phương pháp sấy khô đảm bảo
+              giữ nguyên dưỡng chất và hương thơm đặc trưng.
+            </p>
+            <div class="about__values stagger-children">
+              <div class="about__value-item">
+                <div class="about__value-text">
+                  <strong>Nguyên liệu sạch</strong>
+                  <span>Lá tươi không thuốc trừ sâu</span>
+                </div>
+              </div>
+              <div class="about__value-item">
+                <div class="about__value-text">
+                  <strong>Công nghệ hiện đại</strong>
+                  <span>Sấy khô giữ hương vị</span>
+                </div>
+              </div>
+              <div class="about__value-item">
+                <div class="about__value-text">
+                  <strong>Đóng hộp cao cấp</strong>
+                  <span>Bảo quản dài lâu</span>
+                </div>
+              </div>
+              <div class="about__value-item">
+                <div class="about__value-text">
+                  <strong>Giao hàng toàn quốc</strong>
+                  <span>Nhanh chóng, an toàn</span>
+                </div>
+              </div>
+            </div>
+            <a href="about.html" class="btn btn-dark">Xem Thêm Về Chúng Tôi</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="stats section" id="stats" aria-label="Thống kê nổi bật">
+      <div class="container">
+        <div class="stats__grid">
+          <div class="stats__item">
+            <div class="stats__number">
+              <span class="counter" data-target="500" data-suffix="+">0+</span>
+            </div>
+            <p class="stats__label">Khách hàng tin dùng</p>
+          </div>
+          <div class="stats__item">
+            <div class="stats__number">
+              <span class="counter" data-target="8">0</span
+              ><span class="stats__unit">+</span>
+            </div>
+            <p class="stats__label">Sản phẩm trà mộc</p>
+          </div>
+          <div class="stats__item">
+            <div class="stats__number">
+              <span class="counter" data-target="100" data-suffix="%">0%</span>
+            </div>
+            <p class="stats__label">Nguyên liệu tự nhiên</p>
+          </div>
+          <div class="stats__item">
+            <div class="stats__number">
+              <span class="counter" data-target="63">0</span>
+            </div>
+            <p class="stats__label">Tỉnh thành giao hàng</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SẢN PHẨM TỪ API -->
+    <section
+      class="hp-products"
+      id="products"
+      aria-labelledby="products-heading"
+    >
+      <div class="container">
+        <div class="text-center" data-reveal>
+          <p class="section-label">Sản Phẩm</p>
+          <h2 class="section-heading" id="products-heading">
+            Trà Mộc<br /><span>Chọn Lọc</span>
+          </h2>
+          <p
+            class="section-subtext"
+            style="text-align: center; max-width: 600px; margin-inline: auto"
+          >
+            Từng hộp trà là kết tinh của thiên nhiên và kỹ thuật sấy khô hiện
+            đại giữ nguyên hương thơm tươi ngon của lá trà xanh.
+          </p>
+        </div>
+        <div class="hp-product-grid" id="hpProductGrid">
+          <div class="hp-products-loading">🍃 Đang tải sản phẩm…</div>
+        </div>
+        <div class="text-center" style="margin-top: 40px">
+          <a
+            href="shop.html"
+            class="btn btn-primary"
+            style="padding: 1rem 2.5rem; font-size: 1rem"
+            >Xem Toàn Bộ Sản Phẩm →</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- QUY TRÌNH -->
+    <section
+      class="process section"
+      id="process"
+      aria-labelledby="process-heading"
+    >
+      <div class="container">
+        <div class="text-center" data-reveal>
+          <p class="section-label">Quy Trình</p>
+          <h2 class="section-heading" id="process-heading">
+            Từ Vườn Trà<br /><span>Đến Hộp Trà Của Bạn</span>
+          </h2>
+          <p class="section-subtext" style="margin-inline: auto">
+            Mỗi hộp trà Sen Hồng trải qua 4 giai đoạn kiểm soát chất lượng
+            nghiêm ngặt.
+          </p>
+        </div>
+        <div class="process__steps">
+          <div class="process__step" data-reveal>
+            <span class="process__step-num" aria-hidden="true">01</span>
+            <h3 class="process__step-title">Thu Hái</h3>
+            <p class="process__step-desc">
+              Nguyên liệu được thu hái thủ công từ các loại thảo mộc vào thời
+              điểm thích hợp, đảm bảo độ tươi và chất lượng tốt nhất.
+            </p>
+          </div>
+          <div class="process__step" data-reveal>
+            <span class="process__step-num" aria-hidden="true">02</span>
+            <h3 class="process__step-title">Phân Loại</h3>
+            <p class="process__step-desc">
+              Từng nguyên liệu được chọn lọc kỹ theo kích thước, màu sắc và chất
+              lượng, loại bỏ tạp chất để giữ lại phần tinh túy nhất.
+            </p>
+          </div>
+          <div class="process__step" data-reveal>
+            <span class="process__step-num" aria-hidden="true">03</span>
+            <h3 class="process__step-title">Sấy Khô</h3>
+            <p class="process__step-desc">
+              Sử dụng công nghệ sấy hiện đại với nhiệt độ phù hợp, giúp giữ
+              nguyên hương thơm tự nhiên và dưỡng chất của thảo mộc.
+            </p>
+          </div>
+          <div class="process__step" data-reveal>
+            <span class="process__step-num" aria-hidden="true">04</span>
+            <h3 class="process__step-title">Đóng Gói</h3>
+            <p class="process__step-desc">
+              Sản phẩm được đóng gói trong môi trường sạch, đảm bảo an toàn và
+              giữ trọn hương vị khi đến tay người dùng.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ĐÁNH GIÁ TỪ DATABASE -->
+    <section
+      class="reviews-section"
+      id="reviews"
+      aria-labelledby="reviews-heading"
+    >
+      <div class="container">
+        <div class="text-center" data-reveal>
+          <p class="section-label">Khách Hàng Nói Gì</p>
+          <h2 class="section-heading" id="reviews-heading">
+            Phản Hồi Từ<br /><span>Người Thưởng Trà</span>
+          </h2>
+        </div>
+        <div class="review-grid" id="reviewGrid">
+          <div class="reviews-loading">🍃 Đang tải đánh giá…</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-banner" id="cta" aria-labelledby="cta-heading">
+      <div class="container">
+        <div class="cta-banner__inner" data-reveal>
+          <div>
+            <h2 class="cta-banner__title" id="cta-heading">
+              Thưởng Thức Trà Sen Hồng Ngay Hôm Nay
+            </h2>
+            <p class="cta-banner__desc">
+              Miễn phí vận chuyển cho đơn hàng từ 200.000₫ · Giao toàn quốc
+            </p>
+          </div>
+          <div class="cta-banner__actions">
+            <a href="shop.html" class="btn btn-dark ripple-wrap"
+              >🛒 Đặt Hàng Ngay</a
+            >
+            <a
+              href="contact.html"
+              class="btn"
+              style="
+                background: transparent;
+                border: 2px solid var(--clr-dark);
+                color: var(--clr-dark);
+              "
+              >Liên Hệ</a
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer" role="contentinfo">
+      <div class="container">
+        <div class="footer__grid">
+          <div class="footer__brand">
+            <a
+              href="index.html"
+              class="navbar__logo"
+              aria-label="Trà Sen Hồng – Trang chủ"
+            >
+              <img
+                src="./assets/icon/lono_notext.png"
+                class="navbar__logo-img"
+                alt="Logo Trà Sen Hồng"
+                aria-hidden="true"
+              />
+              <div class="navbar__logo-text">
+                <span class="navbar__logo-name">Trà Sen Hồng</span>
+                <span class="navbar__logo-tagline">Trà Mộc Thuần Việt</span>
+              </div>
+            </a>
+            <p class="footer__tagline">
+              Doanh nghiệp sản xuất và kinh doanh trà mộc từ lá tươi sấy khô –
+              thuần tự nhiên, không phụ gia, mang hương vị trà sen Việt Nam đến
+              mọi gia đình.
+            </p>
+            <div class="footer__socials">
+              <a
+                href="https://www.facebook.com/profile.php?id=100079732578251"
+                class="footer__social-link"
+                target="_blank"
+                rel="noopener"
+                ><span>📘</span> Facebook</a
+              >
+              <a
+                href="https://www.tiktok.com/@trasenhongloan"
+                class="footer__social-link"
+                target="_blank"
+                rel="noopener"
+                ><span>🎵</span> TikTok</a
+              >
+              <a
+                href="mailto:trasenhong9999@gmail.com"
+                class="footer__social-link"
+                ><span>✉️</span> Gmail</a
+              >
+            </div>
+          </div>
+          <nav aria-label="Liên kết trang">
+            <h3 class="footer__col-title">Điều Hướng</h3>
+            <ul class="footer__links">
+              <li><a href="index.html" class="footer__link">Trang Chủ</a></li>
+              <li>
+                <a href="about.html" class="footer__link">Về Chúng Tôi</a>
+              </li>
+              <li><a href="shop.html" class="footer__link">Cửa Hàng</a></li>
+              <li><a href="contact.html" class="footer__link">Liên Hệ</a></li>
+            </ul>
+          </nav>
+          <nav aria-label="Danh mục sản phẩm">
+            <h3 class="footer__col-title">Sản Phẩm</h3>
+            <ul class="footer__links">
+              <li>
+                <a href="shop.html?cat=tra-moc" class="footer__link">Trà Mộc</a>
+              </li>
+              <li>
+                <a href="shop.html?cat=tra-tui-loc" class="footer__link"
+                  >Trà Túi Lọc</a
+                >
+              </li>
+              <li>
+                <a href="shop.html?cat=qua-tang" class="footer__link"
+                  >Bộ Quà Tặng</a
+                >
+              </li>
+              <li>
+                <a href="shop.html?cat=thanh-phan" class="footer__link"
+                  >Thành Phần</a
+                >
+              </li>
+            </ul>
+          </nav>
+          <address>
+            <h3 class="footer__col-title">Liên Hệ</h3>
+            <ul class="footer__contact-items">
+              <li class="footer__contact-item">
+                <span class="footer__contact-icon">📍</span
+                ><span>243, Ấp Lộc Thuận, Xã An Ninh, Tỉnh Tây Ninh</span>
+              </li>
+              <li class="footer__contact-item">
+                <span class="footer__contact-icon">📞</span
+                ><a href="tel:+840916224350" style="color: inherit"
+                  >0916 224 350</a
+                >
+              </li>
+              <li class="footer__contact-item">
+                <span class="footer__contact-icon">✉️</span
+                ><a
+                  href="mailto:trasenhong9999@gmail.com"
+                  style="color: inherit"
+                  >trasenhong9999@gmail.com</a
+                >
+              </li>
+              <li class="footer__contact-item">
+                <span class="footer__contact-icon">🕐</span
+                ><span>T2–T7: 08:00 – 17:00</span>
+              </li>
+            </ul>
+          </address>
+        </div>
+        <div class="footer__bottom">
+          <p class="footer__copy">
+            © 2026 <a href="index.html">Trà Sen Hồng</a>. Khóa luận tốt nghiệp
+            DH22HM – phân tích thiết kế website cho doanh nghiệp Trà Sen Hồng.
+          </p>
+          <nav class="footer__legal" aria-label="Pháp lý">
+            <a href="#">Chính sách bảo mật</a>
+            <a href="#">Điều khoản sử dụng</a>
+            <a href="#">Chính sách vận chuyển</a>
+          </nav>
+        </div>
+      </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/navbar.js"></script>
+    <script src="js/api.js"></script>
+    <script>
+      (function () {
+        const BASE_URL = "http://localhost:3000";
+        const API_URL = BASE_URL + "/api";
+        const fmt = (n) => n.toLocaleString("vi-VN") + "₫";
+        const emojis = ["🍵", "🌿", "🎁", "🌸", "🫖", "🌺", "🏆", "🫙"];
+        const getEmoji = (id) => emojis[(id - 1) % emojis.length] || "🍵";
+        const catMap = {
+          "tra-moc": "Trà Mộc",
+          "tra-tui-loc": "Trà Túi Lọc",
+          "qua-tang": "Bộ Quà Tặng",
+          "thanh-phan": "Thành Phần",
+        };
+
+        // ── Load sản phẩm ──
+        async function loadProducts() {
+          const grid = document.getElementById("hpProductGrid");
+          try {
+            const res = await fetch(`${API_URL}/products?limit=4&sort=newest`);
+            const data = await res.json();
+            if (!data.success || !data.rows.length) {
+              grid.innerHTML =
+                "<p style='color:#aaa;text-align:center'>Chưa có sản phẩm</p>";
+              return;
+            }
+            grid.innerHTML = data.rows
+              .map((p) => {
+                const imgSrc = p.images?.length
+                  ? p.images[0].startsWith("http")
+                    ? p.images[0]
+                    : BASE_URL + p.images[0]
+                  : null;
+
+                const discount = p.original_price
+                  ? Math.round((1 - p.price / p.original_price) * 100)
+                  : 0;
+                const imgBlock = imgSrc
+                  ? `<div class="hp-card__img-wrap"><img src="${imgSrc}" alt="${p.name}" loading="lazy"></div>`
+                  : `<div class="hp-card__img-wrap"><div class="hp-card__emoji">${getEmoji(p.id)}</div></div>`;
+                return `
+          <div class="hp-card" onclick="location.href='shop.html'">
+            ${imgBlock}
+            <div class="hp-card__body">
+              <p class="hp-card__cat">${catMap[p.category_slug] || p.category_slug}</p>
+              <h3 class="hp-card__name">${p.name}</h3>
+              <div class="hp-card__price">
+                <span class="hp-card__price-cur">${fmt(p.price)}</span>
+                ${p.original_price ? `<span class="hp-card__price-old">${fmt(p.original_price)}</span>` : ""}
+                ${discount ? `<span style="background:#e8f5e9;color:#2d6a2d;font-size:.72rem;padding:2px 8px;border-radius:20px;font-weight:700">-${discount}%</span>` : ""}
+              </div>
+              <button class="hp-card__btn" onclick="event.stopPropagation();location.href='shop.html'">🛒 Mua Ngay</button>
+            </div>
+          </div>`;
+              })
+              .join("");
+          } catch (e) {
+            grid.innerHTML =
+              "<p style='color:rgba(255,255,255,.4);text-align:center'>Không thể tải sản phẩm</p>";
+          }
+        }
+
+        // ── Load đánh giá ──
+        async function loadReviews() {
+          const grid = document.getElementById("reviewGrid");
+          try {
+            const res = await fetch(`${API_URL}/reviews?limit=5`);
+            const data = await res.json();
+            if (!data.success || !data.reviews.length) {
+              grid.innerHTML =
+                "<p style='color:#999;text-align:center'>Chưa có đánh giá</p>";
+              return;
+            }
+            grid.innerHTML = data.reviews
+              .map((r) => {
+                const stars = "★".repeat(r.rating) + "☆".repeat(5 - r.rating);
+                const initial = r.name.trim().charAt(0).toUpperCase();
+                return `
+          <div class="review-card">
+            <div class="review-card__stars">${stars}</div>
+            <p class="review-card__text">${r.content}</p>
+            <div class="review-card__author">
+              <div class="review-card__avatar">${initial}</div>
+              <div>
+                <p class="review-card__name">${r.name}</p>
+                <p class="review-card__loc">${r.location || ""}</p>
+              </div>
+            </div>
+          </div>`;
+              })
+              .join("");
+          } catch (e) {
+            grid.innerHTML =
+              "<p style='color:#999;text-align:center'>Không thể tải đánh giá</p>";
+          }
+        }
+
+        loadProducts();
+        loadReviews();
+      })();
+    </script>
+  </body>
+</html>
