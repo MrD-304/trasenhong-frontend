@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  const API_URL = "https://trasenhong-backend-production.up.railway.app";
+  const API_URL = "https://trasenhong-backend-production.up.railway.app/api";
   const FREE_SHIP_MIN = 200000;
   const SHIP_FEE = 30000;
 
