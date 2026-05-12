@@ -44,6 +44,10 @@
           <a href="shop.html" class="navbar__link navbar__cta ripple-wrap"
             >Mua Ngay</a
           >
+          <div
+            id="navUserArea"
+            style="display: flex; align-items: center; margin-left: 6px"
+          ></div>
         </nav>
         <button
           class="navbar__hamburger"
@@ -71,6 +75,7 @@
           style="color: var(--clr-primary)"
           >🛒 Mua Ngay</a
         >
+        <div id="navUserAreaMobile"></div>
       </nav>
     </header>
 
@@ -517,6 +522,7 @@
       </div>
     </footer>
 
+    <script src="js/auth.js"></script>
     <script src="js/main.js" defer></script>
     <script src="js/navbar.js" defer></script>
     <script>
@@ -524,8 +530,10 @@
       (function () {
         "use strict";
 
-        const API_URL = "https://trasenhong-backend-production.up.railway.app/api";
-        const GHN_URL = "https://trasenhong-backend-production.up.railway.app/api/ghn"; // proxy qua backend
+        const API_URL =
+          "https://trasenhong-backend-production.up.railway.app/api";
+        const GHN_URL =
+          "https://trasenhong-backend-production.up.railway.app/api/ghn"; // proxy qua backend
 
         const selProvince = document.getElementById("province");
         const selDistrict = document.getElementById("district");
