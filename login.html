@@ -1,0 +1,824 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Đăng Nhập / Đăng Ký – Trà Sen Hồng</title>
+  <meta name="description" content="Đăng nhập hoặc tạo tài khoản Trà Sen Hồng để theo dõi đơn hàng và lưu địa chỉ giao hàng." />
+  <link rel="icon" type="image/png" href="./assets/icon/lono_notext.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/main.css" />
+
+  <style>
+    :root {
+      --clr-primary: #6ab82a;
+      --clr-primary-dark: #4e9a1a;
+      --clr-dark: #1a2e1a;
+      --clr-bg: #f8fdf4;
+      --clr-border: #d4e8c2;
+      --clr-text: #2c3e2c;
+      --clr-muted: #6b7c6b;
+      --clr-error: #d32f2f;
+      --clr-success: #2e7d32;
+      --radius: 16px;
+      --shadow: 0 8px 40px rgba(26,46,26,.12);
+      --transition: .25s cubic-bezier(.4,0,.2,1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Be Vietnam Pro', sans-serif;
+      background: var(--clr-bg);
+      color: var(--clr-text);
+      min-height: 100vh;
+    }
+
+    /* ── NAVBAR (rút gọn, đồng bộ index.html) ── */
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(255,255,255,.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--clr-border);
+      padding: 0 24px;
+      height: 68px;
+      display: flex; align-items: center;
+    }
+    .navbar__inner {
+      max-width: 1200px; margin: 0 auto; width: 100%;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .navbar__logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .navbar__logo-img { width: 38px; height: 38px; object-fit: contain; }
+    .navbar__logo-name { font-family: 'Playfair Display', serif; font-size: 1.15rem; color: var(--clr-dark); font-weight: 700; display: block; }
+    .navbar__logo-tagline { font-size: .65rem; color: var(--clr-primary); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; display: block; }
+    .navbar__links { display: flex; gap: 28px; list-style: none; }
+    .navbar__links a { text-decoration: none; color: var(--clr-muted); font-size: .9rem; font-weight: 500; transition: color var(--transition); }
+    .navbar__links a:hover { color: var(--clr-primary); }
+
+    /* ── PAGE LAYOUT ── */
+    .auth-page {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding-top: 68px;
+    }
+
+    /* ── LEFT PANEL – decorative ── */
+    .auth-panel {
+      background: var(--clr-dark);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 60px 56px;
+      min-height: calc(100vh - 68px);
+    }
+    .auth-panel__bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 30% 20%, rgba(106,184,42,.18) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 80% at 80% 80%, rgba(106,184,42,.10) 0%, transparent 60%),
+        url('https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=900&auto=format&fit=crop&q=70') center/cover no-repeat;
+      opacity: .45;
+    }
+    .auth-panel__overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(26,46,26,.95) 40%, rgba(26,46,26,.4) 100%);
+    }
+    .auth-panel__content { position: relative; z-index: 1; }
+    .auth-panel__badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(106,184,42,.2);
+      border: 1px solid rgba(106,184,42,.4);
+      border-radius: 30px;
+      padding: 6px 16px;
+      font-size: .75rem;
+      color: #a8d87a;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .auth-panel__title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    .auth-panel__title em { color: var(--clr-primary); font-style: italic; }
+    .auth-panel__desc {
+      color: rgba(255,255,255,.65);
+      font-size: .95rem;
+      line-height: 1.75;
+      max-width: 380px;
+      margin-bottom: 36px;
+    }
+    .auth-panel__features { display: flex; flex-direction: column; gap: 14px; }
+    .auth-panel__feature {
+      display: flex; align-items: center; gap: 12px;
+      color: rgba(255,255,255,.8);
+      font-size: .88rem;
+    }
+    .auth-panel__feature-icon {
+      width: 36px; height: 36px;
+      background: rgba(106,184,42,.2);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    /* ── RIGHT PANEL – form ── */
+    .auth-form-wrap {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 48px;
+      background: #fff;
+    }
+    .auth-form-box {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    /* Tab switcher */
+    .auth-tabs {
+      display: flex;
+      background: var(--clr-bg);
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 36px;
+      border: 1px solid var(--clr-border);
+    }
+    .auth-tab {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      background: transparent;
+      border-radius: 9px;
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: .9rem;
+      font-weight: 600;
+      color: var(--clr-muted);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .auth-tab.active {
+      background: #fff;
+      color: var(--clr-dark);
+      box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    }
+
+    /* Form heading */
+    .auth-heading { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--clr-dark); margin-bottom: 6px; }
+    .auth-subheading { color: var(--clr-muted); font-size: .9rem; margin-bottom: 28px; }
+
+    /* Form fields */
+    .form-group { margin-bottom: 18px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-label {
+      display: block;
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--clr-text);
+      margin-bottom: 7px;
+      letter-spacing: .02em;
+    }
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid var(--clr-border);
+      border-radius: 10px;
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: .9rem;
+      color: var(--clr-text);
+      background: #fff;
+      transition: border-color var(--transition), box-shadow var(--transition);
+      outline: none;
+    }
+    .form-input:focus {
+      border-color: var(--clr-primary);
+      box-shadow: 0 0 0 3px rgba(106,184,42,.15);
+    }
+    .form-input.error { border-color: var(--clr-error); }
+    .form-input.error:focus { box-shadow: 0 0 0 3px rgba(211,47,47,.12); }
+
+    /* Password toggle */
+    .input-wrap { position: relative; }
+    .input-wrap .form-input { padding-right: 44px; }
+    .btn-eye {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer;
+      font-size: 1.1rem; color: var(--clr-muted);
+      padding: 4px;
+      transition: color var(--transition);
+    }
+    .btn-eye:hover { color: var(--clr-primary); }
+
+    /* Error hint */
+    .field-error {
+      font-size: .78rem;
+      color: var(--clr-error);
+      margin-top: 5px;
+      display: none;
+    }
+    .field-error.show { display: block; }
+
+    /* Forgot password */
+    .forgot-wrap { text-align: right; margin-top: -8px; margin-bottom: 20px; }
+    .forgot-link { font-size: .82rem; color: var(--clr-primary); text-decoration: none; font-weight: 600; }
+    .forgot-link:hover { text-decoration: underline; }
+
+    /* Submit button */
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background: var(--clr-primary);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: .95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+      letter-spacing: .02em;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-submit:hover:not(:disabled) {
+      background: var(--clr-primary-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(106,184,42,.35);
+    }
+    .btn-submit:disabled { opacity: .65; cursor: not-allowed; transform: none; }
+    .btn-submit .spinner {
+      display: none;
+      width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,.4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      margin: 0 auto;
+    }
+    .btn-submit.loading .btn-text { display: none; }
+    .btn-submit.loading .spinner { display: block; }
+
+    /* Alert box */
+    .auth-alert {
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: .88rem;
+      font-weight: 500;
+      margin-bottom: 20px;
+      display: none;
+      align-items: center;
+      gap: 10px;
+    }
+    .auth-alert.show { display: flex; }
+    .auth-alert.success { background: #e8f5e9; color: var(--clr-success); border: 1px solid #a5d6a7; }
+    .auth-alert.error { background: #ffebee; color: var(--clr-error); border: 1px solid #ef9a9a; }
+
+    /* Divider */
+    .auth-divider {
+      display: flex; align-items: center; gap: 12px;
+      margin: 22px 0;
+      color: var(--clr-muted);
+      font-size: .8rem;
+    }
+    .auth-divider::before, .auth-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--clr-border);
+    }
+
+    /* Terms */
+    .terms-note {
+      font-size: .78rem;
+      color: var(--clr-muted);
+      text-align: center;
+      margin-top: 16px;
+      line-height: 1.6;
+    }
+    .terms-note a { color: var(--clr-primary); text-decoration: none; font-weight: 600; }
+
+    /* Password strength */
+    .pw-strength { margin-top: 8px; }
+    .pw-strength-bar {
+      height: 4px;
+      border-radius: 4px;
+      background: var(--clr-border);
+      overflow: hidden;
+      margin-bottom: 4px;
+    }
+    .pw-strength-fill {
+      height: 100%;
+      border-radius: 4px;
+      width: 0%;
+      transition: width .3s, background .3s;
+    }
+    .pw-strength-label { font-size: .75rem; color: var(--clr-muted); }
+
+    /* Success screen */
+    .auth-success-screen {
+      display: none;
+      text-align: center;
+      padding: 20px 0;
+    }
+    .auth-success-screen.show { display: block; }
+    .auth-success-icon {
+      width: 72px; height: 72px;
+      background: linear-gradient(135deg, #a8d87a, var(--clr-primary));
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem;
+      margin: 0 auto 20px;
+      animation: popIn .5s cubic-bezier(.34,1.56,.64,1) both;
+    }
+    .auth-success-screen h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      color: var(--clr-dark);
+      margin-bottom: 10px;
+    }
+    .auth-success-screen p { color: var(--clr-muted); font-size: .9rem; line-height: 1.7; margin-bottom: 24px; }
+    .btn-goto {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 28px;
+      background: var(--clr-primary);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: .9rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background var(--transition);
+    }
+    .btn-goto:hover { background: var(--clr-primary-dark); }
+
+    /* User menu (when logged in) */
+    .user-menu-btn {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--clr-bg);
+      border: 1.5px solid var(--clr-border);
+      border-radius: 30px;
+      padding: 6px 14px 6px 8px;
+      cursor: pointer;
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: .85rem;
+      font-weight: 600;
+      color: var(--clr-dark);
+      text-decoration: none;
+      transition: border-color var(--transition);
+    }
+    .user-menu-btn:hover { border-color: var(--clr-primary); }
+    .user-avatar-sm {
+      width: 30px; height: 30px;
+      background: var(--clr-primary);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff;
+      font-weight: 700;
+      font-size: .85rem;
+    }
+
+    /* Animations */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes popIn {
+      0% { transform: scale(0); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .auth-form-box { animation: slideUp .4s ease both; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .auth-page { grid-template-columns: 1fr; }
+      .auth-panel { display: none; }
+      .auth-form-wrap { padding: 40px 24px; justify-content: flex-start; padding-top: 40px; }
+      .form-row { grid-template-columns: 1fr; }
+      .auth-form-box { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="navbar__inner">
+      <a href="index.html" class="navbar__logo">
+        <img src="./assets/icon/logo.png" class="navbar__logo-img" alt="Logo Trà Sen Hồng" onerror="this.style.display='none'"/>
+        <div>
+          <span class="navbar__logo-name">Trà Sen Hồng</span>
+          <span class="navbar__logo-tagline">Trà Việt</span>
+        </div>
+      </a>
+      <ul class="navbar__links">
+        <li><a href="index.html">Trang Chủ</a></li>
+        <li><a href="shop.html">Cửa Hàng</a></li>
+        <li><a href="about.html">Về Chúng Tôi</a></li>
+        <li><a href="contact.html">Liên Hệ</a></li>
+      </ul>
+      <!-- Hiển thị sau khi đã login -->
+      <div id="navUserArea"></div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="auth-page">
+
+    <!-- LEFT: decorative panel -->
+    <div class="auth-panel">
+      <div class="auth-panel__bg"></div>
+      <div class="auth-panel__overlay"></div>
+      <div class="auth-panel__content">
+        <div class="auth-panel__badge">🌿 Thành Viên Trà Sen Hồng</div>
+        <h2 class="auth-panel__title">
+          Tài Khoản<br/>
+          <em>Của Bạn</em>
+        </h2>
+        <p class="auth-panel__desc">
+          Đăng nhập để theo dõi đơn hàng, lưu địa chỉ giao hàng và nhận ưu đãi dành riêng cho thành viên.
+        </p>
+        <div class="auth-panel__features">
+          <div class="auth-panel__feature">
+            <div class="auth-panel__feature-icon">📦</div>
+            <span>Theo dõi đơn hàng theo thời gian thực</span>
+          </div>
+          <div class="auth-panel__feature">
+            <div class="auth-panel__feature-icon">📍</div>
+            <span>Lưu địa chỉ, không cần nhập lại khi thanh toán</span>
+          </div>
+          <div class="auth-panel__feature">
+            <div class="auth-panel__feature-icon">🎁</div>
+            <span>Nhận ưu đãi & mã giảm giá thành viên</span>
+          </div>
+          <div class="auth-panel__feature">
+            <div class="auth-panel__feature-icon">⭐</div>
+            <span>Lịch sử mua hàng và đánh giá sản phẩm</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: form -->
+    <div class="auth-form-wrap">
+      <div class="auth-form-box">
+
+        <!-- Tab -->
+        <div class="auth-tabs" role="tablist">
+          <button class="auth-tab active" id="tab-login" role="tab" aria-selected="true" onclick="switchTab('login')">Đăng Nhập</button>
+          <button class="auth-tab" id="tab-register" role="tab" aria-selected="false" onclick="switchTab('register')">Đăng Ký</button>
+        </div>
+
+        <!-- Alert -->
+        <div class="auth-alert" id="authAlert" role="alert"></div>
+
+        <!-- ── LOGIN FORM ── -->
+        <div id="loginPanel">
+          <h1 class="auth-heading">Chào mừng trở lại</h1>
+          <p class="auth-subheading">Đăng nhập để tiếp tục thưởng thức trà 🍵</p>
+
+          <form id="loginForm" novalidate>
+            <div class="form-group">
+              <label class="form-label" for="loginEmail">Email</label>
+              <input class="form-input" type="email" id="loginEmail" name="email" placeholder="example@email.com" autocomplete="email" required />
+              <span class="field-error" id="loginEmailErr">Vui lòng nhập email hợp lệ</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="loginPassword">Mật khẩu</label>
+              <div class="input-wrap">
+                <input class="form-input" type="password" id="loginPassword" name="password" placeholder="••••••••" autocomplete="current-password" required />
+                <button type="button" class="btn-eye" onclick="togglePw('loginPassword', this)" aria-label="Hiện/ẩn mật khẩu">👁️</button>
+              </div>
+              <span class="field-error" id="loginPasswordErr">Vui lòng nhập mật khẩu</span>
+            </div>
+            <div class="forgot-wrap">
+              <a href="#" class="forgot-link" onclick="showForgot(event)">Quên mật khẩu?</a>
+            </div>
+            <button type="submit" class="btn-submit" id="loginBtn">
+              <span class="btn-text">Đăng Nhập</span>
+              <div class="spinner"></div>
+            </button>
+          </form>
+
+          <div class="auth-divider">hoặc</div>
+          <p style="text-align:center;font-size:.88rem;color:var(--clr-muted)">
+            Chưa có tài khoản?
+            <a href="#" style="color:var(--clr-primary);font-weight:700;text-decoration:none" onclick="switchTab('register');return false">Đăng ký ngay</a>
+          </p>
+        </div>
+
+        <!-- ── REGISTER FORM ── -->
+        <div id="registerPanel" style="display:none">
+          <h1 class="auth-heading">Tạo tài khoản</h1>
+          <p class="auth-subheading">Tham gia cộng đồng yêu trà Sen Hồng 🌿</p>
+
+          <form id="registerForm" novalidate>
+            <div class="form-group">
+              <label class="form-label" for="regName">Họ và tên</label>
+              <input class="form-input" type="text" id="regName" placeholder="Nguyễn Văn A" autocomplete="name" required />
+              <span class="field-error" id="regNameErr">Vui lòng nhập họ tên (ít nhất 2 ký tự)</span>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="regEmail">Email</label>
+                <input class="form-input" type="email" id="regEmail" placeholder="example@email.com" autocomplete="email" required />
+                <span class="field-error" id="regEmailErr">Email không hợp lệ</span>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="regPhone">Số điện thoại</label>
+                <input class="form-input" type="tel" id="regPhone" placeholder="0912 345 678" autocomplete="tel" />
+                <span class="field-error" id="regPhoneErr">SĐT không hợp lệ (10 số)</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="regPassword">Mật khẩu</label>
+              <div class="input-wrap">
+                <input class="form-input" type="password" id="regPassword" placeholder="Ít nhất 8 ký tự" autocomplete="new-password" required />
+                <button type="button" class="btn-eye" onclick="togglePw('regPassword', this)" aria-label="Hiện/ẩn mật khẩu">👁️</button>
+              </div>
+              <div class="pw-strength" id="pwStrength" style="display:none">
+                <div class="pw-strength-bar"><div class="pw-strength-fill" id="pwFill"></div></div>
+                <span class="pw-strength-label" id="pwLabel"></span>
+              </div>
+              <span class="field-error" id="regPasswordErr">Mật khẩu ít nhất 8 ký tự</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="regConfirm">Xác nhận mật khẩu</label>
+              <div class="input-wrap">
+                <input class="form-input" type="password" id="regConfirm" placeholder="Nhập lại mật khẩu" autocomplete="new-password" required />
+                <button type="button" class="btn-eye" onclick="togglePw('regConfirm', this)" aria-label="Hiện/ẩn mật khẩu">👁️</button>
+              </div>
+              <span class="field-error" id="regConfirmErr">Mật khẩu xác nhận không khớp</span>
+            </div>
+
+            <button type="submit" class="btn-submit" id="registerBtn">
+              <span class="btn-text">Tạo Tài Khoản</span>
+              <div class="spinner"></div>
+            </button>
+            <p class="terms-note">
+              Bằng cách đăng ký, bạn đồng ý với
+              <a href="#">Điều khoản sử dụng</a> và
+              <a href="#">Chính sách bảo mật</a> của chúng tôi.
+            </p>
+          </form>
+
+          <div class="auth-divider">hoặc</div>
+          <p style="text-align:center;font-size:.88rem;color:var(--clr-muted)">
+            Đã có tài khoản?
+            <a href="#" style="color:var(--clr-primary);font-weight:700;text-decoration:none" onclick="switchTab('login');return false">Đăng nhập</a>
+          </p>
+        </div>
+
+        <!-- SUCCESS SCREEN -->
+        <div class="auth-success-screen" id="successScreen">
+          <div class="auth-success-icon">✓</div>
+          <h3 id="successTitle">Đăng nhập thành công!</h3>
+          <p id="successDesc">Chào mừng bạn trở lại với Trà Sen Hồng 🍵</p>
+          <a href="index.html" class="btn-goto">🏠 Về Trang Chủ</a>
+          &nbsp;
+          <a href="shop.html" class="btn-goto" style="background:var(--clr-dark)">🛒 Mua Sắm</a>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+<script>
+  // ── CONFIG ──
+  const API_URL = 'https://trasenhong-backend-production.up.railway.app/api';
+  // Nếu test local thì đổi thành: 'http://localhost:3000/api'
+
+  // ── HELPERS ──
+  const $ = id => document.getElementById(id);
+  const showAlert = (msg, type='error') => {
+    const el = $('authAlert');
+    el.className = `auth-alert show ${type}`;
+    el.innerHTML = `<span>${type==='success'?'✅':'❌'}</span> ${msg}`;
+    setTimeout(() => el.classList.remove('show'), 5000);
+  };
+  const setLoading = (btnId, loading) => {
+    const btn = $(btnId);
+    btn.classList.toggle('loading', loading);
+    btn.disabled = loading;
+  };
+  const setFieldError = (fieldId, errId, show) => {
+    $(fieldId).classList.toggle('error', show);
+    $(errId).classList.toggle('show', show);
+  };
+
+  // ── TAB SWITCH ──
+  function switchTab(tab) {
+    $('loginPanel').style.display   = tab === 'login'    ? 'block' : 'none';
+    $('registerPanel').style.display = tab === 'register' ? 'block' : 'none';
+    $('successScreen').classList.remove('show');
+    $('tab-login').classList.toggle('active', tab === 'login');
+    $('tab-register').classList.toggle('active', tab === 'register');
+    $('tab-login').setAttribute('aria-selected', tab === 'login');
+    $('tab-register').setAttribute('aria-selected', tab === 'register');
+    $('authAlert').classList.remove('show');
+  }
+
+  // ── TOGGLE PASSWORD ──
+  function togglePw(inputId, btn) {
+    const inp = $(inputId);
+    if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
+    else { inp.type = 'password'; btn.textContent = '👁️'; }
+  }
+
+  // ── PASSWORD STRENGTH ──
+  $('regPassword').addEventListener('input', function() {
+    const v = this.value;
+    const wrap = $('pwStrength');
+    const fill = $('pwFill');
+    const label = $('pwLabel');
+    if (!v) { wrap.style.display = 'none'; return; }
+    wrap.style.display = 'block';
+    let score = 0;
+    if (v.length >= 8) score++;
+    if (v.length >= 12) score++;
+    if (/[A-Z]/.test(v)) score++;
+    if (/[0-9]/.test(v)) score++;
+    if (/[^A-Za-z0-9]/.test(v)) score++;
+    const levels = [
+      { w:'20%', c:'#ef5350', t:'Rất yếu' },
+      { w:'40%', c:'#ff7043', t:'Yếu' },
+      { w:'60%', c:'#ffa726', t:'Trung bình' },
+      { w:'80%', c:'#66bb6a', t:'Mạnh' },
+      { w:'100%',c:'#2e7d32', t:'Rất mạnh' },
+    ];
+    const lv = levels[Math.min(score-1, 4)] || levels[0];
+    fill.style.width = lv.w;
+    fill.style.background = lv.c;
+    label.style.color = lv.c;
+    label.textContent = lv.t;
+  });
+
+  // ── SAVE / LOAD TOKEN ──
+  const saveUser = (token, user) => {
+    localStorage.setItem('tsh_token', token);
+    localStorage.setItem('tsh_user', JSON.stringify(user));
+  };
+  const getUser = () => {
+    try { return JSON.parse(localStorage.getItem('tsh_user')); } catch { return null; }
+  };
+  const getToken = () => localStorage.getItem('tsh_token');
+
+  // ── CHECK ALREADY LOGGED IN ──
+  (function checkLogin() {
+    const user = getUser();
+    if (!user) return;
+    // Hiện user menu trên navbar
+    const area = $('navUserArea');
+    const initial = (user.full_name || user.email || 'U').charAt(0).toUpperCase();
+    area.innerHTML = `
+      <a href="profile.html" class="user-menu-btn">
+        <div class="user-avatar-sm">${initial}</div>
+        ${user.full_name || 'Tài khoản'} ▾
+      </a>`;
+    // Hiện success screen
+    $('loginPanel').style.display = 'none';
+    $('registerPanel').style.display = 'none';
+    document.querySelector('.auth-tabs').style.display = 'none';
+    const s = $('successScreen');
+    s.classList.add('show');
+    $('successTitle').textContent = `Xin chào, ${user.full_name || user.email}!`;
+    $('successDesc').textContent = 'Bạn đã đăng nhập. Tiếp tục khám phá sản phẩm trà Sen Hồng nhé 🍵';
+  })();
+
+  // ── VALIDATE EMAIL ──
+  const validEmail = e => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+  const validPhone = p => !p || /^(0|\+84)[0-9]{9}$/.test(p.replace(/\s/g,''));
+
+  // ── LOGIN ──
+  $('loginForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const email    = $('loginEmail').value.trim();
+    const password = $('loginPassword').value;
+    let valid = true;
+
+    setFieldError('loginEmail',    'loginEmailErr',    !validEmail(email));
+    setFieldError('loginPassword', 'loginPasswordErr', !password);
+    if (!validEmail(email) || !password) return;
+
+    setLoading('loginBtn', true);
+    try {
+      const res = await fetch(`${API_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        showAlert(data.message || 'Email hoặc mật khẩu không đúng.');
+        return;
+      }
+      saveUser(data.token, data.user);
+
+      // Redirect admin
+      if (data.user.role === 'admin') {
+        showAlert('Đăng nhập admin thành công! Chuyển hướng...', 'success');
+        setTimeout(() => location.href = 'admin.html', 1200);
+        return;
+      }
+
+      // Redirect user
+      $('loginPanel').style.display = 'none';
+      document.querySelector('.auth-tabs').style.display = 'none';
+      $('authAlert').classList.remove('show');
+      const s = $('successScreen');
+      s.classList.add('show');
+      $('successTitle').textContent = `Chào mừng, ${data.user.full_name || data.user.email}!`;
+      $('successDesc').textContent = 'Đăng nhập thành công. Khám phá sản phẩm trà Sen Hồng ngay nhé 🍵';
+
+      // Redirect về trang trước nếu có
+      const returnTo = new URLSearchParams(location.search).get('return');
+      if (returnTo) setTimeout(() => location.href = decodeURIComponent(returnTo), 1500);
+
+    } catch (err) {
+      showAlert('Lỗi kết nối. Vui lòng thử lại.');
+    } finally {
+      setLoading('loginBtn', false);
+    }
+  });
+
+  // ── REGISTER ──
+  $('registerForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const full_name = $('regName').value.trim();
+    const email     = $('regEmail').value.trim();
+    const phone     = $('regPhone').value.trim();
+    const password  = $('regPassword').value;
+    const confirm   = $('regConfirm').value;
+
+    let ok = true;
+    const check = (fid, eid, cond) => { setFieldError(fid, eid, !cond); if (!cond) ok = false; };
+    check('regName',     'regNameErr',     full_name.length >= 2);
+    check('regEmail',    'regEmailErr',    validEmail(email));
+    check('regPhone',    'regPhoneErr',    validPhone(phone));
+    check('regPassword', 'regPasswordErr', password.length >= 8);
+    check('regConfirm',  'regConfirmErr',  password === confirm && !!confirm);
+    if (!ok) return;
+
+    setLoading('registerBtn', true);
+    try {
+      const res = await fetch(`${API_URL}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ full_name, email, phone: phone || undefined, password }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        showAlert(data.message || 'Đăng ký thất bại. Vui lòng thử lại.');
+        return;
+      }
+      saveUser(data.token, data.user);
+      $('registerPanel').style.display = 'none';
+      document.querySelector('.auth-tabs').style.display = 'none';
+      $('authAlert').classList.remove('show');
+      const s = $('successScreen');
+      s.classList.add('show');
+      $('successTitle').textContent = `Chào mừng, ${data.user.full_name}!`;
+      $('successDesc').textContent  = 'Tài khoản đã được tạo thành công. Hãy cập nhật địa chỉ giao hàng để thanh toán nhanh hơn nhé 🎉';
+      // Thêm nút profile
+      const btnWrap = s.querySelector('a[href="index.html"]').parentNode;
+      const profileBtn = document.createElement('a');
+      profileBtn.href = 'profile.html';
+      profileBtn.className = 'btn-goto';
+      profileBtn.style.cssText = 'background:#2c5f2e;margin-left:8px';
+      profileBtn.textContent = '👤 Cập Nhật Hồ Sơ';
+      btnWrap.appendChild(profileBtn);
+
+    } catch (err) {
+      showAlert('Lỗi kết nối. Vui lòng thử lại.');
+    } finally {
+      setLoading('registerBtn', false);
+    }
+  });
+
+  // ── QUÊN MẬT KHẨU (placeholder) ──
+  function showForgot(e) {
+    e.preventDefault();
+    showAlert('Tính năng quên mật khẩu đang được phát triển. Vui lòng liên hệ trasenhong9999@gmail.com để được hỗ trợ.', 'success');
+  }
+
+  // ── URL PARAM: ?tab=register ──
+  const urlTab = new URLSearchParams(location.search).get('tab');
+  if (urlTab === 'register') switchTab('register');
+</script>
+
+</body>
+</html>
