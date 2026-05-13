@@ -493,9 +493,9 @@
 
           <form id="loginForm" novalidate>
             <div class="form-group">
-              <label class="form-label" for="loginEmail">Email</label>
-              <input class="form-input" type="email" id="loginEmail" name="email" placeholder="example@email.com" autocomplete="email" required />
-              <span class="field-error" id="loginEmailErr">Vui lòng nhập email hợp lệ</span>
+              <label class="form-label" for="loginEmail">Email hoặc Số điện thoại</label>
+              <input class="form-input" type="text" id="loginEmail" name="email" placeholder="Email hoặc số điện thoại" autocomplete="username" required />
+              <span class="field-error" id="loginEmailErr">Vui lòng nhập email hoặc số điện thoại</span>
             </div>
             <div class="form-group">
               <label class="form-label" for="loginPassword">Mật khẩu</label>
@@ -635,8 +635,8 @@
   // ── TOGGLE PASSWORD ──
   function togglePw(inputId, btn) {
     const inp = $(inputId);
-    if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
-    else { inp.type = 'password'; btn.textContent = '👁️'; }
+    if (inp.type === 'password') { inp.type = 'text'; btn.textContent = 'Ẩn'; }
+    else { inp.type = 'password'; btn.textContent = 'Hiện'; }
   }
 
   // ── PASSWORD STRENGTH ──
@@ -710,9 +710,10 @@
     const password = $('loginPassword').value;
     let valid = true;
 
-    setFieldError('loginEmail',    'loginEmailErr',    !validEmail(email));
+    const validLogin = email.length >= 5; // chấp nhận cả email lẫn SĐT
+    setFieldError('loginEmail',    'loginEmailErr',    !validLogin);
     setFieldError('loginPassword', 'loginPasswordErr', !password);
-    if (!validEmail(email) || !password) return;
+    if (!validLogin || !password) return;
 
     setLoading('loginBtn', true);
     try {
