@@ -1,351 +1,693 @@
-(function () {
-  "use strict";
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thanh Toán – Trà Sen Hồng</title>
+    <meta
+      name="description"
+      content="Hoàn tất đơn hàng trà mộc Trà Sen Hồng. Điền thông tin giao hàng, chọn phương thức thanh toán."
+    />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" type="image/png" href="./assets/icon/lono_notext.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/checkout.css" />
+  </head>
+  <body>
+    <div class="scroll-progress" aria-hidden="true"></div>
+    <button class="back-to-top" aria-label="Lên đầu trang">↑</button>
 
-  const API_URL = "https://trasenhong-backend-production.up.railway.app/api";
-  const FREE_SHIP_MIN = 200000;
-  const SHIP_FEE = 30000;
-
-  // ── EmailJS config ──
-  const EMAILJS_SERVICE_ID  = "service_wg68jbu";
-  const EMAILJS_TEMPLATE_ID = "cetu3vc";
-  const EMAILJS_PUBLIC_KEY  = "BptJ9xxzyF5SdCKDw";
-
-  const ADMIN_SITE_URL = "https://starlit-tartufo-1d180f.netlify.app/admin.html";
-
-  let cart = JSON.parse(localStorage.getItem("tsh_cart") || "[]");
-  let promoDiscount = 0;
-  let promoCode = "";
-  let promoType = "percent";
-  let productsMap = {};
-  let ghnShippingFee = null;
-
-  const $ = (id) => document.getElementById(id);
-  const fmt = (n) => n.toLocaleString("vi-VN") + "₫";
-
-  const FALLBACK_EMOJIS = ["🍵","🌿","🎁","🌸","🫖","🌺","🏆","🫙","🥢","💚","🧧","🍯"];
-  const getEmoji = (id) => FALLBACK_EMOJIS[(id - 1) % FALLBACK_EMOJIS.length] || "🍵";
-
-  function calcSubtotal() {
-    return cart.reduce((s, i) => {
-      const p = productsMap[i.id];
-      return s + (p ? p.price * i.qty : 0);
-    }, 0);
-  }
-
-  function loadCartProducts() {
-    cart.forEach((i) => {
-      productsMap[i.id] = {
-        name: i.name || "Sản phẩm",
-        price: i.price || 0,
-        image: i.image || null,
-        emoji: getEmoji(i.id),
-      };
-    });
-    renderSummary();
-  }
-
-  function renderSummary() {
-    const items = $("summaryItems");
-    const empty = $("summaryEmpty");
-    const subtotalEl = $("summarySubtotal");
-    const shippingEl = $("summaryShipping");
-    const discountEl = $("summaryDiscount");
-    const totalEl = $("summaryTotal");
-
-    if (!items) return;
-
-    if (cart.length === 0) {
-      items.innerHTML = "";
-      if (empty) items.appendChild(empty);
-      if (subtotalEl) subtotalEl.textContent = "0₫";
-      if (totalEl) totalEl.textContent = "0₫";
-      return;
-    }
-
-    empty?.remove();
-    items.innerHTML = cart.map((i) => {
-      const p = productsMap[i.id];
-      if (!p) return "";
-      const imgHtml = p.image
-        ? `<img src="${p.image}" alt="${p.name}" style="width:40px;height:40px;object-fit:cover;border-radius:8px">`
-        : `<div class="co-summary__item-emoji">${p.emoji}</div>`;
-      return `
-        <div class="co-summary__item">
-          ${imgHtml}
-          <div class="co-summary__item-info">
-            <p class="co-summary__item-name">${p.name}</p>
-            <p class="co-summary__item-qty">x${i.qty}</p>
+    <header class="navbar scrolled" role="banner">
+      <div class="container navbar__inner">
+        <a
+          href="index.html"
+          class="navbar__logo"
+          aria-label="Trà Sen Hồng – Trang chủ"
+        >
+          <img
+            src="./assets/icon/logo.png"
+            class="navbar__logo-img"
+            alt="Logo Trà Sen Hồng"
+          />
+          <div class="navbar__logo-text">
+            <span class="navbar__logo-name">Trà Sen Hồng</span>
+            <span class="navbar__logo-tagline">Trà Việt</span>
           </div>
-          <span class="co-summary__item-price">${fmt(p.price * i.qty)}</span>
-        </div>`;
-    }).join("");
+        </a>
+        <nav class="navbar__menu" aria-label="Menu chính">
+          <a href="index.html" class="navbar__link">Trang Chủ</a>
+          <a href="about.html" class="navbar__link">Về Chúng Tôi</a>
+          <a href="shop.html" class="navbar__link">Cửa Hàng</a>
+          <a href="contact.html" class="navbar__link">Liên Hệ</a>
+          <a href="shop.html" class="navbar__link navbar__cta ripple-wrap"
+            >Mua Ngay</a
+          >
+          <div
+            id="navUserArea"
+            style="display: flex; align-items: center; margin-left: 6px"
+          ></div>
+        </nav>
+        <button
+          class="navbar__hamburger"
+          aria-label="Mở menu"
+          aria-expanded="false"
+          aria-controls="mobile-drawer-checkout"
+        >
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+      </div>
+      <nav
+        class="navbar__drawer"
+        id="mobile-drawer-checkout"
+        aria-label="Menu di động"
+      >
+        <a href="index.html" class="navbar__link">Trang Chủ</a>
+        <a href="about.html" class="navbar__link">Về Chúng Tôi</a>
+        <a href="shop.html" class="navbar__link">Cửa Hàng</a>
+        <a href="contact.html" class="navbar__link">Liên Hệ</a>
+        <a
+          href="shop.html"
+          class="navbar__link"
+          style="color: var(--clr-primary)"
+          >🛒 Mua Ngay</a
+        >
+        <div id="navUserAreaMobile"></div>
+      </nav>
+    </header>
 
-    const subtotal = calcSubtotal();
-    const shipping = subtotal >= FREE_SHIP_MIN ? 0 : ghnShippingFee !== null ? ghnShippingFee : SHIP_FEE;
-    const discountAmt = promoType === "percent"
-      ? Math.round((subtotal * promoDiscount) / 100)
-      : promoDiscount;
-    const total = subtotal - discountAmt + shipping;
+    <section class="co-hero section" aria-label="Thanh toán">
+      <div class="container">
+        <nav class="co-breadcrumb" aria-label="Đường dẫn">
+          <a href="index.html">Trang Chủ</a>
+          <span aria-hidden="true">›</span>
+          <a href="shop.html">Cửa Hàng</a>
+          <span aria-hidden="true">›</span>
+          <span aria-current="page">Thanh Toán</span>
+        </nav>
+        <div class="text-center" data-reveal>
+          <p class="section-label">Đặt Hàng</p>
+          <h1 class="section-heading">
+            Hoàn Tất<br /><span>Đơn Hàng Của Bạn</span>
+          </h1>
+        </div>
+      </div>
+    </section>
 
-    if (subtotalEl) subtotalEl.textContent = fmt(subtotal);
-    if (shippingEl) {
-      shippingEl.textContent = shipping === 0 ? "Miễn phí" : fmt(shipping);
-      shippingEl.className = shipping === 0 ? "co-free" : "";
-    }
-    if (discountEl) {
-      discountEl.textContent = discountAmt > 0 ? `-${fmt(discountAmt)}` : "—";
-      discountEl.closest?.(".co-summary__row")?.style.setProperty("display", discountAmt > 0 ? "" : "none");
-    }
-    if (totalEl) totalEl.textContent = fmt(total);
-  }
+    <main class="co-main section" id="checkoutMain">
+      <div class="container">
+        <div class="co-layout">
+          <div class="co-form-col">
+            <section class="co-card" id="sectionContact" data-reveal>
+              <div class="co-card__head">
+                <span class="co-card__num" aria-hidden="true">01</span>
+                <h2 class="co-card__title">Thông Tin Liên Hệ</h2>
+              </div>
+              <div class="co-card__body">
+                <div class="co-form-row co-form-row--2">
+                  <div class="co-field">
+                    <label class="co-label" for="firstName"
+                      >Họ
+                      <span class="co-req" aria-hidden="true">*</span></label
+                    >
+                    <input
+                      class="co-input"
+                      type="text"
+                      id="firstName"
+                      name="firstName"
+                      placeholder="Nguyễn"
+                      required
+                      autocomplete="given-name"
+                    />
+                    <span class="co-err" id="err-firstName"
+                      >Vui lòng nhập họ.</span
+                    >
+                  </div>
+                  <div class="co-field">
+                    <label class="co-label" for="lastName"
+                      >Tên
+                      <span class="co-req" aria-hidden="true">*</span></label
+                    >
+                    <input
+                      class="co-input"
+                      type="text"
+                      id="lastName"
+                      name="lastName"
+                      placeholder="Văn A"
+                      required
+                      autocomplete="family-name"
+                    />
+                    <span class="co-err" id="err-lastName"
+                      >Vui lòng nhập tên.</span
+                    >
+                  </div>
+                </div>
+                <div class="co-form-row co-form-row--2">
+                  <div class="co-field">
+                    <label class="co-label" for="phone"
+                      >Số điện thoại
+                      <span class="co-req" aria-hidden="true">*</span></label
+                    >
+                    <input
+                      class="co-input"
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      placeholder="0900 000 000"
+                      required
+                      autocomplete="tel"
+                      pattern="[0-9\s\+\-]{9,15}"
+                    />
+                    <span class="co-err" id="err-phone"
+                      >Vui lòng nhập số điện thoại hợp lệ.</span
+                    >
+                  </div>
+                  <div class="co-field">
+                    <label class="co-label" for="email">Email</label>
+                    <input
+                      class="co-input"
+                      type="email"
+                      id="email"
+                      name="email"
+                      placeholder="email@example.com"
+                      autocomplete="email"
+                    />
+                    <span class="co-err" id="err-email"
+                      >Email không hợp lệ.</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </section>
 
-  async function fetchGhnFee(district_id, ward_code) {
-    if (!district_id || !ward_code) return;
-    try {
-      const totalWeight = cart.reduce((s, i) => {
-        const p = productsMap[i.id];
-        return s + (p ? 300 * i.qty : 0);
-      }, 0);
-      const density = 0.3;
-      const vol = totalWeight / density;
-      const r = Math.cbrt(vol || 1);
-      const length = Math.max(Math.ceil(r * 1.6), 10);
-      const width = Math.max(Math.ceil(r), 10);
-      const height = Math.max(Math.ceil(r * 0.625), 5);
-      const convertWeight = Math.round(((length * width * height) / 5000) * 1000);
-      const weight = Math.max(totalWeight, convertWeight);
+            <section class="co-card" id="sectionShipping" data-reveal>
+              <div class="co-card__head">
+                <span class="co-card__num" aria-hidden="true">02</span>
+                <h2 class="co-card__title">Địa Chỉ Giao Hàng</h2>
+              </div>
+              <div class="co-card__body">
+                <div class="co-field">
+                  <label class="co-label" for="address"
+                    >Địa chỉ
+                    <span class="co-req" aria-hidden="true">*</span></label
+                  >
+                  <input
+                    class="co-input"
+                    type="text"
+                    id="address"
+                    name="address"
+                    placeholder="Số nhà, tên đường"
+                    required
+                    autocomplete="street-address"
+                  />
+                  <span class="co-err" id="err-address"
+                    >Vui lòng nhập địa chỉ.</span
+                  >
+                </div>
+                <!-- Hidden fields — GHN mã số, gửi lên backend -->
+                <input type="hidden" id="provinceId" name="provinceId" />
+                <input type="hidden" id="districtId" name="districtId" />
+                <input type="hidden" id="wardCode" name="wardCode" />
 
-      const params = new URLSearchParams({ to_district_id: district_id, to_ward_code: ward_code, weight, length, width, height });
-      const res = await fetch(`${API_URL}/ghn/fee?${params}`);
-      const data = await res.json();
-      if (data.success && data.total) {
-        ghnShippingFee = data.total;
-        renderSummary();
-      }
-    } catch (err) {
-      console.warn("[checkout] Không lấy được phí GHN:", err);
-    }
-  }
+                <div class="co-form-row co-form-row--3">
+                  <!-- TỈNH / THÀNH PHỐ -->
+                  <div class="co-field">
+                    <label class="co-label" for="province">
+                      Tỉnh / Thành phố
+                      <span class="co-req" aria-hidden="true">*</span>
+                    </label>
+                    <select
+                      class="co-input co-select"
+                      id="province"
+                      name="province"
+                      required
+                      disabled
+                    >
+                      <option value="">— Đang tải… —</option>
+                    </select>
+                    <span class="co-err" id="err-province"
+                      >Vui lòng chọn tỉnh.</span
+                    >
+                  </div>
 
-  document.querySelectorAll(".co-pay-option").forEach((opt) => {
-    opt.addEventListener("click", () => {
-      document.querySelectorAll(".co-pay-option").forEach((o) => o.classList.remove("co-pay-option--active"));
-      opt.classList.add("co-pay-option--active");
-      opt.querySelector("input").checked = true;
-    });
-  });
+                  <!-- QUẬN / HUYỆN -->
+                  <div class="co-field">
+                    <label class="co-label" for="district">
+                      Quận / Huyện
+                      <span class="co-req" aria-hidden="true">*</span>
+                    </label>
+                    <select
+                      class="co-input co-select"
+                      id="district"
+                      name="district"
+                      disabled
+                    >
+                      <option value="">— Chọn tỉnh trước —</option>
+                    </select>
+                    <span class="co-err" id="err-district"
+                      >Vui lòng chọn quận/huyện.</span
+                    >
+                  </div>
 
-  const LOCAL_PROMOS = { TRASENHONG10: 10, WELCOME20: 20, TSH15: 15 };
+                  <!-- PHƯỜNG / XÃ -->
+                  <div class="co-field">
+                    <label class="co-label" for="ward">
+                      Phường / Xã
+                      <span class="co-req" aria-hidden="true">*</span>
+                    </label>
+                    <select
+                      class="co-input co-select"
+                      id="ward"
+                      name="ward"
+                      disabled
+                    >
+                      <option value="">— Chọn quận trước —</option>
+                    </select>
+                    <span class="co-err" id="err-ward"
+                      >Vui lòng chọn phường/xã.</span
+                    >
+                  </div>
+                </div>
 
-  async function applyPromoCode(code) {
-    const promoMsg = $("promoMsg");
-    try {
-      const res = await fetch(`${API_URL}/promo/validate`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code, subtotal: calcSubtotal() }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        promoDiscount = data.discount;
-        promoCode = code;
-        promoType = data.type || "percent";
-        const label = promoType === "percent" ? `Giảm ${promoDiscount}%` : `Giảm ${fmt(promoDiscount)}`;
-        promoMsg.textContent = `✅ Áp dụng thành công! ${label}`;
-        promoMsg.className = "co-promo__msg success";
-        renderSummary();
-        return;
-      }
-      promoDiscount = 0;
-      promoCode = "";
-      promoMsg.textContent = `❌ ${data.message || "Mã không hợp lệ hoặc đã hết hạn."}`;
-      promoMsg.className = "co-promo__msg error";
-    } catch {
-      if (LOCAL_PROMOS[code]) {
-        promoDiscount = LOCAL_PROMOS[code];
-        promoCode = code;
-        promoType = "percent";
-        promoMsg.textContent = `✅ Áp dụng thành công! Giảm ${promoDiscount}%`;
-        promoMsg.className = "co-promo__msg success";
-        renderSummary();
-      } else {
-        promoDiscount = 0;
-        promoCode = "";
-        promoMsg.textContent = "❌ Không thể kết nối server.";
-        promoMsg.className = "co-promo__msg error";
-      }
-    }
-  }
+                <!-- Phí ship realtime từ GHN -->
+                <div
+                  id="shippingFeeNote"
+                  style="
+                    display: none;
+                    margin-top: 6px;
+                    font-size: 13px;
+                    color: var(--clr-primary);
+                    font-weight: 500;
+                  "
+                >
+                  🚚 <span id="shippingFeeText"></span>
+                </div>
+                <div class="co-field">
+                  <label class="co-label" for="note">Ghi chú đơn hàng</label>
+                  <textarea
+                    class="co-input co-textarea"
+                    id="note"
+                    name="note"
+                    placeholder="Ghi chú cho người giao hàng (không bắt buộc)..."
+                    rows="3"
+                  ></textarea>
+                </div>
+              </div>
+            </section>
 
-  $("applyPromo")?.addEventListener("click", () => {
-    const code = $("promoCode").value.trim().toUpperCase();
-    if (!code) return;
-    applyPromoCode(code);
-  });
+            <section class="co-card" id="sectionPayment" data-reveal>
+              <div class="co-card__head">
+                <span class="co-card__num" aria-hidden="true">03</span>
+                <h2 class="co-card__title">Phương Thức Thanh Toán</h2>
+              </div>
+              <div class="co-card__body">
+                <div
+                  class="co-payment-methods"
+                  role="radiogroup"
+                  aria-label="Phương thức thanh toán"
+                >
+                  <label
+                    class="co-pay-option co-pay-option--active"
+                    for="payCOD"
+                  >
+                    <input
+                      type="radio"
+                      id="payCOD"
+                      name="payment"
+                      value="cod"
+                      checked
+                    />
+                    <span class="co-pay-icon">💵</span>
+                    <div class="co-pay-text">
+                      <strong>Thanh toán khi nhận hàng (COD)</strong>
+                      <span>Thanh toán tiền mặt khi nhận hàng. Miễn phí.</span>
+                    </div>
+                    <span class="co-pay-check" aria-hidden="true">✓</span>
+                  </label>
+                </div>
+              </div>
+            </section>
 
-  const validators = {
-    firstName: (v) => v.trim().length >= 1,
-    lastName:  (v) => v.trim().length >= 1,
-    phone:     (v) => /^[0-9\s+\-]{9,15}$/.test(v.trim()),
-    email:     (v) => !v || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
-    address:   (v) => v.trim().length >= 5,
-    province:  (v) => v !== "",
-  };
+            <button
+              class="co-submit-btn ripple-wrap"
+              id="submitOrder"
+              type="button"
+            >
+              Xác Nhận Đặt Hàng →
+            </button>
+          </div>
 
-  function validateField(name, value) { return validators[name] ? validators[name](value) : true; }
-  function markField(name, valid) {
-    const input = document.querySelector(`[name="${name}"]`);
-    if (!input) return;
-    input.closest(".co-field")?.classList.toggle("error", !valid);
-  }
+          <aside class="co-summary-col" aria-label="Tóm tắt đơn hàng">
+            <div class="co-summary" data-reveal>
+              <h2 class="co-summary__title">Đơn Hàng Của Bạn</h2>
 
-  Object.keys(validators).forEach((name) => {
-    const el = document.querySelector(`[name="${name}"]`);
-    if (!el) return;
-    el.addEventListener("blur", () => markField(name, validateField(name, el.value)));
-    el.addEventListener("input", () => {
-      if (el.closest(".co-field")?.classList.contains("error")) markField(name, validateField(name, el.value));
-    });
-  });
+              <div class="co-summary__items" id="summaryItems">
+                <div class="co-summary__empty" id="summaryEmpty">
+                  <span>🛒</span>
+                  <p>
+                    Giỏ hàng trống. <a href="shop.html">Tiếp tục mua sắm</a>
+                  </p>
+                </div>
+              </div>
 
-  function collectFormData() {
-    const g = (name) => document.querySelector(`[name="${name}"]`)?.value?.trim() || "";
-    const payment_method = document.querySelector(".co-pay-option--active input")?.value || "cod";
-    return {
-      full_name: `${g("lastName")} ${g("firstName")}`,
-      phone: g("phone"),
-      email: g("email") || null,
-      address: g("address"),
-      province: g("province"),
-      district: g("district") || null,
-      ward: g("ward") || null,
-      ward_code: g("wardCode") || null,
-      district_id: g("districtId") ? Number(g("districtId")) : null,
-      note: g("note") || null,
-      payment_method,
-      promo_code: promoCode || null,
-      items: cart.map((i) => ({ product_id: i.id, quantity: i.qty })),
-    };
-  }
+              <div class="co-summary__totals">
+                <div class="co-summary__row">
+                  <span>Tạm tính</span>
+                  <strong id="summarySubtotal">0₫</strong>
+                </div>
+                <div class="co-summary__row" id="shippingRow">
+                  <span>Phí vận chuyển</span>
+                  <strong id="summaryShipping" class="co-free">Miễn phí</strong>
+                </div>
+                <div class="co-summary__row co-summary__row--total">
+                  <span>Tổng cộng</span>
+                  <strong id="summaryTotal">0₫</strong>
+                </div>
+              </div>
 
-  // ── EMAIL CHO ADMIN (gọi từ frontend — EmailJS browser) ──
-  async function sendAdminEmail(orderData, orderCode, orderId) {
-    try {
-      emailjs.init(EMAILJS_PUBLIC_KEY);
+              <div class="co-promo">
+                <label class="co-label" for="promoCode">Mã giảm giá</label>
+                <div class="co-promo__wrap">
+                  <input
+                    class="co-input"
+                    type="text"
+                    id="promoCode"
+                    placeholder="Nhập mã…"
+                    autocomplete="off"
+                  />
+                  <button class="co-promo__btn" id="applyPromo">Áp dụng</button>
+                </div>
+                <span class="co-promo__msg" id="promoMsg"></span>
+              </div>
 
-      const paymentLabel = {
-        cod: "Thanh toán khi nhận hàng (COD)",
-        bank_transfer: "Chuyển khoản ngân hàng",
-        momo: "Ví MoMo",
-      }[orderData.payment_method] || orderData.payment_method;
+              <div class="co-trust">
+                <div class="co-trust__item">
+                  <span>🚚</span><span>Miễn phí từ 200.000₫</span>
+                </div>
+                <div class="co-trust__item">
+                  <span>🔒</span><span>Thanh toán an toàn</span>
+                </div>
+                <div class="co-trust__item">
+                  <span>↩️</span><span>Đổi trả trong 7 ngày</span>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </main>
 
-      const itemsText = cart
-        .map((i) => {
-          const p = productsMap[i.id];
-          return p ? `${p.name} x${i.qty} – ${fmt(p.price * i.qty)}` : "";
-        })
-        .filter(Boolean)
-        .join("\n");
+    <div class="co-success-overlay" id="coSuccessOverlay" hidden>
+      <div class="co-success-box">
+        <div class="co-success__icon">🎉</div>
+        <h2 class="co-success__title">Đặt Hàng Thành Công!</h2>
+        <p class="co-success__text">
+          Cảm ơn bạn đã tin tưởng Trà Sen Hồng. Chúng tôi sẽ liên hệ xác nhận
+          đơn hàng trong thời gian sớm nhất.
+        </p>
+        <p class="co-success__order" id="successOrderId"></p>
+        <div class="co-success__actions">
+          <a href="index.html" class="btn btn-primary">🏠 Về Trang Chủ</a>
+          <a href="shop.html" class="btn btn-dark">🛒 Tiếp Tục Mua</a>
+        </div>
+      </div>
+    </div>
 
-      const subtotal = calcSubtotal();
-      const shipping = subtotal >= FREE_SHIP_MIN ? 0 : ghnShippingFee !== null ? ghnShippingFee : SHIP_FEE;
-      const discountAmt = promoType === "percent"
-        ? Math.round((subtotal * promoDiscount) / 100)
-        : promoDiscount;
-      const total = subtotal - discountAmt + shipping;
+    <footer class="footer" role="contentinfo">
+      <div class="container">
+        <div class="footer__grid">
+          <div class="footer__brand">
+            <a href="index.html" class="navbar__logo">
+              <img
+                src="./assets/icon/lono_notext.png"
+                class="navbar__logo-img"
+                alt="Logo"
+                aria-hidden="true"
+              />
+              <div class="navbar__logo-text">
+                <span class="navbar__logo-name">Trà Sen Hồng</span>
+                <span class="navbar__logo-tagline">Trà Mộc Thuần Việt</span>
+              </div>
+            </a>
+            <p class="footer__tagline">
+              Doanh nghiệp sản xuất và kinh doanh trà mộc từ lá tươi sấy khô –
+              thuần tự nhiên, không phụ gia.
+            </p>
+            <div class="footer__socials">
+              <a
+                href="https://www.facebook.com/profile.php?id=100079732578251"
+                class="footer__social-link"
+                target="_blank"
+                rel="noopener"
+                ><span>📘</span> Facebook</a
+              >
+              <a
+                href="https://www.tiktok.com/@trasenhongloan"
+                class="footer__social-link"
+                target="_blank"
+                rel="noopener"
+                ><span>🎵</span> TikTok</a
+              >
+              <a
+                href="mailto:trasenhong9999@gmail.com"
+                class="footer__social-link"
+                ><span>✉️</span> Gmail</a
+              >
+            </div>
+          </div>
+          <nav aria-label="Liên kết trang">
+            <h3 class="footer__col-title">Điều Hướng</h3>
+            <ul class="footer__links">
+              <li><a href="index.html" class="footer__link">Trang Chủ</a></li>
+              <li>
+                <a href="about.html" class="footer__link">Về Chúng Tôi</a>
+              </li>
+              <li><a href="shop.html" class="footer__link">Cửa Hàng</a></li>
+              <li><a href="contact.html" class="footer__link">Liên Hệ</a></li>
+            </ul>
+          </nav>
+          <nav aria-label="Danh mục">
+            <h3 class="footer__col-title">Sản Phẩm</h3>
+            <ul class="footer__links">
+              <li>
+                <a href="shop.html" class="footer__link">Trà Lá Loose-leaf</a>
+              </li>
+              <li><a href="shop.html" class="footer__link">Trà Túi Lọc</a></li>
+              <li><a href="shop.html" class="footer__link">Bộ Quà Tặng</a></li>
+              <li><a href="shop.html" class="footer__link">Phụ Kiện Trà</a></li>
+            </ul>
+          </nav>
+          <address>
+            <h3 class="footer__col-title">Liên Hệ</h3>
+            <ul class="footer__contact-items">
+              <li class="footer__contact-item">
+                <span class="footer__contact-icon">📍</span
+                ><span>243, Ấp Lộc Thuận, Xã An Ninh, Tỉnh Tây Ninh</span>
+              </li>
+              <li class="footer__contact-item">
+                <span class="footer__contact-icon">📞</span
+                ><a href="tel:+840916224350" style="color: inherit"
+                  >0916 224 350</a
+                >
+              </li>
+              <li class="footer__contact-item">
+                <span class="footer__contact-icon">✉️</span
+                ><a
+                  href="mailto:trasenhong9999@gmail.com"
+                  style="color: inherit"
+                  >trasenhong9999@gmail.com</a
+                >
+              </li>
+              <li class="footer__contact-item">
+                <span class="footer__contact-icon">🕐</span
+                ><span>T2–T7: 08:00 – 17:00</span>
+              </li>
+            </ul>
+          </address>
+        </div>
+        <div class="footer__bottom">
+          <p class="footer__copy">
+            © 2026 <a href="index.html">Trà Sen Hồng</a>. Khóa luận tốt nghiệp
+            DH22HM – phân tích thiết kế website cho doanh nghiệp Trà Sen Hồng.
+          </p>
+          <nav class="footer__legal" aria-label="Pháp lý">
+            <a href="#">Chính sách bảo mật</a>
+            <a href="#">Điều khoản sử dụng</a>
+            <a href="#">Chính sách vận chuyển</a>
+          </nav>
+        </div>
+      </div>
+    </footer>
 
-      const confirmUrl = `${ADMIN_SITE_URL}?page=orders&highlight=${orderId}`;
+    <script src="js/auth.js"></script>
+    <script src="js/main.js" defer></script>
+    <script src="js/navbar.js" defer></script>
+    <script>
+      // ─── GHN ADDRESS DROPDOWNS ───────────────────────────────────────────────────
+      (function () {
+        "use strict";
 
-      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-        order_code:      orderCode,
-        customer_name:   orderData.full_name,
-        customer_phone:  orderData.phone,
-        customer_email:  orderData.email || "Không có",
-        items_text:      itemsText,
-        subtotal:        fmt(subtotal),
-        shipping_fee:    shipping === 0 ? "Miễn phí" : fmt(shipping),
-        discount:        discountAmt > 0 ? fmt(discountAmt) : "0₫",
-        total:           fmt(total),
-        address:         [orderData.address, orderData.ward, orderData.district, orderData.province].filter(Boolean).join(", "),
-        payment:         paymentLabel,
-        note:            orderData.note || "Không có",
-        confirm_url:     confirmUrl,
-        created_at:      new Date().toLocaleString("vi-VN"),
-      });
+        const API_URL =
+          "https://trasenhong-backend-production.up.railway.app/api";
+        const GHN_URL =
+          "https://trasenhong-backend-production.up.railway.app/api/ghn"; // proxy qua backend
 
-      console.log("[email] ✅ Đã gửi thông báo admin");
-    } catch (err) {
-      console.warn("[email] ❌ Gửi email admin thất bại:", err);
-    }
-  }
+        const selProvince = document.getElementById("province");
+        const selDistrict = document.getElementById("district");
+        const selWard = document.getElementById("ward");
+        const inpProvinceId = document.getElementById("provinceId");
+        const inpDistrictId = document.getElementById("districtId");
+        const inpWardCode = document.getElementById("wardCode");
+        const feeNote = document.getElementById("shippingFeeNote");
+        const feeText = document.getElementById("shippingFeeText");
 
-  // ── ĐẶT HÀNG ──
-  $("submitOrder")?.addEventListener("click", async () => {
-    if (cart.length === 0) {
-      alert("Giỏ hàng của bạn đang trống. Vui lòng thêm sản phẩm trước khi đặt hàng.");
-      return;
-    }
+        // ── helpers ──
+        function setOptions(sel, items, valKey, labelKey, placeholder) {
+          sel.innerHTML = `<option value="">${placeholder}</option>`;
+          items.forEach((item) => {
+            const opt = document.createElement("option");
+            opt.value = item[valKey];
+            opt.textContent = item[labelKey];
+            opt.dataset.id = item[valKey];
+            sel.appendChild(opt);
+          });
+          sel.disabled = false;
+        }
 
-    let isValid = true;
-    Object.keys(validators).forEach((name) => {
-      const el = document.querySelector(`[name="${name}"]`);
-      if (!el) return;
-      const valid = validateField(name, el.value);
-      markField(name, valid);
-      if (!valid) isValid = false;
-    });
+        function resetSelect(sel, placeholder) {
+          sel.innerHTML = `<option value="">${placeholder}</option>`;
+          sel.disabled = true;
+        }
 
-    if (!isValid) {
-      document.querySelector(".co-field.error")?.scrollIntoView({ behavior: "smooth", block: "center" });
-      return;
-    }
+        function fmt(n) {
+          return Number(n).toLocaleString("vi-VN") + "₫";
+        }
 
-    const btn = $("submitOrder");
-    btn.disabled = true;
-    btn.textContent = "Đang xử lý…";
+        // ── 1. Load tỉnh thành ──
+        async function loadProvinces() {
+          try {
+            const res = await fetch(`${GHN_URL}/provinces`);
+            const data = await res.json();
+            if (!data.success) throw new Error();
+            setOptions(
+              selProvince,
+              data.data,
+              "ProvinceID",
+              "ProvinceName",
+              "— Chọn tỉnh —",
+            );
+          } catch {
+            selProvince.innerHTML =
+              '<option value="">— Lỗi tải tỉnh thành —</option>';
+          }
+        }
 
-    const orderPayload = collectFormData();
+        // ── 2. Khi chọn tỉnh → load huyện ──
+        selProvince.addEventListener("change", async () => {
+          const provinceId = selProvince.value;
+          inpProvinceId.value = provinceId;
+          inpDistrictId.value = "";
+          inpWardCode.value = "";
+          resetSelect(selDistrict, "— Đang tải… —");
+          resetSelect(selWard, "— Chọn quận trước —");
+          feeNote.style.display = "none";
 
-    try {
-      const res = await fetch(`${API_URL}/orders`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(orderPayload),
-      });
-      const data = await res.json();
-      if (!res.ok || !data.success) throw new Error(data.message || `HTTP ${res.status}`);
+          if (!provinceId) {
+            resetSelect(selDistrict, "— Chọn tỉnh trước —");
+            return;
+          }
 
-      const orderCode = data.order_code || data.order?.order_code || "TSH" + Date.now().toString().slice(-6);
-      const orderId   = data.order?.id || "";
+          try {
+            const res = await fetch(
+              `${GHN_URL}/districts?province_id=${provinceId}`,
+            );
+            const data = await res.json();
+            if (!data.success) throw new Error();
+            setOptions(
+              selDistrict,
+              data.data,
+              "DistrictID",
+              "DistrictName",
+              "— Chọn quận/huyện —",
+            );
+          } catch {
+            resetSelect(selDistrict, "— Lỗi tải quận/huyện —");
+          }
+        });
 
-      // Gửi email thông báo admin (từ browser — EmailJS hoạt động!)
-      sendAdminEmail(orderPayload, orderCode, orderId);
+        // ── 3. Khi chọn huyện → load xã ──
+        selDistrict.addEventListener("change", async () => {
+          const districtId = selDistrict.value;
+          inpDistrictId.value = districtId;
+          inpWardCode.value = "";
+          resetSelect(selWard, "— Đang tải… —");
+          feeNote.style.display = "none";
 
-      $("successOrderId").textContent = `Mã đơn hàng: #${orderCode}`;
-      $("coSuccessOverlay").hidden = false;
-      document.body.style.overflow = "hidden";
-      localStorage.removeItem("tsh_cart");
-      cart = [];
+          if (!districtId) {
+            resetSelect(selWard, "— Chọn quận trước —");
+            return;
+          }
 
-    } catch (err) {
-      console.error("[checkout] Đặt hàng thất bại:", err);
-      alert(`Đặt hàng thất bại: ${err.message}\nVui lòng thử lại hoặc liên hệ hỗ trợ.`);
-      btn.disabled = false;
-      btn.textContent = "Xác Nhận Đặt Hàng →";
-    }
-  });
+          try {
+            const res = await fetch(
+              `${GHN_URL}/wards?district_id=${districtId}`,
+            );
+            const data = await res.json();
+            if (!data.success) throw new Error();
+            setOptions(
+              selWard,
+              data.data,
+              "WardCode",
+              "WardName",
+              "— Chọn phường/xã —",
+            );
+          } catch {
+            resetSelect(selWard, "— Lỗi tải phường/xã —");
+          }
+        });
 
-  $("coSuccessOverlay")?.addEventListener("click", (e) => {
-    if (e.target === $("coSuccessOverlay")) $("coSuccessOverlay").hidden = false;
-  });
+        // ── 4. Khi chọn xã → tính phí ship GHN ──
+        selWard.addEventListener("change", async () => {
+          const wardCode = selWard.value;
+          const districtId = inpDistrictId.value;
+          inpWardCode.value = wardCode;
+          feeNote.style.display = "none";
 
-  document.addEventListener("change", (e) => {
-    if (e.target.name === "ward" || e.target.name === "wardCode") {
-      const districtId = document.querySelector("[name=districtId]")?.value;
-      const wardCode   = document.querySelector("[name=wardCode]")?.value;
-      if (districtId && wardCode) fetchGhnFee(districtId, wardCode);
-    }
-  });
+          if (!wardCode || !districtId) return;
 
-  loadCartProducts();
-})();
+          try {
+            const res = await fetch(
+              `${GHN_URL}/fee?to_district_id=${districtId}&to_ward_code=${wardCode}`,
+            );
+            const data = await res.json();
+            if (!data.success) return;
+
+            const fee = data.total;
+            feeText.textContent =
+              fee === 0
+                ? "Miễn phí vận chuyển!"
+                : `Phí vận chuyển ước tính: ${fmt(fee)}`;
+            feeNote.style.display = "block";
+
+            // Cập nhật summary nếu checkout.js đã render
+            const shippingEl = document.getElementById("summaryShipping");
+            if (shippingEl) {
+              shippingEl.textContent = fee === 0 ? "Miễn phí" : fmt(fee);
+              shippingEl.className = fee === 0 ? "co-free" : "";
+            }
+          } catch {
+            /* bỏ qua lỗi tính phí */
+          }
+        });
+
+        // ── Init ──
+        loadProvinces();
+      })();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script src="js/checkout.js"></script>
+  </body>
+</html>
