@@ -5,9 +5,12 @@
   const FREE_SHIP_MIN = 200000;
   const SHIP_FEE = 30000;
 
-  const EMAILJS_SERVICE_ID = "service_wg68jbu";
-  const EMAILJS_TEMPLATE_ID = "template_itum6cx";
-  const EMAILJS_PUBLIC_KEY = "BptJ9xxzyF5SdCKDw";
+  // ── EmailJS config ──
+  const EMAILJS_SERVICE_ID  = "service_wg68jbu";
+  const EMAILJS_TEMPLATE_ID = "cetu3vc";
+  const EMAILJS_PUBLIC_KEY  = "BptJ9xxzyF5SdCKDw";
+
+  const ADMIN_SITE_URL = "https://starlit-tartufo-1d180f.netlify.app/admin.html";
 
   let cart = JSON.parse(localStorage.getItem("tsh_cart") || "[]");
   let promoDiscount = 0;
@@ -19,22 +22,8 @@
   const $ = (id) => document.getElementById(id);
   const fmt = (n) => n.toLocaleString("vi-VN") + "₫";
 
-  const FALLBACK_EMOJIS = [
-    "🍵",
-    "🌿",
-    "🎁",
-    "🌸",
-    "🫖",
-    "🌺",
-    "🏆",
-    "🫙",
-    "🥢",
-    "💚",
-    "🧧",
-    "🍯",
-  ];
-  const getEmoji = (id) =>
-    FALLBACK_EMOJIS[(id - 1) % FALLBACK_EMOJIS.length] || "🍵";
+  const FALLBACK_EMOJIS = ["🍵","🌿","🎁","🌸","🫖","🌺","🏆","🫙","🥢","💚","🧧","🍯"];
+  const getEmoji = (id) => FALLBACK_EMOJIS[(id - 1) % FALLBACK_EMOJIS.length] || "🍵";
 
   function calcSubtotal() {
     return cart.reduce((s, i) => {
@@ -74,14 +63,13 @@
     }
 
     empty?.remove();
-    items.innerHTML = cart
-      .map((i) => {
-        const p = productsMap[i.id];
-        if (!p) return "";
-        const imgHtml = p.image
-          ? `<img src="${p.image}" alt="${p.name}" style="width:40px;height:40px;object-fit:cover;border-radius:8px">`
-          : `<div class="co-summary__item-emoji">${p.emoji}</div>`;
-        return `
+    items.innerHTML = cart.map((i) => {
+      const p = productsMap[i.id];
+      if (!p) return "";
+      const imgHtml = p.image
+        ? `<img src="${p.image}" alt="${p.name}" style="width:40px;height:40px;object-fit:cover;border-radius:8px">`
+        : `<div class="co-summary__item-emoji">${p.emoji}</div>`;
+      return `
         <div class="co-summary__item">
           ${imgHtml}
           <div class="co-summary__item-info">
@@ -90,20 +78,13 @@
           </div>
           <span class="co-summary__item-price">${fmt(p.price * i.qty)}</span>
         </div>`;
-      })
-      .join("");
+    }).join("");
 
     const subtotal = calcSubtotal();
-    const shipping =
-      subtotal >= FREE_SHIP_MIN
-        ? 0
-        : ghnShippingFee !== null
-          ? ghnShippingFee
-          : SHIP_FEE;
-    const discountAmt =
-      promoType === "percent"
-        ? Math.round((subtotal * promoDiscount) / 100)
-        : promoDiscount;
+    const shipping = subtotal >= FREE_SHIP_MIN ? 0 : ghnShippingFee !== null ? ghnShippingFee : SHIP_FEE;
+    const discountAmt = promoType === "percent"
+      ? Math.round((subtotal * promoDiscount) / 100)
+      : promoDiscount;
     const total = subtotal - discountAmt + shipping;
 
     if (subtotalEl) subtotalEl.textContent = fmt(subtotal);
@@ -113,9 +94,7 @@
     }
     if (discountEl) {
       discountEl.textContent = discountAmt > 0 ? `-${fmt(discountAmt)}` : "—";
-      discountEl
-        .closest?.(".co-summary__row")
-        ?.style.setProperty("display", discountAmt > 0 ? "" : "none");
+      discountEl.closest?.(".co-summary__row")?.style.setProperty("display", discountAmt > 0 ? "" : "none");
     }
     if (totalEl) totalEl.textContent = fmt(total);
   }
@@ -133,19 +112,10 @@
       const length = Math.max(Math.ceil(r * 1.6), 10);
       const width = Math.max(Math.ceil(r), 10);
       const height = Math.max(Math.ceil(r * 0.625), 5);
-      const convertWeight = Math.round(
-        ((length * width * height) / 5000) * 1000,
-      );
+      const convertWeight = Math.round(((length * width * height) / 5000) * 1000);
       const weight = Math.max(totalWeight, convertWeight);
 
-      const params = new URLSearchParams({
-        to_district_id: district_id,
-        to_ward_code: ward_code,
-        weight,
-        length,
-        width,
-        height,
-      });
+      const params = new URLSearchParams({ to_district_id: district_id, to_ward_code: ward_code, weight, length, width, height });
       const res = await fetch(`${API_URL}/ghn/fee?${params}`);
       const data = await res.json();
       if (data.success && data.total) {
@@ -159,9 +129,7 @@
 
   document.querySelectorAll(".co-pay-option").forEach((opt) => {
     opt.addEventListener("click", () => {
-      document
-        .querySelectorAll(".co-pay-option")
-        .forEach((o) => o.classList.remove("co-pay-option--active"));
+      document.querySelectorAll(".co-pay-option").forEach((o) => o.classList.remove("co-pay-option--active"));
       opt.classList.add("co-pay-option--active");
       opt.querySelector("input").checked = true;
     });
@@ -182,10 +150,7 @@
         promoDiscount = data.discount;
         promoCode = code;
         promoType = data.type || "percent";
-        const label =
-          promoType === "percent"
-            ? `Giảm ${promoDiscount}%`
-            : `Giảm ${fmt(promoDiscount)}`;
+        const label = promoType === "percent" ? `Giảm ${promoDiscount}%` : `Giảm ${fmt(promoDiscount)}`;
         promoMsg.textContent = `✅ Áp dụng thành công! ${label}`;
         promoMsg.className = "co-promo__msg success";
         renderSummary();
@@ -220,17 +185,14 @@
 
   const validators = {
     firstName: (v) => v.trim().length >= 1,
-    lastName: (v) => v.trim().length >= 1,
-    phone: (v) => /^[0-9\s+\-]{9,15}$/.test(v.trim()),
-    email: (v) => !v || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
-    address: (v) => v.trim().length >= 5,
-    province: (v) => v !== "",
+    lastName:  (v) => v.trim().length >= 1,
+    phone:     (v) => /^[0-9\s+\-]{9,15}$/.test(v.trim()),
+    email:     (v) => !v || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
+    address:   (v) => v.trim().length >= 5,
+    province:  (v) => v !== "",
   };
 
-  function validateField(name, value) {
-    return validators[name] ? validators[name](value) : true;
-  }
-
+  function validateField(name, value) { return validators[name] ? validators[name](value) : true; }
   function markField(name, valid) {
     const input = document.querySelector(`[name="${name}"]`);
     if (!input) return;
@@ -240,21 +202,15 @@
   Object.keys(validators).forEach((name) => {
     const el = document.querySelector(`[name="${name}"]`);
     if (!el) return;
-    el.addEventListener("blur", () =>
-      markField(name, validateField(name, el.value)),
-    );
+    el.addEventListener("blur", () => markField(name, validateField(name, el.value)));
     el.addEventListener("input", () => {
-      if (el.closest(".co-field")?.classList.contains("error")) {
-        markField(name, validateField(name, el.value));
-      }
+      if (el.closest(".co-field")?.classList.contains("error")) markField(name, validateField(name, el.value));
     });
   });
 
   function collectFormData() {
-    const g = (name) =>
-      document.querySelector(`[name="${name}"]`)?.value?.trim() || "";
-    const payment_method =
-      document.querySelector(".co-pay-option--active input")?.value || "cod";
+    const g = (name) => document.querySelector(`[name="${name}"]`)?.value?.trim() || "";
+    const payment_method = document.querySelector(".co-pay-option--active input")?.value || "cod";
     return {
       full_name: `${g("lastName")} ${g("firstName")}`,
       phone: g("phone"),
@@ -272,74 +228,61 @@
     };
   }
 
-  async function sendConfirmationEmail(orderData, responseData) {
-    if (!orderData.email) return;
+  // ── EMAIL CHO ADMIN (gọi từ frontend — EmailJS browser) ──
+  async function sendAdminEmail(orderData, orderCode, orderId) {
     try {
       emailjs.init(EMAILJS_PUBLIC_KEY);
 
-      const paymentLabel =
-        {
-          cod: "Thanh toán khi nhận hàng (COD)",
-          bank_transfer: "Chuyển khoản ngân hàng",
-          momo: "Ví MoMo",
-        }[orderData.payment_method] || orderData.payment_method;
+      const paymentLabel = {
+        cod: "Thanh toán khi nhận hàng (COD)",
+        bank_transfer: "Chuyển khoản ngân hàng",
+        momo: "Ví MoMo",
+      }[orderData.payment_method] || orderData.payment_method;
 
       const itemsText = cart
         .map((i) => {
           const p = productsMap[i.id];
-          return p ? `${p.name} x${i.qty} = ${fmt(p.price * i.qty)}` : "";
+          return p ? `${p.name} x${i.qty} – ${fmt(p.price * i.qty)}` : "";
         })
         .filter(Boolean)
         .join("\n");
 
       const subtotal = calcSubtotal();
-      const shipping =
-        ghnShippingFee !== null
-          ? ghnShippingFee
-          : subtotal >= FREE_SHIP_MIN
-            ? 0
-            : SHIP_FEE;
-      const discountAmt =
-        promoType === "percent"
-          ? Math.round((subtotal * promoDiscount) / 100)
-          : promoDiscount;
+      const shipping = subtotal >= FREE_SHIP_MIN ? 0 : ghnShippingFee !== null ? ghnShippingFee : SHIP_FEE;
+      const discountAmt = promoType === "percent"
+        ? Math.round((subtotal * promoDiscount) / 100)
+        : promoDiscount;
       const total = subtotal - discountAmt + shipping;
-      const ghnCode =
-        responseData?.ghn?.order_code ||
-        responseData?.order?.ghn_order_code ||
-        "";
+
+      const confirmUrl = `${ADMIN_SITE_URL}?page=orders&highlight=${orderId}`;
 
       await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-        to_email: orderData.email,
-        to_name: orderData.full_name,
-        order_code: responseData.order_code,
-        items: itemsText,
-        subtotal: fmt(subtotal),
-        shipping_fee: shipping === 0 ? "Miễn phí" : fmt(shipping),
-        discount: discountAmt > 0 ? `-${fmt(discountAmt)}` : "Không có",
-        total: fmt(total),
-        address: [
-          orderData.address,
-          orderData.ward,
-          orderData.district,
-          orderData.province,
-        ]
-          .filter(Boolean)
-          .join(", "),
-        payment_method: paymentLabel,
-        ghn_code: ghnCode || "Đang cập nhật",
-        note: orderData.note || "Không có",
+        order_code:      orderCode,
+        customer_name:   orderData.full_name,
+        customer_phone:  orderData.phone,
+        customer_email:  orderData.email || "Không có",
+        items_text:      itemsText,
+        subtotal:        fmt(subtotal),
+        shipping_fee:    shipping === 0 ? "Miễn phí" : fmt(shipping),
+        discount:        discountAmt > 0 ? fmt(discountAmt) : "0₫",
+        total:           fmt(total),
+        address:         [orderData.address, orderData.ward, orderData.district, orderData.province].filter(Boolean).join(", "),
+        payment:         paymentLabel,
+        note:            orderData.note || "Không có",
+        confirm_url:     confirmUrl,
+        created_at:      new Date().toLocaleString("vi-VN"),
       });
+
+      console.log("[email] ✅ Đã gửi thông báo admin");
     } catch (err) {
-      console.warn("[email] Gửi EmailJS thất bại:", err);
+      console.warn("[email] ❌ Gửi email admin thất bại:", err);
     }
   }
 
+  // ── ĐẶT HÀNG ──
   $("submitOrder")?.addEventListener("click", async () => {
     if (cart.length === 0) {
-      alert(
-        "Giỏ hàng của bạn đang trống. Vui lòng thêm sản phẩm trước khi đặt hàng.",
-      );
+      alert("Giỏ hàng của bạn đang trống. Vui lòng thêm sản phẩm trước khi đặt hàng.");
       return;
     }
 
@@ -353,9 +296,7 @@
     });
 
     if (!isValid) {
-      document
-        .querySelector(".co-field.error")
-        ?.scrollIntoView({ behavior: "smooth", block: "center" });
+      document.querySelector(".co-field.error")?.scrollIntoView({ behavior: "smooth", block: "center" });
       return;
     }
 
@@ -372,43 +313,36 @@
         body: JSON.stringify(orderPayload),
       });
       const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.message || `HTTP ${res.status}`);
 
-      if (!res.ok || !data.success)
-        throw new Error(data.message || `HTTP ${res.status}`);
+      const orderCode = data.order_code || data.order?.order_code || "TSH" + Date.now().toString().slice(-6);
+      const orderId   = data.order?.id || "";
 
-      const orderCode =
-        data.order_code ||
-        data.order?.order_code ||
-        "TSH" + Date.now().toString().slice(-6);
-
-      sendConfirmationEmail(orderPayload, data);
+      // Gửi email thông báo admin (từ browser — EmailJS hoạt động!)
+      sendAdminEmail(orderPayload, orderCode, orderId);
 
       $("successOrderId").textContent = `Mã đơn hàng: #${orderCode}`;
       $("coSuccessOverlay").hidden = false;
       document.body.style.overflow = "hidden";
       localStorage.removeItem("tsh_cart");
       cart = [];
+
     } catch (err) {
       console.error("[checkout] Đặt hàng thất bại:", err);
-      alert(
-        `Đặt hàng thất bại: ${err.message}\nVui lòng thử lại hoặc liên hệ hỗ trợ.`,
-      );
-      /* BUG FIX: bản gốc reset text thành "Đặt hàng" nhưng nút có text "Xác Nhận Đặt Hàng →" */
+      alert(`Đặt hàng thất bại: ${err.message}\nVui lòng thử lại hoặc liên hệ hỗ trợ.`);
       btn.disabled = false;
       btn.textContent = "Xác Nhận Đặt Hàng →";
     }
   });
 
   $("coSuccessOverlay")?.addEventListener("click", (e) => {
-    if (e.target === $("coSuccessOverlay")) {
-      $("coSuccessOverlay").hidden = false;
-    }
+    if (e.target === $("coSuccessOverlay")) $("coSuccessOverlay").hidden = false;
   });
 
   document.addEventListener("change", (e) => {
     if (e.target.name === "ward" || e.target.name === "wardCode") {
       const districtId = document.querySelector("[name=districtId]")?.value;
-      const wardCode = document.querySelector("[name=wardCode]")?.value;
+      const wardCode   = document.querySelector("[name=wardCode]")?.value;
       if (districtId && wardCode) fetchGhnFee(districtId, wardCode);
     }
   });
