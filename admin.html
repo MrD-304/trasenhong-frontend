@@ -615,6 +615,32 @@
     font-size: .9rem;
   }
 
+  /* GHN info box */
+  .ghn-info-box {
+    background: #e0f7fa;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+    border-left: 3px solid #00acc1;
+  }
+  .ghn-info-box__label {
+    font-size: .7rem;
+    color: #00695c;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+  .ghn-info-box__value {
+    font-weight: 700;
+    font-family: monospace;
+    font-size: .95rem;
+    color: #004d40;
+  }
+
   /* Animations */
   @keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
   @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
@@ -811,9 +837,9 @@
         <div style="overflow-x:auto">
           <table>
             <thead><tr>
-              <th>Mã đơn</th><th>Khách hàng</th><th>Tổng tiền</th><th>Thanh toán</th><th>Trạng thái</th><th>Ngày đặt</th><th>Thao tác</th>
+              <th>Mã đơn</th><th>Khách hàng</th><th>Tổng tiền</th><th>Thanh toán</th><th>Trạng thái</th><th>Mã GHN</th><th>Ngày đặt</th><th>Thao tác</th>
             </tr></thead>
-            <tbody id="orderTbody"><tr><td colspan="7" style="text-align:center;padding:32px;color:var(--muted)">Đang tải…</td></tr></tbody>
+            <tbody id="orderTbody"><tr><td colspan="8" style="text-align:center;padding:32px;color:var(--muted)">Đang tải…</td></tr></tbody>
           </table>
         </div>
         <div class="pagination" id="orderPagination"></div>
@@ -952,11 +978,10 @@
       <h3 id="orderModalTitle">Chi tiết đơn hàng</h3>
       <button class="modal__close" onclick="closeModal('orderModal')">✕</button>
     </div>
-    <div class="modal__body" id="orderModalBody">
-    </div>
+    <div class="modal__body" id="orderModalBody"></div>
     <div class="modal__foot">
       <button class="btn btn-secondary" onclick="closeModal('orderModal')">Đóng</button>
-      <div id="orderStatusActions"></div>
+      <div id="orderStatusActions" style="display:flex;gap:8px"></div>
     </div>
   </div>
 </div>
@@ -1010,7 +1035,7 @@
   </div>
 </div>
 
-<!-- ══ MODAL: CONFIRM DELETE ══ -->
+<!-- ══ MODAL: CONFIRM ══ -->
 <div class="modal-overlay" id="confirmModal">
   <div class="modal" style="max-width:380px">
     <div class="modal__head">
@@ -1032,7 +1057,6 @@
 // CONFIG & STATE
 // ══════════════════════════════════════════
 const API = 'https://trasenhong-backend-production.up.railway.app/api';
-// Test local: const API = 'http://localhost:3000/api';
 
 const state = {
   products: { page: 1, total: 0 },
@@ -1048,21 +1072,26 @@ function getToken() { return localStorage.getItem('tsh_token'); }
 function getUser()  { try { return JSON.parse(localStorage.getItem('tsh_user')); } catch { return null; } }
 
 (function authGuard() {
-  const user = getUser();
+  const user  = getUser();
   const token = getToken();
   if (!user || !token || user.role !== 'admin') {
     document.getElementById('authGate').style.display = 'flex';
     return;
   }
-  // Set user info in sidebar
   const n = user.full_name || user.email || 'Admin';
   document.getElementById('sidebarName').textContent = n;
   document.getElementById('sidebarAvatar').textContent = n.charAt(0).toUpperCase();
-  // Load initial data
   loadDashboard();
   loadCategories();
-  // Check pending orders for badge
   checkPendingOrders();
+
+  // Auto-highlight đơn nếu có ?page=orders&highlight=ID trên URL
+  const params = new URLSearchParams(location.search);
+  if (params.get('page') === 'orders') {
+    goPage('orders');
+    const highlightId = params.get('highlight');
+    if (highlightId) setTimeout(() => viewOrder(Number(highlightId)), 800);
+  }
 })();
 
 function logout() {
@@ -1078,7 +1107,7 @@ async function apiFetch(endpoint, options = {}) {
   const headers = { 'Content-Type': 'application/json', ...options.headers };
   const token = getToken();
   if (token) headers['Authorization'] = `Bearer ${token}`;
-  const res = await fetch(`${API}${endpoint}`, { ...options, headers });
+  const res  = await fetch(`${API}${endpoint}`, { ...options, headers });
   const data = await res.json();
   if (res.status === 401 || res.status === 403) {
     toast('Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.', 'error');
@@ -1093,10 +1122,10 @@ async function apiFetch(endpoint, options = {}) {
 // ══════════════════════════════════════════
 const pageTitles = {
   dashboard: 'Dashboard',
-  products: 'Quản Lý Sản Phẩm',
-  orders: 'Quản Lý Đơn Hàng',
-  users: 'Khách Hàng',
-  promo: 'Mã Giảm Giá',
+  products:  'Quản Lý Sản Phẩm',
+  orders:    'Quản Lý Đơn Hàng',
+  users:     'Khách Hàng',
+  promo:     'Mã Giảm Giá',
 };
 
 function goPage(name) {
@@ -1107,14 +1136,10 @@ function goPage(name) {
     if (b.getAttribute('onclick')?.includes(`'${name}'`)) b.classList.add('active');
   });
   document.getElementById('topbarTitle').textContent = pageTitles[name] || name;
-
-  // Load data on first visit
   if (name === 'products') loadProducts();
   if (name === 'orders')   loadOrders();
   if (name === 'users')    loadUsers();
   if (name === 'promo')    loadPromos();
-
-  // Close sidebar on mobile
   if (window.innerWidth < 900) document.getElementById('sidebar').classList.remove('open');
 }
 
@@ -1122,10 +1147,7 @@ function toggleSidebar() {
   document.getElementById('sidebar').classList.toggle('open');
 }
 
-// Show mobile hamburger on small screens
-if (window.innerWidth < 900) {
-  document.getElementById('menuToggle').style.display = 'flex';
-}
+if (window.innerWidth < 900) document.getElementById('menuToggle').style.display = 'flex';
 window.addEventListener('resize', () => {
   document.getElementById('menuToggle').style.display = window.innerWidth < 900 ? 'flex' : 'none';
 });
@@ -1146,13 +1168,11 @@ const statusLabel = {
   cancelled:  '✕ Đã huỷ',
 };
 const statusNext = {
-  pending:    'confirmed',
   confirmed:  'processing',
   processing: 'shipping',
   shipping:   'delivered',
 };
 const statusNextLabel = {
-  pending:    '✅ Xác nhận đơn',
   confirmed:  '⚙️ Bắt đầu xử lý',
   processing: '🚚 Bắt đầu giao',
   shipping:   '✓ Đã giao xong',
@@ -1165,19 +1185,22 @@ function debounce(fn, ms) {
 
 function toast(msg, type = 'success') {
   const wrap = document.getElementById('toastContainer');
-  const el = document.createElement('div');
+  const el   = document.createElement('div');
   el.className = `toast ${type}`;
   el.innerHTML = `<span>${type === 'success' ? '✅' : type === 'warning' ? '⚠️' : '❌'}</span> ${msg}`;
   wrap.appendChild(el);
-  setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translateY(10px)'; el.style.transition = '.3s'; setTimeout(() => el.remove(), 300); }, 3500);
+  setTimeout(() => {
+    el.style.opacity = '0'; el.style.transform = 'translateY(10px)'; el.style.transition = '.3s';
+    setTimeout(() => el.remove(), 300);
+  }, 3500);
 }
 
-function openModal(id) { document.getElementById(id).classList.add('show'); }
+function openModal(id)  { document.getElementById(id).classList.add('show'); }
 function closeModal(id) { document.getElementById(id).classList.remove('show'); }
 
 function confirm(title, msg, onOk) {
   document.getElementById('confirmTitle').textContent = title;
-  document.getElementById('confirmMsg').textContent = msg;
+  document.getElementById('confirmMsg').textContent   = msg;
   document.getElementById('confirmOkBtn').onclick = () => { closeModal('confirmModal'); onOk(); };
   openModal('confirmModal');
 }
@@ -1203,7 +1226,6 @@ function handleGlobalSearch(e) {
   if (e.key !== 'Enter') return;
   const q = e.target.value.trim();
   if (!q) return;
-  // Navigate to orders and search
   goPage('orders');
   document.getElementById('orderSearch').value = q;
   loadOrders();
@@ -1213,9 +1235,9 @@ function refreshPage() {
   const active = document.querySelector('.page.active')?.id?.replace('page-', '');
   if (active === 'dashboard') loadDashboard();
   else if (active === 'products') loadProducts();
-  else if (active === 'orders') loadOrders();
-  else if (active === 'users') loadUsers();
-  else if (active === 'promo') loadPromos();
+  else if (active === 'orders')   loadOrders();
+  else if (active === 'users')    loadUsers();
+  else if (active === 'promo')    loadPromos();
   toast('Đã làm mới dữ liệu');
 }
 
@@ -1255,14 +1277,12 @@ async function loadDashboard() {
       </div>
     `;
 
-    // Update pending badge
     if (d.pending_orders > 0) {
       const badge = document.getElementById('pendingBadge');
       badge.style.display = 'inline-block';
       badge.textContent = d.pending_orders;
     }
 
-    // Recent orders
     const ro = d.recent_orders || [];
     document.getElementById('dashRecentOrders').innerHTML = ro.length
       ? ro.map(o => `
@@ -1271,12 +1291,11 @@ async function loadDashboard() {
             <div class="dash-list-item__title">${o.order_code}</div>
             <div class="dash-list-item__sub">${o.full_name} • ${fmtDateShort(o.created_at)}</div>
           </div>
-          <div><span class="badge badge-${o.status}">${statusLabel[o.status]||o.status}</span></div>
+          <span class="badge badge-${o.status}">${statusLabel[o.status]||o.status}</span>
           <div style="font-weight:700;color:var(--primary);font-size:.85rem">${fmt(o.total)}</div>
         </div>`).join('')
       : '<div style="padding:24px;color:var(--muted);text-align:center">Chưa có đơn hàng</div>';
 
-    // Low stock
     const ls = d.low_stock_products || [];
     document.getElementById('dashLowStock').innerHTML = ls.length
       ? ls.map(p => `
@@ -1311,12 +1330,11 @@ async function loadCategories() {
   try {
     const data = await apiFetch('/products/categories');
     state.categories = data.categories || [];
-    const select1 = document.getElementById('productCatFilter');
-    const select2 = document.getElementById('pCategory');
+    const s1 = document.getElementById('productCatFilter');
+    const s2 = document.getElementById('pCategory');
     state.categories.forEach(c => {
-      const opt = `<option value="${c.slug}">${c.name}</option>`;
-      select1.innerHTML += opt;
-      select2.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+      s1.innerHTML += `<option value="${c.slug}">${c.name}</option>`;
+      s2.innerHTML += `<option value="${c.id}">${c.name}</option>`;
     });
   } catch {}
 }
@@ -1336,7 +1354,6 @@ async function loadProducts(page = state.products.page) {
     const data = await apiFetch(`/admin/products?${params}`);
     state.products.total = data.total || 0;
     document.getElementById('productCount').textContent = `${data.total || 0} sản phẩm`;
-
     const tbody = document.getElementById('productTbody');
     if (!data.rows?.length) {
       tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--muted)">Không có sản phẩm</td></tr>';
@@ -1374,14 +1391,11 @@ async function loadProducts(page = state.products.page) {
       }).join('');
     }
     renderPagination('productPagination', page, data.total, 15, 'loadProducts');
-  } catch (e) {
-    toast('Lỗi tải sản phẩm', 'error');
-  } finally {
-    setLoading('productLoading', false);
-  }
+  } catch { toast('Lỗi tải sản phẩm', 'error'); }
+  finally  { setLoading('productLoading', false); }
 }
 
-function openProductModal(product = null) {
+function openProductModal() {
   document.getElementById('editProductId').value = '';
   document.getElementById('productModalTitle').textContent = 'Thêm Sản Phẩm';
   document.getElementById('pStatusField').style.display = 'none';
@@ -1407,7 +1421,6 @@ async function editProduct(id) {
     document.getElementById('pImages').value = (p.images || []).join('\n');
     document.getElementById('pDesc').value = p.description || '';
     document.getElementById('pStatus').value = p.is_active ? '1' : '0';
-    // Set category
     const catOpts = document.getElementById('pCategory').options;
     for (let o of catOpts) { if (parseInt(o.value) === p.category_id) { o.selected = true; break; } }
     openModal('productModal');
@@ -1424,14 +1437,14 @@ async function saveProduct() {
 
   const body = {
     name, slug,
-    category_id: parseInt(cat),
+    category_id:    parseInt(cat),
     price,
     original_price: parseInt(document.getElementById('pOriginalPrice').value) || null,
-    stock: parseInt(document.getElementById('pStock').value) || 0,
-    weight: parseInt(document.getElementById('pWeight').value) || 300,
-    description: document.getElementById('pDesc').value.trim() || null,
-    images: document.getElementById('pImages').value.split('\n').map(s=>s.trim()).filter(Boolean),
-    tags: document.getElementById('pTags').value.split(',').map(s=>s.trim()).filter(Boolean),
+    stock:          parseInt(document.getElementById('pStock').value) || 0,
+    weight:         parseInt(document.getElementById('pWeight').value) || 300,
+    description:    document.getElementById('pDesc').value.trim() || null,
+    images:         document.getElementById('pImages').value.split('\n').map(s=>s.trim()).filter(Boolean),
+    tags:           document.getElementById('pTags').value.split(',').map(s=>s.trim()).filter(Boolean),
   };
   if (id) body.is_active = parseInt(document.getElementById('pStatus').value);
 
@@ -1446,11 +1459,11 @@ async function saveProduct() {
     closeModal('productModal');
     loadProducts();
   } catch { toast('Lỗi kết nối', 'error'); }
-  finally { btn.disabled = false; btn.textContent = '💾 Lưu Sản Phẩm'; }
+  finally  { btn.disabled = false; btn.textContent = '💾 Lưu Sản Phẩm'; }
 }
 
 async function deleteProduct(id, name) {
-  confirm('Ẩn sản phẩm', `Bạn có chắc muốn ẩn sản phẩm "${name}"? Sản phẩm sẽ không hiển thị trên cửa hàng.`, async () => {
+  confirm('Ẩn sản phẩm', `Bạn có chắc muốn ẩn sản phẩm "${name}"?`, async () => {
     try {
       const data = await apiFetch(`/products/${id}`, { method: 'DELETE' });
       if (data.success) { toast('Đã ẩn sản phẩm'); loadProducts(); }
@@ -1459,11 +1472,10 @@ async function deleteProduct(id, name) {
   });
 }
 
-// Auto-generate slug from name
 document.getElementById('pName').addEventListener('input', function() {
   if (document.getElementById('editProductId').value) return;
   const slug = this.value.toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
     .replace(/đ/g,'d').replace(/[^a-z0-9\s-]/g,'')
     .trim().replace(/\s+/g,'-');
   document.getElementById('pSlug').value = slug;
@@ -1486,10 +1498,10 @@ async function loadOrders(page = state.orders.page) {
     document.getElementById('orderCount').textContent = `${data.total || 0} đơn hàng`;
     const tbody = document.getElementById('orderTbody');
     if (!data.rows?.length) {
-      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--muted)">Không có đơn hàng</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:32px;color:var(--muted)">Không có đơn hàng</td></tr>';
     } else {
       tbody.innerHTML = data.rows.map(o => `
-        <tr>
+        <tr id="order-row-${o.id}">
           <td><strong style="color:var(--primary);font-family:monospace">${o.order_code}</strong></td>
           <td>
             <div style="font-weight:600">${o.full_name}</div>
@@ -1498,18 +1510,45 @@ async function loadOrders(page = state.orders.page) {
           <td style="font-weight:700">${fmt(o.total)}</td>
           <td><span class="badge ${o.payment_status==='paid'?'badge-active':'badge-pending'}">${o.payment_method?.toUpperCase()||'COD'}</span></td>
           <td><span class="badge badge-${o.status}">${statusLabel[o.status]||o.status}</span></td>
+          <td style="font-family:monospace;font-size:.8rem;color:#00695c">
+            ${o.ghn_order_code ? `🚚 ${o.ghn_order_code}` : '<span style="color:var(--muted)">–</span>'}
+          </td>
           <td style="font-size:.8rem;color:var(--muted)">${fmtDateShort(o.created_at)}</td>
           <td>
             <div class="tbl-actions">
               <button class="btn btn-secondary btn-sm" onclick="viewOrder(${o.id})">👁️ Xem</button>
-              ${statusNext[o.status] ? `<button class="btn btn-primary btn-sm" onclick="quickUpdateOrder(${o.id},'${statusNext[o.status]}','${o.order_code}')">${statusNextLabel[o.status]}</button>` : ''}
+              ${o.status === 'pending'
+                ? `<button class="btn btn-primary btn-sm" id="confirm-btn-${o.id}" onclick="confirmOrderGHN(${o.id}, '${o.order_code}')">✅ Xác nhận</button>`
+                : statusNext[o.status]
+                  ? `<button class="btn btn-primary btn-sm" onclick="quickUpdateOrder(${o.id},'${statusNext[o.status]}','${o.order_code}')">${statusNextLabel[o.status]}</button>`
+                  : ''
+              }
             </div>
           </td>
         </tr>`).join('');
     }
     renderPagination('orderPagination', page, data.total, 15, 'loadOrders');
   } catch { toast('Lỗi tải đơn hàng', 'error'); }
-  finally { setLoading('orderLoading', false); }
+  finally  { setLoading('orderLoading', false); }
+}
+
+// ── Xác nhận đơn → tạo vận đơn GHN thật ──
+async function confirmOrderGHN(id, code) {
+  const btn = document.getElementById(`confirm-btn-${id}`);
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Đang tạo…'; }
+  try {
+    const data = await apiFetch(`/admin/orders/${id}/confirm`, { method: 'PUT' });
+    if (data.success) {
+      toast(`✅ Xác nhận thành công! Mã GHN: ${data.ghn_order_code}`);
+      loadOrders();
+    } else {
+      toast(data.message || 'Lỗi tạo vận đơn GHN', 'error');
+      if (btn) { btn.disabled = false; btn.textContent = '✅ Xác nhận'; }
+    }
+  } catch {
+    toast('Lỗi kết nối', 'error');
+    if (btn) { btn.disabled = false; btn.textContent = '✅ Xác nhận'; }
+  }
 }
 
 async function viewOrder(id) {
@@ -1531,6 +1570,7 @@ async function viewOrder(id) {
           <p style="font-size:.85rem;color:var(--muted)">${[o.ward,o.district,o.province].filter(Boolean).join(', ')}</p>
         </div>
       </div>
+
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px">
         <div style="background:var(--bg);border-radius:8px;padding:10px;text-align:center">
           <div style="font-size:.7rem;color:var(--muted);font-weight:700;text-transform:uppercase">Trạng thái</div>
@@ -1545,9 +1585,24 @@ async function viewOrder(id) {
           <div style="font-size:.8rem;margin-top:4px">${fmtDate(o.created_at)}</div>
         </div>
       </div>
+
+      ${o.ghn_order_code ? `
+      <div class="ghn-info-box">
+        <span style="font-size:1.4rem">🚚</span>
+        <div>
+          <div class="ghn-info-box__label">Mã vận đơn GHN</div>
+          <div class="ghn-info-box__value">${o.ghn_order_code}</div>
+        </div>
+        ${o.ghn_expected_delivery ? `
+        <div>
+          <div class="ghn-info-box__label">Dự kiến giao</div>
+          <div style="font-size:.85rem;font-weight:600;color:#004d40">${fmtDate(o.ghn_expected_delivery)}</div>
+        </div>` : ''}
+      </div>` : ''}
+
       ${(o.items||[]).length ? `
       <p style="font-size:.75rem;color:var(--muted);font-weight:700;text-transform:uppercase;margin-bottom:8px">Sản phẩm</p>
-      <table style="width:100%;font-size:.85rem">
+      <table style="width:100%;font-size:.85rem;margin-bottom:12px">
         <thead><tr>
           <th style="padding:6px;text-align:left;border-bottom:1px solid var(--border);font-size:.72rem;color:var(--muted)">Sản phẩm</th>
           <th style="padding:6px;text-align:center;border-bottom:1px solid var(--border);font-size:.72rem;color:var(--muted)">SL</th>
@@ -1560,29 +1615,57 @@ async function viewOrder(id) {
             <td style="padding:7px 6px;text-align:right;font-weight:600">${fmt(i.subtotal)}</td>
           </tr>`).join('')}</tbody>
       </table>` : ''}
-      <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
+
+      <div style="padding-top:12px;border-top:1px solid var(--border)">
         <div style="display:flex;justify-content:space-between;font-size:.85rem;margin-bottom:4px"><span style="color:var(--muted)">Tạm tính</span><span>${fmt(o.subtotal)}</span></div>
-        <div style="display:flex;justify-content:space-between;font-size:.85rem;margin-bottom:4px"><span style="color:var(--muted)">Phí ship</span><span>${fmt(o.shipping_fee)}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:.85rem;margin-bottom:4px"><span style="color:var(--muted)">Phí ship</span><span>${o.shipping_fee === 0 ? 'Miễn phí' : fmt(o.shipping_fee)}</span></div>
         ${o.discount ? `<div style="display:flex;justify-content:space-between;font-size:.85rem;margin-bottom:4px"><span style="color:var(--muted)">Giảm giá</span><span style="color:var(--danger)">–${fmt(o.discount)}</span></div>` : ''}
         <div style="display:flex;justify-content:space-between;font-weight:700;font-size:1rem;margin-top:6px"><span>Tổng cộng</span><span style="color:var(--primary)">${fmt(o.total)}</span></div>
       </div>
       ${o.note ? `<div style="margin-top:10px;background:#fffde7;border-radius:8px;padding:10px;font-size:.85rem"><strong>Ghi chú:</strong> ${o.note}</div>` : ''}
     `;
+
     // Action buttons
     const actions = document.getElementById('orderStatusActions');
     actions.innerHTML = '';
+
+    // Nút xác nhận đơn → tạo GHN (chỉ khi pending)
+    if (o.status === 'pending') {
+      const btnConfirm = document.createElement('button');
+      btnConfirm.className = 'btn btn-primary';
+      btnConfirm.textContent = '✅ Xác nhận & Tạo vận đơn GHN';
+      btnConfirm.onclick = async () => {
+        btnConfirm.disabled = true;
+        btnConfirm.textContent = '⏳ Đang tạo vận đơn…';
+        const res = await apiFetch(`/admin/orders/${o.id}/confirm`, { method: 'PUT' });
+        if (res.success) {
+          toast(`✅ Xác nhận thành công! Mã GHN: ${res.ghn_order_code}`);
+          closeModal('orderModal');
+          loadOrders();
+        } else {
+          toast(res.message || 'Lỗi tạo vận đơn GHN', 'error');
+          btnConfirm.disabled = false;
+          btnConfirm.textContent = '✅ Xác nhận & Tạo vận đơn GHN';
+        }
+      };
+      actions.appendChild(btnConfirm);
+    }
+
+    // Nút chuyển trạng thái tiếp theo (confirmed/processing/shipping)
     if (statusNext[o.status]) {
-      const btn = document.createElement('button');
-      btn.className = 'btn btn-primary';
-      btn.textContent = statusNextLabel[o.status];
-      btn.onclick = async () => {
+      const btnNext = document.createElement('button');
+      btnNext.className = 'btn btn-primary';
+      btnNext.textContent = statusNextLabel[o.status];
+      btnNext.onclick = async () => {
         await updateOrderStatus(o.id, statusNext[o.status]);
         closeModal('orderModal');
         loadOrders();
       };
-      actions.appendChild(btn);
+      actions.appendChild(btnNext);
     }
-    if (o.status !== 'cancelled' && o.status !== 'delivered') {
+
+    // Nút huỷ đơn
+    if (!['cancelled','delivered'].includes(o.status)) {
       const btnCancel = document.createElement('button');
       btnCancel.className = 'btn btn-danger';
       btnCancel.textContent = '✕ Huỷ đơn';
@@ -1595,6 +1678,7 @@ async function viewOrder(id) {
       };
       actions.appendChild(btnCancel);
     }
+
     openModal('orderModal');
   } catch { toast('Không tải được đơn hàng', 'error'); }
 }
@@ -1602,7 +1686,7 @@ async function viewOrder(id) {
 async function updateOrderStatus(id, status) {
   try {
     const data = await apiFetch(`/admin/orders/${id}/status`, { method: 'PUT', body: JSON.stringify({ status }) });
-    if (data.success) { toast(`Cập nhật trạng thái thành công`); return true; }
+    if (data.success) { toast('Cập nhật trạng thái thành công'); return true; }
     else { toast(data.message || 'Lỗi', 'error'); return false; }
   } catch { toast('Lỗi kết nối', 'error'); return false; }
 }
@@ -1618,7 +1702,7 @@ async function quickUpdateOrder(id, status, code) {
 async function loadUsers(page = state.users.page) {
   state.users.page = page;
   setLoading('userLoading', true);
-  const role = document.getElementById('userRoleFilter').value;
+  const role   = document.getElementById('userRoleFilter').value;
   const params = new URLSearchParams({ page, limit: 20 });
   if (role) params.set('role', role);
   try {
@@ -1647,14 +1731,16 @@ async function loadUsers(page = state.users.page) {
           <td><span class="badge ${u.is_active ? 'badge-active' : 'badge-inactive'}">${u.is_active ? '✓ Hoạt động' : '✕ Đã khoá'}</span></td>
           <td style="font-size:.8rem;color:var(--muted)">${fmtDateShort(u.created_at)}</td>
           <td>
-            ${u.role !== 'admin' ? `<button class="btn ${u.is_active ? 'btn-danger' : 'btn-primary'} btn-sm" onclick="toggleUser(${u.id},'${(u.full_name||u.email).replace(/'/g,"\\'")}',${u.is_active})">${u.is_active ? '🔒 Khoá' : '🔓 Mở'}</button>` : '<span style="color:var(--muted);font-size:.8rem">–</span>'}
+            ${u.role !== 'admin'
+              ? `<button class="btn ${u.is_active ? 'btn-danger' : 'btn-primary'} btn-sm" onclick="toggleUser(${u.id},'${(u.full_name||u.email).replace(/'/g,"\\'")}',${u.is_active})">${u.is_active ? '🔒 Khoá' : '🔓 Mở'}</button>`
+              : '<span style="color:var(--muted);font-size:.8rem">–</span>'}
           </td>
         </tr>`;
       }).join('');
     }
     renderPagination('userPagination', page, data.total, 20, 'loadUsers');
   } catch { toast('Lỗi tải người dùng', 'error'); }
-  finally { setLoading('userLoading', false); }
+  finally  { setLoading('userLoading', false); }
 }
 
 async function toggleUser(id, name, isActive) {
@@ -1684,7 +1770,7 @@ async function loadPromos() {
     }
     tbody.innerHTML = data.promo_codes.map(p => `
       <tr>
-        <td><strong style="font-family:monospace;letter-spacing:.05em;color:var(--dark)">${p.code}</strong></td>
+        <td><strong style="font-family:monospace;letter-spacing:.05em">${p.code}</strong></td>
         <td>${p.discount_type === 'percent' ? 'Phần trăm' : 'Cố định'}</td>
         <td style="font-weight:700;color:var(--primary)">${p.discount_type === 'percent' ? p.discount_value + '%' : fmt(p.discount_value)}</td>
         <td>${fmt(p.min_order)}</td>
@@ -1714,10 +1800,10 @@ async function savePromo() {
   if (!code || !value) { toast('Vui lòng điền mã code và giá trị giảm', 'warning'); return; }
   const body = {
     code,
-    discount_type: type,
+    discount_type:  type,
     discount_value: value,
-    min_order: parseInt(document.getElementById('promoMin').value) || 0,
-    max_uses: parseInt(document.getElementById('promoMaxUses').value) || null,
+    min_order:  parseInt(document.getElementById('promoMin').value) || 0,
+    max_uses:   parseInt(document.getElementById('promoMaxUses').value) || null,
     expires_at: document.getElementById('promoExpires').value || null,
   };
   try {
