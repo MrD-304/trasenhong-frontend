@@ -7,10 +7,13 @@
 
   // ── EmailJS config ──
   const EMAILJS_SERVICE_ID  = "service_wg68jbu";
-  const EMAILJS_TEMPLATE_ID = "cetu3vc";
+  const EMAILJS_TEMPLATE_ID = "template_amdl8zr";
   const EMAILJS_PUBLIC_KEY  = "BptJ9xxzyF5SdCKDw";
 
   const ADMIN_SITE_URL = "https://starlit-tartufo-1d180f.netlify.app/admin.html";
+
+  // ── Init EmailJS một lần khi page load ──
+  emailjs.init(EMAILJS_PUBLIC_KEY);
 
   let cart = JSON.parse(localStorage.getItem("tsh_cart") || "[]");
   let promoDiscount = 0;
@@ -231,8 +234,6 @@
   // ── EMAIL CHO ADMIN (gọi từ frontend — EmailJS browser) ──
   async function sendAdminEmail(orderData, orderCode, orderId) {
     try {
-      emailjs.init(EMAILJS_PUBLIC_KEY);
-
       const paymentLabel = {
         cod: "Thanh toán khi nhận hàng (COD)",
         bank_transfer: "Chuyển khoản ngân hàng",
@@ -318,7 +319,7 @@
       const orderCode = data.order_code || data.order?.order_code || "TSH" + Date.now().toString().slice(-6);
       const orderId   = data.order?.id || "";
 
-      // Gửi email thông báo admin (từ browser — EmailJS hoạt động!)
+      // Gửi email thông báo admin (không await — không block UI)
       sendAdminEmail(orderPayload, orderCode, orderId);
 
       $("successOrderId").textContent = `Mã đơn hàng: #${orderCode}`;
