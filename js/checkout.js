@@ -12,7 +12,7 @@
 
   const ADMIN_SITE_URL = "https://starlit-tartufo-1d180f.netlify.app/admin.html";
 
-  // ── Init EmailJS một lần khi page load ──
+  // ── Init EmailJS một lần khi load ──
   emailjs.init(EMAILJS_PUBLIC_KEY);
 
   let cart = JSON.parse(localStorage.getItem("tsh_cart") || "[]");
@@ -231,7 +231,7 @@
     };
   }
 
-  // ── EMAIL CHO ADMIN (gọi từ frontend — EmailJS browser) ──
+  // ── EMAIL CHO ADMIN ──
   async function sendAdminEmail(orderData, orderCode, orderId) {
     try {
       const paymentLabel = {
@@ -307,10 +307,15 @@
 
     const orderPayload = collectFormData();
 
+    // ── Gắn token nếu đang đăng nhập để backend tự gán user_id ──
+    const token = localStorage.getItem("tsh_token");
+    const headers = { "Content-Type": "application/json" };
+    if (token) headers["Authorization"] = `Bearer ${token}`;
+
     try {
       const res = await fetch(`${API_URL}/orders`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify(orderPayload),
       });
       const data = await res.json();
