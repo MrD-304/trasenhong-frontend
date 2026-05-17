@@ -28,13 +28,7 @@
   }
   body { font-family: 'Be Vietnam Pro', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-  /* ── NAVBAR ── */
-  .navbar {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    background: rgba(255,255,255,.96); backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-    height: 68px; display: flex; align-items: center; padding: 0 24px;
-  }
+  .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(255,255,255,.96); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); height: 68px; display: flex; align-items: center; padding: 0 24px; }
   .navbar__inner { max-width: 1200px; margin: 0 auto; width: 100%; display: flex; align-items: center; justify-content: space-between; }
   .navbar__logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
   .navbar__logo img { width: 36px; height: 36px; object-fit: contain; }
@@ -44,10 +38,8 @@
   .navbar__links a { text-decoration: none; color: var(--muted); font-size: .88rem; font-weight: 500; transition: color var(--transition); }
   .navbar__links a:hover, .navbar__links a.active { color: var(--primary); }
 
-  /* ── PAGE LAYOUT ── */
   .page-wrap { max-width: 1060px; margin: 0 auto; padding: 96px 24px 60px; display: grid; grid-template-columns: 260px 1fr; gap: 28px; align-items: start; }
 
-  /* ── SIDEBAR ── */
   .profile-sidebar { position: sticky; top: 88px; display: flex; flex-direction: column; gap: 12px; }
   .avatar-card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); padding: 28px 20px; text-align: center; }
   .avatar-ring { width: 84px; height: 84px; border-radius: 50%; background: linear-gradient(135deg, #a8d87a, var(--primary)); display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; font-size: 2.2rem; color: #fff; font-weight: 800; font-family: 'Playfair Display', serif; box-shadow: 0 4px 18px rgba(106,184,42,.35); position: relative; }
@@ -64,7 +56,6 @@
   .btn-logout-side { display: flex; align-items: center; gap: 10px; padding: 12px 18px; background: #fff5f5; border: 1.5px solid #ffd0d0; border-radius: var(--radius-sm); color: var(--danger); font-size: .85rem; font-weight: 600; cursor: pointer; width: 100%; transition: all var(--transition); font-family: 'Be Vietnam Pro', sans-serif; }
   .btn-logout-side:hover { background: var(--danger); color: #fff; border-color: var(--danger); }
 
-  /* ── MAIN CONTENT ── */
   .profile-main { display: flex; flex-direction: column; gap: 20px; }
   .card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
   .card__head { display: flex; align-items: center; justify-content: space-between; padding: 18px 24px 14px; border-bottom: 1px solid var(--border); }
@@ -75,42 +66,43 @@
   .card__body { padding: 22px 24px; }
   .card__foot { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; border-top: 1px solid var(--border); background: #fafcf8; flex-wrap: wrap; gap: 10px; }
 
-  /* ── FORM ── */
   .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   .form-full  { grid-column: 1 / -1; }
   .field { display: flex; flex-direction: column; gap: 6px; }
   .field label { font-size: .77rem; font-weight: 700; color: var(--text); text-transform: uppercase; letter-spacing: .04em; }
   .field label .required { color: var(--danger); margin-left: 2px; }
   .field input, .field select, .field textarea { width: 100%; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-family: 'Be Vietnam Pro', sans-serif; font-size: .88rem; color: var(--text); background: var(--white); outline: none; transition: border-color var(--transition), box-shadow var(--transition); }
-  .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(106,184,42,.12); }
+  .field input:focus, .field select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(106,184,42,.12); }
   .field input:read-only { background: #f9fcf7; color: var(--muted); cursor: not-allowed; }
+  .field select:disabled { background: #f9fcf7; color: var(--muted); cursor: not-allowed; }
   .field .hint { font-size: .73rem; color: var(--muted); }
+
+  /* Loading select */
+  .select-loading { position: relative; }
+  .select-loading::after { content: '⏳'; position: absolute; right: 32px; top: 50%; transform: translateY(-50%); font-size: .8rem; pointer-events: none; }
+
   .input-wrap { position: relative; }
   .input-wrap input { padding-right: 42px; }
-  .btn-eye { position: absolute; right: 11px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 1rem; color: var(--muted); padding: 4px; transition: color var(--transition); }
+  .btn-eye { position: absolute; right: 11px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 1rem; color: var(--muted); padding: 4px; }
   .btn-eye:hover { color: var(--primary); }
 
-  /* ── BUTTONS ── */
-  .btn-save { display: inline-flex; align-items: center; gap: 7px; padding: 10px 24px; background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm); font-family: 'Be Vietnam Pro', sans-serif; font-size: .88rem; font-weight: 700; cursor: pointer; transition: background var(--transition), transform var(--transition), box-shadow var(--transition); }
+  .btn-save { display: inline-flex; align-items: center; gap: 7px; padding: 10px 24px; background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm); font-family: 'Be Vietnam Pro', sans-serif; font-size: .88rem; font-weight: 700; cursor: pointer; transition: all var(--transition); }
   .btn-save:hover:not(:disabled) { background: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 5px 18px rgba(106,184,42,.3); }
   .btn-save:disabled { opacity: .6; cursor: not-allowed; }
   .btn-save .spinner { width: 15px; height: 15px; border: 2px solid rgba(255,255,255,.4); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; display: none; }
   .btn-save.loading .lbl { display: none; }
   .btn-save.loading .spinner { display: block; }
 
-  /* ── ALERTS ── */
   .inline-alert { display: none; align-items: center; gap: 8px; padding: 10px 14px; border-radius: var(--radius-sm); font-size: .83rem; font-weight: 500; margin-bottom: 16px; }
   .inline-alert.show { display: flex; }
   .inline-alert.success { background: #e8f5e9; color: var(--success); border: 1px solid #a5d6a7; }
   .inline-alert.error   { background: #ffebee; color: var(--danger);  border: 1px solid #ef9a9a; }
 
-  /* ── PASSWORD STRENGTH ── */
   .pw-strength { margin-top: 5px; }
   .pw-strength-bar  { height: 3px; border-radius: 3px; background: var(--border); overflow: hidden; margin-bottom: 3px; }
   .pw-strength-fill { height: 100%; border-radius: 3px; width: 0%; transition: width .3s, background .3s; }
   .pw-strength-lbl  { font-size: .72rem; }
 
-  /* ── BADGES ── */
   .badge { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 20px; font-size: .7rem; font-weight: 700; }
   .badge-pending    { background: #fff8e1; color: #e65100; }
   .badge-confirmed  { background: #e3f2fd; color: #1565c0; }
@@ -119,7 +111,6 @@
   .badge-delivered  { background: #e8f5e9; color: var(--success); }
   .badge-cancelled  { background: #ffebee; color: var(--danger); }
 
-  /* ── ORDERS ── */
   .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 6px; }
   .stat-mini { background: var(--primary-light); border-radius: var(--radius-sm); padding: 14px; text-align: center; }
   .stat-mini__val { font-size: 1.5rem; font-weight: 800; color: var(--dark); }
@@ -138,7 +129,6 @@
 
   .empty-state { text-align: center; padding: 40px 20px; color: var(--muted); }
   .empty-state .icon { font-size: 3rem; margin-bottom: 10px; }
-  .empty-state p { font-size: .88rem; line-height: 1.6; }
 
   /* ── TRACKING MODAL ── */
   .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.55); backdrop-filter: blur(4px); z-index: 600; display: none; align-items: center; justify-content: center; padding: 20px; }
@@ -148,22 +138,18 @@
   .trk-modal__code { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: #fff; font-weight: 600; }
   .trk-modal__code span { display: block; font-family: 'Be Vietnam Pro', sans-serif; font-size: .68rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.6); margin-bottom: 2px; }
   .trk-modal__status { padding: 5px 14px; border-radius: 50px; background: rgba(255,255,255,.2); color: #fff; font-weight: 700; font-size: .8rem; border: 1px solid rgba(255,255,255,.3); }
-  .trk-modal__close { width: 30px; height: 30px; border-radius: 50%; border: none; background: rgba(255,255,255,.15); color: #fff; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; transition: background var(--transition); flex-shrink: 0; }
+  .trk-modal__close { width: 30px; height: 30px; border-radius: 50%; border: none; background: rgba(255,255,255,.15); color: #fff; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .trk-modal__close:hover { background: rgba(255,255,255,.3); }
   .trk-modal__body { padding: 22px 24px; }
-
-  /* GHN box */
   .trk-ghn-box { display: none; background: #e8f5e9; border-radius: 10px; padding: 12px 16px; margin-bottom: 18px; border-left: 3px solid #2e7d32; gap: 12px; align-items: center; flex-wrap: wrap; }
   .trk-ghn-box.show { display: flex; }
   .trk-ghn-label { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #1b5e20; margin-bottom: 2px; }
   .trk-ghn-value { font-family: monospace; font-weight: 700; font-size: .92rem; color: #1b5e20; }
-
-  /* Timeline */
   .trk-timeline-title { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: 14px; }
-  .trk-step { display: flex; gap: 14px; position: relative; padding-bottom: 20px; }
+  .trk-step { display: flex; gap: 14px; padding-bottom: 20px; }
   .trk-step:last-child { padding-bottom: 0; }
   .trk-step__line { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
-  .trk-step__dot { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .95rem; flex-shrink: 0; transition: all .3s; }
+  .trk-step__dot { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .95rem; }
   .trk-step__dot.done    { background: var(--primary); color: #fff; box-shadow: 0 0 0 4px var(--primary-light); }
   .trk-step__dot.current { background: #f9a825; color: #fff; box-shadow: 0 0 0 4px #fff8e1; animation: pulse 1.5s ease-in-out infinite; }
   .trk-step__dot.pending { background: #f0f4f0; color: #aaa; }
@@ -175,8 +161,6 @@
   .trk-step__name { font-weight: 700; font-size: .88rem; color: var(--text); margin-bottom: 1px; }
   .trk-step__name.pending { color: var(--muted); font-weight: 500; }
   .trk-step__desc { font-size: .77rem; color: var(--muted); }
-
-  /* GHN logs */
   .trk-logs-title { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin: 18px 0 10px; display: flex; align-items: center; gap: 8px; }
   .trk-polling-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--success); animation: blink 1.5s ease-in-out infinite; }
   @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:.2; } }
@@ -184,40 +168,31 @@
   .trk-log:last-child { border-bottom: none; }
   .trk-log__time { color: var(--muted); font-size: .76rem; white-space: nowrap; min-width: 110px; }
   .trk-log__status { font-weight: 600; color: var(--text); }
-
-  /* Loading spinner */
   .trk-spinner-wrap { text-align: center; padding: 40px 20px; }
   .trk-spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 12px; }
-
-  /* Cancelled */
   .trk-cancelled { background: #ffebee; border-radius: 10px; padding: 12px 16px; margin-bottom: 16px; border-left: 3px solid var(--danger); color: #c0392b; font-weight: 600; font-size: .85rem; }
 
-  /* ── TOAST ── */
   #toastWrap { position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; }
   .toast { display: flex; align-items: center; gap: 9px; padding: 11px 16px; background: var(--white); border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,.13); font-size: .85rem; font-weight: 500; min-width: 220px; border-left: 4px solid var(--primary); animation: slideUp .3s ease both; }
   .toast.error   { border-left-color: var(--danger); }
   .toast.warning { border-left-color: #f9a825; }
 
-  /* ── AUTH GATE ── */
   #authGate { position: fixed; inset: 0; background: rgba(26,46,26,.97); z-index: 9999; display: none; align-items: center; justify-content: center; flex-direction: column; gap: 16px; text-align: center; padding: 24px; }
   #authGate h2 { font-family: 'Playfair Display', serif; color: #fff; font-size: 1.8rem; }
   #authGate p  { color: rgba(255,255,255,.6); }
   .btn-gate { padding: 12px 32px; background: var(--primary); color: #fff; border-radius: 10px; font-weight: 700; text-decoration: none; font-family: 'Be Vietnam Pro', sans-serif; }
 
-  /* ── ANIMATIONS ── */
   @keyframes spin    { to { transform: rotate(360deg); } }
   @keyframes slideUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
   @keyframes fadeIn  { from { opacity:0; } to { opacity:1; } }
   .profile-main { animation: fadeIn .35s ease; }
 
-  /* ── RESPONSIVE ── */
   @media (max-width: 860px) { .page-wrap { grid-template-columns: 1fr; } .profile-sidebar { position: static; } }
   @media (max-width: 540px) { .form-grid { grid-template-columns: 1fr; } .page-wrap { padding: 84px 16px 48px; } .stats-row { grid-template-columns: 1fr 1fr; } }
   </style>
 </head>
 <body>
 
-<!-- AUTH GATE -->
 <div id="authGate">
   <div style="font-size:3.5rem">🔒</div>
   <h2>Vui lòng đăng nhập</h2>
@@ -225,15 +200,11 @@
   <a href="login.html?return=profile.html" class="btn-gate">Đăng Nhập Ngay</a>
 </div>
 
-<!-- NAVBAR -->
 <header class="navbar">
   <div class="navbar__inner">
     <a href="index.html" class="navbar__logo">
       <img src="./assets/icon/logo.png" alt="Logo" onerror="this.style.display='none'"/>
-      <div>
-        <span class="navbar__logo-name">Trà Sen Hồng</span>
-        <span class="navbar__logo-sub">Trà Việt</span>
-      </div>
+      <div><span class="navbar__logo-name">Trà Sen Hồng</span><span class="navbar__logo-sub">Trà Việt</span></div>
     </a>
     <ul class="navbar__links">
       <li><a href="index.html">Trang Chủ</a></li>
@@ -245,10 +216,8 @@
   </div>
 </header>
 
-<!-- PAGE -->
 <div class="page-wrap" id="pageWrap" style="display:none">
 
-  <!-- SIDEBAR -->
   <aside class="profile-sidebar">
     <div class="avatar-card">
       <div class="avatar-ring">
@@ -260,23 +229,14 @@
       <span class="avatar-role">🌿 Thành viên</span>
     </div>
     <nav class="sidebar-menu">
-      <a href="#info" class="active" onclick="return scrollTo('info')">
-        <span class="menu-icon">👤</span> Thông tin cá nhân
-      </a>
-      <a href="#address" onclick="return scrollTo('address')">
-        <span class="menu-icon">📍</span> Địa chỉ giao hàng
-      </a>
-      <a href="#orders" onclick="return scrollTo('orders')">
-        <span class="menu-icon">📦</span> Đơn hàng của tôi
-      </a>
-      <a href="#security" onclick="return scrollTo('security')">
-        <span class="menu-icon">🔐</span> Bảo mật
-      </a>
+      <a href="#info" class="active" onclick="return scrollTo('info')"><span class="menu-icon">👤</span> Thông tin cá nhân</a>
+      <a href="#address" onclick="return scrollTo('address')"><span class="menu-icon">📍</span> Địa chỉ giao hàng</a>
+      <a href="#orders" onclick="return scrollTo('orders')"><span class="menu-icon">📦</span> Đơn hàng của tôi</a>
+      <a href="#security" onclick="return scrollTo('security')"><span class="menu-icon">🔐</span> Bảo mật</a>
     </nav>
     <button class="btn-logout-side" onclick="logout()">⏻ Đăng xuất</button>
   </aside>
 
-  <!-- MAIN -->
   <main class="profile-main">
 
     <!-- ① THÔNG TIN CÁ NHÂN -->
@@ -313,7 +273,7 @@
       </div>
     </div>
 
-    <!-- ② ĐỊA CHỈ -->
+    <!-- ② ĐỊA CHỈ GIAO HÀNG — dùng dropdown GHN -->
     <div class="card" id="address">
       <div class="card__head">
         <div class="card__head-left">
@@ -323,53 +283,50 @@
       </div>
       <div class="card__body">
         <div class="inline-alert" id="addrAlert"></div>
+
+        <!-- Hidden fields lưu mã GHN -->
+        <input type="hidden" id="addrProvinceId"/>
+        <input type="hidden" id="addrDistrictId"/>
+        <input type="hidden" id="addrWardCode"/>
+
         <div class="form-grid">
+          <!-- Địa chỉ cụ thể -->
           <div class="field form-full">
-            <label>Địa chỉ cụ thể <span class="required">*</span></label>
-            <input type="text" id="addrStreet" placeholder="Số nhà, tên đường…" autocomplete="street-address"/>
+            <label>Số nhà, tên đường <span class="required">*</span></label>
+            <input type="text" id="addrStreet" placeholder="VD: 123 Nguyễn Huệ" autocomplete="street-address"/>
           </div>
-          <div class="field">
-            <label>Phường / Xã</label>
-            <input type="text" id="addrWard" placeholder="VD: Phường Bến Nghé" autocomplete="address-level3"/>
-          </div>
-          <div class="field">
-            <label>Quận / Huyện</label>
-            <input type="text" id="addrDistrict" placeholder="VD: Quận 1" autocomplete="address-level2"/>
-          </div>
+
+          <!-- Tỉnh / Thành phố -->
           <div class="field form-full">
-            <label>Tỉnh / Thành phố</label>
-            <select id="addrProvince">
-              <option value="">-- Chọn tỉnh / thành phố --</option>
-              <option>An Giang</option><option>Bà Rịa – Vũng Tàu</option><option>Bắc Giang</option>
-              <option>Bắc Kạn</option><option>Bạc Liêu</option><option>Bắc Ninh</option>
-              <option>Bến Tre</option><option>Bình Định</option><option>Bình Dương</option>
-              <option>Bình Phước</option><option>Bình Thuận</option><option>Cà Mau</option>
-              <option>Cần Thơ</option><option>Cao Bằng</option><option>Đà Nẵng</option>
-              <option>Đắk Lắk</option><option>Đắk Nông</option><option>Điện Biên</option>
-              <option>Đồng Nai</option><option>Đồng Tháp</option><option>Gia Lai</option>
-              <option>Hà Giang</option><option>Hà Nam</option><option>Hà Nội</option>
-              <option>Hà Tĩnh</option><option>Hải Dương</option><option>Hải Phòng</option>
-              <option>Hậu Giang</option><option>Hòa Bình</option><option>Hưng Yên</option>
-              <option>Khánh Hòa</option><option>Kiên Giang</option><option>Kon Tum</option>
-              <option>Lai Châu</option><option>Lâm Đồng</option><option>Lạng Sơn</option>
-              <option>Lào Cai</option><option>Long An</option><option>Nam Định</option>
-              <option>Nghệ An</option><option>Ninh Bình</option><option>Ninh Thuận</option>
-              <option>Phú Thọ</option><option>Phú Yên</option><option>Quảng Bình</option>
-              <option>Quảng Nam</option><option>Quảng Ngãi</option><option>Quảng Ninh</option>
-              <option>Quảng Trị</option><option>Sóc Trăng</option><option>Sơn La</option>
-              <option>Tây Ninh</option><option>Thái Bình</option><option>Thái Nguyên</option>
-              <option>Thanh Hóa</option><option>Thừa Thiên Huế</option><option>Tiền Giang</option>
-              <option>TP. Hồ Chí Minh</option><option>Trà Vinh</option><option>Tuyên Quang</option>
-              <option>Vĩnh Long</option><option>Vĩnh Phúc</option><option>Yên Bái</option>
+            <label>Tỉnh / Thành phố <span class="required">*</span></label>
+            <select id="addrProvince" disabled>
+              <option value="">— Đang tải… —</option>
+            </select>
+          </div>
+
+          <!-- Quận / Huyện -->
+          <div class="field">
+            <label>Quận / Huyện <span class="required">*</span></label>
+            <select id="addrDistrict" disabled>
+              <option value="">— Chọn tỉnh trước —</option>
+            </select>
+          </div>
+
+          <!-- Phường / Xã -->
+          <div class="field">
+            <label>Phường / Xã <span class="required">*</span></label>
+            <select id="addrWard" disabled>
+              <option value="">— Chọn quận trước —</option>
             </select>
           </div>
         </div>
+
         <div style="margin-top:14px;background:var(--primary-light);border-radius:var(--radius-sm);padding:12px 14px;font-size:.82rem;color:var(--muted);display:flex;gap:8px;align-items:flex-start">
           <span>💡</span><span>Địa chỉ này sẽ được tự động điền vào trang thanh toán.</span>
         </div>
       </div>
       <div class="card__foot">
-        <span style="font-size:.78rem;color:var(--muted)" id="addrPreview"></span>
+        <span style="font-size:.78rem;color:var(--muted)" id="addrPreview">Chưa có địa chỉ</span>
         <button class="btn-save" id="btnSaveAddr" onclick="saveAddress()">
           <span class="lbl">📍 Lưu địa chỉ</span><div class="spinner"></div>
         </button>
@@ -448,10 +405,9 @@
   </main>
 </div>
 
-<!-- TOAST -->
 <div id="toastWrap"></div>
 
-<!-- ══ TRACKING MODAL ══ -->
+<!-- TRACKING MODAL -->
 <div class="modal-overlay" id="trackingModal">
   <div class="trk-modal">
     <div class="trk-modal__head">
@@ -465,107 +421,203 @@
       </div>
     </div>
     <div class="trk-modal__body" id="trkModalBody">
-      <div class="trk-spinner-wrap">
-        <div class="trk-spinner"></div>
-        <p style="color:var(--muted);font-size:.85rem">Đang tải thông tin đơn hàng…</p>
-      </div>
+      <div class="trk-spinner-wrap"><div class="trk-spinner"></div></div>
     </div>
   </div>
 </div>
 
 <script>
-// ══════════════════════════════════════════
-// CONFIG
-// ══════════════════════════════════════════
-const API = 'https://trasenhong-backend-production.up.railway.app/api';
+const API     = 'https://trasenhong-backend-production.up.railway.app/api';
+const GHN_URL = 'https://trasenhong-backend-production.up.railway.app/api/ghn';
 
-const $  = id => document.getElementById(id);
+const $        = id => document.getElementById(id);
 const getToken = () => localStorage.getItem('tsh_token');
 const getUser  = () => { try { return JSON.parse(localStorage.getItem('tsh_user')); } catch { return null; } };
 const saveUser = u => localStorage.setItem('tsh_user', JSON.stringify(u));
-const fmt = n => Number(n || 0).toLocaleString('vi-VN') + '₫';
-const fmtDate = s => s ? new Date(s).toLocaleDateString('vi-VN', { day:'2-digit', month:'2-digit', year:'numeric' }) : '–';
+const fmt      = n => Number(n || 0).toLocaleString('vi-VN') + '₫';
+const fmtDate  = s => s ? new Date(s).toLocaleDateString('vi-VN', { day:'2-digit', month:'2-digit', year:'numeric' }) : '–';
 const fmtDateTime = s => s ? new Date(s).toLocaleString('vi-VN', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' }) : '–';
 
-const STATUS_LABEL = {
-  pending:    '⏳ Chờ xác nhận',
-  confirmed:  '✅ Đã xác nhận',
-  processing: '⚙️ Đang xử lý',
-  shipping:   '🚚 Đang giao',
-  delivered:  '✓ Đã giao',
-  cancelled:  '✕ Đã huỷ',
-};
-
-// ── TIMELINE STEPS ──
+const STATUS_LABEL = { pending:'⏳ Chờ xác nhận', confirmed:'✅ Đã xác nhận', processing:'⚙️ Đang xử lý', shipping:'🚚 Đang giao', delivered:'✓ Đã giao', cancelled:'✕ Đã huỷ' };
 const TIMELINE_STEPS = [
-  { key: 'pending',    icon: '📝', name: 'Đặt hàng thành công',  desc: 'Đơn hàng đã được ghi nhận' },
-  { key: 'confirmed',  icon: '✅', name: 'Đã xác nhận',          desc: 'Cửa hàng đã xác nhận và tạo vận đơn GHN' },
-  { key: 'processing', icon: '⚙️', name: 'Đang đóng gói',        desc: 'Sản phẩm đang được chuẩn bị' },
-  { key: 'shipping',   icon: '🚚', name: 'Đang giao hàng',        desc: 'Đơn hàng đang trên đường đến bạn' },
-  { key: 'delivered',  icon: '🎉', name: 'Giao hàng thành công', desc: 'Đơn hàng đã đến tay bạn' },
+  { key:'pending',    icon:'📝', name:'Đặt hàng thành công',  desc:'Đơn hàng đã được ghi nhận' },
+  { key:'confirmed',  icon:'✅', name:'Đã xác nhận',          desc:'Cửa hàng đã xác nhận và tạo vận đơn GHN' },
+  { key:'processing', icon:'⚙️', name:'Đang đóng gói',        desc:'Sản phẩm đang được chuẩn bị' },
+  { key:'shipping',   icon:'🚚', name:'Đang giao hàng',        desc:'Đơn hàng đang trên đường đến bạn' },
+  { key:'delivered',  icon:'🎉', name:'Giao hàng thành công', desc:'Đơn hàng đã đến tay bạn' },
 ];
 const STATUS_ORDER = ['pending','confirmed','processing','shipping','delivered'];
 
-// ══════════════════════════════════════════
-// UTILS
-// ══════════════════════════════════════════
+// ── UTILS ──
 function toast(msg, type = 'success') {
-  const wrap = $('toastWrap');
   const el = document.createElement('div');
   el.className = `toast ${type}`;
-  el.innerHTML = `<span>${type === 'success' ? '✅' : type === 'warning' ? '⚠️' : '❌'}</span> ${msg}`;
-  wrap.appendChild(el);
-  setTimeout(() => { el.style.opacity = '0'; el.style.transition = '.3s'; setTimeout(() => el.remove(), 300); }, 3500);
+  el.innerHTML = `<span>${type==='success'?'✅':type==='warning'?'⚠️':'❌'}</span> ${msg}`;
+  $('toastWrap').appendChild(el);
+  setTimeout(() => { el.style.opacity='0'; el.style.transition='.3s'; setTimeout(()=>el.remove(),300); }, 3500);
 }
-
-function showAlert(elId, msg, type = 'error') {
-  const el = $(elId);
-  el.className = `inline-alert show ${type}`;
-  el.innerHTML = `<span>${type === 'success' ? '✅' : '❌'}</span> ${msg}`;
-  setTimeout(() => el.classList.remove('show'), 5000);
+function showAlert(id, msg, type='error') {
+  const el=$(id); el.className=`inline-alert show ${type}`;
+  el.innerHTML=`<span>${type==='success'?'✅':'❌'}</span> ${msg}`;
+  setTimeout(()=>el.classList.remove('show'),5000);
 }
-
-function setLoading(btnId, on) {
-  const btn = $(btnId);
-  btn.classList.toggle('loading', on);
-  btn.disabled = on;
-}
-
-async function apiFetch(endpoint, options = {}) {
-  const headers = { 'Content-Type': 'application/json', ...options.headers };
+function setLoading(id,on){ const b=$(id); b.classList.toggle('loading',on); b.disabled=on; }
+async function apiFetch(endpoint, opts={}) {
+  const headers = {'Content-Type':'application/json',...opts.headers};
   const token = getToken();
   if (token) headers['Authorization'] = `Bearer ${token}`;
-  const res  = await fetch(`${API}${endpoint}`, { ...options, headers });
+  const res  = await fetch(`${API}${endpoint}`, {...opts, headers});
   const data = await res.json();
-  if (res.status === 401) { localStorage.clear(); location.href = 'login.html?return=profile.html'; throw new Error('Unauthorized'); }
+  if (res.status===401) { localStorage.clear(); location.href='login.html?return=profile.html'; throw new Error('Unauthorized'); }
   return data;
 }
 
-// ══════════════════════════════════════════
-// AUTH GUARD & INIT
-// ══════════════════════════════════════════
+// ── AUTH GUARD & INIT ──
 (async function init() {
-  const user  = getUser();
-  const token = getToken();
-  if (!user || !token) { $('authGate').style.display = 'flex'; return; }
-  $('pageWrap').style.display = 'grid';
-
-  const name = user.full_name || user.email || 'Bạn';
+  const user=getUser(), token=getToken();
+  if (!user||!token) { $('authGate').style.display='flex'; return; }
+  $('pageWrap').style.display='grid';
+  const name = user.full_name||user.email||'Bạn';
   $('avatarInitial').textContent = name.charAt(0).toUpperCase();
   $('avatarName').textContent    = name;
-  $('avatarEmail').textContent   = user.email || '';
+  $('avatarEmail').textContent   = user.email||'';
+
+  // Load GHN provinces trước
+  await loadGhnProvinces();
 
   try {
     const data = await apiFetch('/auth/me');
-    if (data.success) { saveUser(data.user); fillInfo(data.user); fillAddress(data.user); }
+    if (data.success) { saveUser(data.user); fillInfo(data.user); await fillAddress(data.user); }
   } catch {}
 
   loadOrders();
 })();
 
 // ══════════════════════════════════════════
-// FILL FORMS
+// GHN ADDRESS DROPDOWNS
 // ══════════════════════════════════════════
+function setOptions(sel, items, valKey, labelKey, placeholder) {
+  sel.innerHTML = `<option value="">${placeholder}</option>`;
+  items.forEach(item => {
+    const opt = document.createElement('option');
+    opt.value = item[valKey];
+    opt.textContent = item[labelKey];
+    sel.appendChild(opt);
+  });
+  sel.disabled = false;
+}
+function resetSelect(sel, placeholder) {
+  sel.innerHTML = `<option value="">${placeholder}</option>`;
+  sel.disabled = true;
+}
+
+async function loadGhnProvinces() {
+  try {
+    const res  = await fetch(`${GHN_URL}/provinces`);
+    const data = await res.json();
+    if (data.success) setOptions($('addrProvince'), data.data, 'ProvinceID', 'ProvinceName', '— Chọn tỉnh / thành phố —');
+    else $('addrProvince').innerHTML = '<option value="">— Lỗi tải tỉnh thành —</option>';
+  } catch {
+    $('addrProvince').innerHTML = '<option value="">— Lỗi tải tỉnh thành —</option>';
+  }
+}
+
+$('addrProvince').addEventListener('change', async () => {
+  const provinceId = $('addrProvince').value;
+  $('addrProvinceId').value = provinceId;
+  $('addrDistrictId').value = '';
+  $('addrWardCode').value   = '';
+  resetSelect($('addrDistrict'), '— Đang tải… —');
+  resetSelect($('addrWard'), '— Chọn quận trước —');
+  updateAddrPreview();
+  if (!provinceId) { resetSelect($('addrDistrict'), '— Chọn tỉnh trước —'); return; }
+  try {
+    const res  = await fetch(`${GHN_URL}/districts?province_id=${provinceId}`);
+    const data = await res.json();
+    if (data.success) setOptions($('addrDistrict'), data.data, 'DistrictID', 'DistrictName', '— Chọn quận / huyện —');
+    else resetSelect($('addrDistrict'), '— Lỗi tải quận/huyện —');
+  } catch { resetSelect($('addrDistrict'), '— Lỗi tải quận/huyện —'); }
+});
+
+$('addrDistrict').addEventListener('change', async () => {
+  const districtId = $('addrDistrict').value;
+  $('addrDistrictId').value = districtId;
+  $('addrWardCode').value   = '';
+  resetSelect($('addrWard'), '— Đang tải… —');
+  updateAddrPreview();
+  if (!districtId) { resetSelect($('addrWard'), '— Chọn quận trước —'); return; }
+  try {
+    const res  = await fetch(`${GHN_URL}/wards?district_id=${districtId}`);
+    const data = await res.json();
+    if (data.success) setOptions($('addrWard'), data.data, 'WardCode', 'WardName', '— Chọn phường / xã —');
+    else resetSelect($('addrWard'), '— Lỗi tải phường/xã —');
+  } catch { resetSelect($('addrWard'), '— Lỗi tải phường/xã —'); }
+});
+
+$('addrWard').addEventListener('change', () => {
+  $('addrWardCode').value = $('addrWard').value;
+  updateAddrPreview();
+});
+
+$('addrStreet').addEventListener('input', updateAddrPreview);
+
+function updateAddrPreview() {
+  const street   = $('addrStreet').value.trim();
+  const ward     = $('addrWard').options[$('addrWard').selectedIndex]?.text || '';
+  const district = $('addrDistrict').options[$('addrDistrict').selectedIndex]?.text || '';
+  const province = $('addrProvince').options[$('addrProvince').selectedIndex]?.text || '';
+  const parts = [street, ward, district, province].filter(v => v && v !== '— Chọn tỉnh / thành phố —' && !v.startsWith('—'));
+  $('addrPreview').textContent = parts.length ? '📍 ' + parts.join(', ') : 'Chưa có địa chỉ';
+}
+
+// Fill địa chỉ đã lưu — khôi phục dropdown theo tên
+async function fillAddress(u) {
+  $('addrStreet').value = u.address || '';
+
+  if (!u.province) { updateAddrPreview(); return; }
+
+  // Tìm & chọn tỉnh theo tên
+  const provSel = $('addrProvince');
+  for (let opt of provSel.options) {
+    if (opt.textContent === u.province) { provSel.value = opt.value; break; }
+  }
+  if (!provSel.value) { updateAddrPreview(); return; }
+  $('addrProvinceId').value = provSel.value;
+
+  // Load quận
+  try {
+    const res  = await fetch(`${GHN_URL}/districts?province_id=${provSel.value}`);
+    const data = await res.json();
+    if (!data.success) return;
+    setOptions($('addrDistrict'), data.data, 'DistrictID', 'DistrictName', '— Chọn quận / huyện —');
+
+    if (u.district) {
+      const distSel = $('addrDistrict');
+      for (let opt of distSel.options) {
+        if (opt.textContent === u.district) { distSel.value = opt.value; break; }
+      }
+      if (!distSel.value) { updateAddrPreview(); return; }
+      $('addrDistrictId').value = distSel.value;
+
+      // Load phường
+      const res2  = await fetch(`${GHN_URL}/wards?district_id=${distSel.value}`);
+      const data2 = await res2.json();
+      if (!data2.success) return;
+      setOptions($('addrWard'), data2.data, 'WardCode', 'WardName', '— Chọn phường / xã —');
+
+      if (u.ward) {
+        const wardSel = $('addrWard');
+        for (let opt of wardSel.options) {
+          if (opt.textContent === u.ward) { wardSel.value = opt.value; break; }
+        }
+        $('addrWardCode').value = wardSel.value;
+      }
+    }
+  } catch {}
+  updateAddrPreview();
+}
+
+// ── FILL INFO ──
 function fillInfo(u) {
   $('infoName').value  = u.full_name || '';
   $('infoEmail').value = u.email || '';
@@ -577,94 +629,75 @@ function fillInfo(u) {
   $('avatarEmail').textContent   = u.email || '';
 }
 
-function fillAddress(u) {
-  $('addrStreet').value   = u.address  || '';
-  $('addrWard').value     = u.ward     || '';
-  $('addrDistrict').value = u.district || '';
-  const sel = $('addrProvince');
-  for (let opt of sel.options) { if (opt.value === u.province) { opt.selected = true; break; } }
-  updateAddrPreview(u);
-}
-
-function updateAddrPreview(u) {
-  const parts = [u.address, u.ward, u.district, u.province].filter(Boolean);
-  $('addrPreview').textContent = parts.length ? '📍 ' + parts.join(', ') : 'Chưa có địa chỉ';
-}
-
-// ══════════════════════════════════════════
-// SAVE INFO
-// ══════════════════════════════════════════
+// ── SAVE INFO ──
 async function saveInfo() {
   const full_name = $('infoName').value.trim();
   const phone     = $('infoPhone').value.trim();
-  if (!full_name || full_name.length < 2) { showAlert('infoAlert', 'Họ tên phải có ít nhất 2 ký tự.'); return; }
-  if (phone && !/^(0|\+84)[0-9]{9}$/.test(phone.replace(/\s/g,''))) { showAlert('infoAlert', 'Số điện thoại không hợp lệ.'); return; }
-  setLoading('btnSaveInfo', true);
+  if (!full_name||full_name.length<2) { showAlert('infoAlert','Họ tên phải có ít nhất 2 ký tự.'); return; }
+  if (phone&&!/^(0|\+84)[0-9]{9}$/.test(phone.replace(/\s/g,''))) { showAlert('infoAlert','Số điện thoại không hợp lệ.'); return; }
+  setLoading('btnSaveInfo',true);
   try {
-    const data = await apiFetch('/auth/me', { method: 'PUT', body: JSON.stringify({ full_name, phone: phone || undefined }) });
-    if (!data.success) { showAlert('infoAlert', data.message || 'Cập nhật thất bại.'); return; }
-    saveUser({ ...getUser(), full_name, phone });
-    fillInfo(data.user || { ...getUser(), full_name, phone });
-    showAlert('infoAlert', 'Cập nhật thông tin thành công!', 'success');
+    const data = await apiFetch('/auth/me',{method:'PUT',body:JSON.stringify({full_name,phone:phone||undefined})});
+    if (!data.success) { showAlert('infoAlert',data.message||'Cập nhật thất bại.'); return; }
+    saveUser({...getUser(),full_name,phone});
+    fillInfo(data.user||{...getUser(),full_name,phone});
+    showAlert('infoAlert','Cập nhật thông tin thành công!','success');
     toast('Đã lưu thông tin cá nhân!');
-  } catch { showAlert('infoAlert', 'Lỗi kết nối.'); }
-  finally { setLoading('btnSaveInfo', false); }
+  } catch { showAlert('infoAlert','Lỗi kết nối.'); }
+  finally { setLoading('btnSaveInfo',false); }
 }
 
-// ══════════════════════════════════════════
-// SAVE ADDRESS
-// ══════════════════════════════════════════
+// ── SAVE ADDRESS ──
 async function saveAddress() {
-  const address  = $('addrStreet').value.trim();
-  const ward     = $('addrWard').value.trim();
-  const district = $('addrDistrict').value.trim();
-  const province = $('addrProvince').value;
-  if (!address) { showAlert('addrAlert', 'Vui lòng nhập địa chỉ cụ thể.'); return; }
-  setLoading('btnSaveAddr', true);
+  const street   = $('addrStreet').value.trim();
+  const wardSel  = $('addrWard');
+  const distSel  = $('addrDistrict');
+  const provSel  = $('addrProvince');
+  const ward     = wardSel.options[wardSel.selectedIndex]?.text || '';
+  const district = distSel.options[distSel.selectedIndex]?.text || '';
+  const province = provSel.options[provSel.selectedIndex]?.text || '';
+  const ward_code   = $('addrWardCode').value;
+  const district_id = $('addrDistrictId').value ? Number($('addrDistrictId').value) : null;
+
+  if (!street)   { showAlert('addrAlert','Vui lòng nhập số nhà, tên đường.'); return; }
+  if (!province||province.startsWith('—')) { showAlert('addrAlert','Vui lòng chọn tỉnh / thành phố.'); return; }
+  if (!district||district.startsWith('—')) { showAlert('addrAlert','Vui lòng chọn quận / huyện.'); return; }
+  if (!ward||ward.startsWith('—'))         { showAlert('addrAlert','Vui lòng chọn phường / xã.'); return; }
+
+  setLoading('btnSaveAddr',true);
   try {
-    const data = await apiFetch('/auth/me', { method: 'PUT', body: JSON.stringify({ address, ward: ward || undefined, district: district || undefined, province: province || undefined }) });
-    if (!data.success) { showAlert('addrAlert', data.message || 'Cập nhật thất bại.'); return; }
-    const updated = { ...getUser(), address, ward, district, province };
-    saveUser(updated);
-    updateAddrPreview(updated);
-    showAlert('addrAlert', 'Lưu địa chỉ thành công!', 'success');
+    const data = await apiFetch('/auth/me',{method:'PUT',body:JSON.stringify({
+      address: street,
+      ward, district, province,
+      ward_code: ward_code || undefined,
+      district_id: district_id || undefined,
+    })});
+    if (!data.success) { showAlert('addrAlert',data.message||'Cập nhật thất bại.'); return; }
+    saveUser({...getUser(), address:street, ward, district, province, ward_code, district_id});
+    updateAddrPreview();
+    showAlert('addrAlert','Lưu địa chỉ thành công!','success');
     toast('Đã lưu địa chỉ giao hàng!');
-  } catch { showAlert('addrAlert', 'Lỗi kết nối.'); }
-  finally { setLoading('btnSaveAddr', false); }
+  } catch { showAlert('addrAlert','Lỗi kết nối.'); }
+  finally { setLoading('btnSaveAddr',false); }
 }
 
-['addrStreet','addrWard','addrDistrict','addrProvince'].forEach(id => {
-  $(id).addEventListener('input', () => updateAddrPreview({ address: $('addrStreet').value, ward: $('addrWard').value, district: $('addrDistrict').value, province: $('addrProvince').value }));
-});
-
-// ══════════════════════════════════════════
-// ORDERS
-// ══════════════════════════════════════════
+// ── ORDERS ──
 async function loadOrders() {
   try {
     const data = await apiFetch('/orders/my');
     const orders = data.orders || [];
-
     const total     = orders.length;
-    const delivered = orders.filter(o => o.status === 'delivered').length;
-    const active    = orders.filter(o => ['confirmed','processing','shipping'].includes(o.status)).length;
+    const delivered = orders.filter(o=>o.status==='delivered').length;
+    const active    = orders.filter(o=>['confirmed','processing','shipping'].includes(o.status)).length;
     $('orderStats').innerHTML = `
       <div class="stat-mini"><div class="stat-mini__val">${total}</div><div class="stat-mini__lbl">Tổng đơn</div></div>
       <div class="stat-mini"><div class="stat-mini__val">${delivered}</div><div class="stat-mini__lbl">Đã giao</div></div>
-      <div class="stat-mini"><div class="stat-mini__val">${active}</div><div class="stat-mini__lbl">Đang giao</div></div>
-    `;
-
+      <div class="stat-mini"><div class="stat-mini__val">${active}</div><div class="stat-mini__lbl">Đang giao</div></div>`;
     if (!orders.length) {
-      $('orderList').innerHTML = `
-        <div class="empty-state">
-          <div class="icon">📭</div>
-          <p>Bạn chưa có đơn hàng nào.<br/>Hãy khám phá cửa hàng và đặt hàng ngay!</p>
-          <a href="shop.html" style="display:inline-block;margin-top:14px;padding:10px 22px;background:var(--primary);color:#fff;border-radius:8px;text-decoration:none;font-weight:700;font-size:.85rem">🛒 Mua sắm ngay</a>
-        </div>`;
+      $('orderList').innerHTML = `<div class="empty-state"><div class="icon">📭</div><p>Bạn chưa có đơn hàng nào.<br/>Hãy khám phá cửa hàng và đặt hàng ngay!</p><a href="shop.html" style="display:inline-block;margin-top:14px;padding:10px 22px;background:var(--primary);color:#fff;border-radius:8px;text-decoration:none;font-weight:700;font-size:.85rem">🛒 Mua sắm ngay</a></div>`;
       return;
     }
-
-    $('orderList').innerHTML = orders.slice(0, 10).map(o => `
+    $('orderList').innerHTML = orders.slice(0,10).map(o=>`
       <div class="order-item">
         <div class="order-icon">📦</div>
         <div class="order-info">
@@ -673,223 +706,116 @@ async function loadOrders() {
         </div>
         <div class="order-right">
           <div class="order-total">${fmt(o.total)}</div>
-          <span class="badge badge-${o.status}">${STATUS_LABEL[o.status] || o.status}</span>
-          ${o.status !== 'cancelled'
-            ? `<br><button class="btn-track" onclick="openTracking('${o.order_code}')">📍 Theo dõi</button>`
-            : ''}
+          <span class="badge badge-${o.status}">${STATUS_LABEL[o.status]||o.status}</span>
+          ${o.status!=='cancelled'?`<br><button class="btn-track" onclick="openTracking('${o.order_code}')">📍 Theo dõi</button>`:''}
         </div>
       </div>`).join('');
-
-    if (orders.length > 10) {
-      $('orderList').innerHTML += `<div style="text-align:center;margin-top:10px;font-size:.82rem;color:var(--muted)">Hiển thị 10 đơn gần nhất</div>`;
-    }
+    if (orders.length>10) $('orderList').innerHTML+=`<div style="text-align:center;margin-top:10px;font-size:.82rem;color:var(--muted)">Hiển thị 10 đơn gần nhất</div>`;
   } catch {
-    $('orderList').innerHTML = '<div style="padding:20px;text-align:center;color:var(--muted);font-size:.85rem">Không tải được đơn hàng</div>';
+    $('orderList').innerHTML='<div style="padding:20px;text-align:center;color:var(--muted);font-size:.85rem">Không tải được đơn hàng</div>';
   }
 }
 
-// ══════════════════════════════════════════
-// TRACKING MODAL
-// ══════════════════════════════════════════
+// ── TRACKING MODAL ──
 let _pollingTimer = null;
-
 async function openTracking(orderCode) {
-  // Reset modal
-  $('trkModalCode').textContent   = orderCode;
-  $('trkModalStatus').textContent = '…';
-  $('trkModalBody').innerHTML = `
-    <div class="trk-spinner-wrap">
-      <div class="trk-spinner"></div>
-      <p style="color:var(--muted);font-size:.85rem">Đang tải thông tin đơn hàng…</p>
-    </div>`;
+  $('trkModalCode').textContent='…';
+  $('trkModalStatus').textContent='…';
+  $('trkModalBody').innerHTML='<div class="trk-spinner-wrap"><div class="trk-spinner"></div><p style="color:var(--muted);font-size:.85rem">Đang tải…</p></div>';
   $('trackingModal').classList.add('show');
-  document.body.style.overflow = 'hidden';
-
+  document.body.style.overflow='hidden';
   await fetchTracking(orderCode);
 }
 
 async function fetchTracking(orderCode) {
   try {
     const data = await apiFetch(`/orders/track/${orderCode}`);
-    if (!data.success) {
-      $('trkModalBody').innerHTML = `<div style="text-align:center;padding:32px;color:var(--muted)">❌ Không tìm thấy đơn hàng.</div>`;
-      return;
-    }
-
-    const o   = data.order;
-    const ghn = data.ghn_status;
-
-    $('trkModalCode').textContent   = o.order_code;
-    $('trkModalStatus').textContent = STATUS_LABEL[o.status] || o.status;
-
-    // Render body
-    const currentIdx = STATUS_ORDER.indexOf(o.status);
-    const isCancelled = o.status === 'cancelled';
-
-    // Timeline HTML
+    if (!data.success) { $('trkModalBody').innerHTML='<div style="text-align:center;padding:32px;color:var(--muted)">❌ Không tìm thấy đơn hàng.</div>'; return; }
+    const o=data.order, ghn=data.ghn_status;
+    $('trkModalCode').textContent=o.order_code;
+    $('trkModalStatus').textContent=STATUS_LABEL[o.status]||o.status;
+    const currentIdx=STATUS_ORDER.indexOf(o.status);
+    const isCancelled=o.status==='cancelled';
     const timelineHtml = isCancelled
-      ? `<div class="trk-cancelled">✕ Đơn hàng này đã bị huỷ. Liên hệ cửa hàng nếu cần hỗ trợ.</div>`
-      : TIMELINE_STEPS.map((step, i) => {
-          const stepIdx = STATUS_ORDER.indexOf(step.key);
-          const isDone    = stepIdx < currentIdx;
-          const isCurrent = stepIdx === currentIdx;
-          const dotClass  = isDone ? 'done' : isCurrent ? 'current' : 'pending';
-          const connClass = isDone ? 'done' : '';
-          return `
-            <div class="trk-step">
-              <div class="trk-step__line">
-                <div class="trk-step__dot ${dotClass}">${step.icon}</div>
-                <div class="trk-step__connector ${connClass}"></div>
-              </div>
-              <div class="trk-step__content">
-                <div class="trk-step__name ${dotClass === 'pending' ? 'pending' : ''}">${step.name}</div>
-                <div class="trk-step__desc">${step.desc}</div>
-              </div>
-            </div>`;
+      ? `<div class="trk-cancelled">✕ Đơn hàng đã bị huỷ. Liên hệ cửa hàng nếu cần hỗ trợ.</div>`
+      : TIMELINE_STEPS.map((step,i)=>{
+          const si=STATUS_ORDER.indexOf(step.key);
+          const dc=si<currentIdx?'done':si===currentIdx?'current':'pending';
+          return `<div class="trk-step"><div class="trk-step__line"><div class="trk-step__dot ${dc}">${step.icon}</div><div class="trk-step__connector ${si<currentIdx?'done':''}"></div></div><div class="trk-step__content"><div class="trk-step__name ${dc==='pending'?'pending':''}">${step.name}</div><div class="trk-step__desc">${step.desc}</div></div></div>`;
         }).join('');
-
-    // GHN box
-    const ghnHtml = o.ghn_order_code ? `
-      <div class="trk-ghn-box show">
-        <span style="font-size:1.4rem">🚚</span>
-        <div>
-          <div class="trk-ghn-label">Mã vận đơn GHN</div>
-          <div class="trk-ghn-value">${o.ghn_order_code}</div>
-        </div>
-        ${o.ghn_expected_delivery ? `
-        <div>
-          <div class="trk-ghn-label">Dự kiến giao</div>
-          <div style="font-weight:700;font-size:.85rem;color:#1b5e20">${fmtDateTime(o.ghn_expected_delivery)}</div>
-        </div>` : ''}
-      </div>` : '';
-
-    // GHN realtime logs
-    const isActive = ['confirmed','processing','shipping'].includes(o.status);
-    let ghnLogsHtml = '';
-    if (ghn && ghn.logs && ghn.logs.length) {
-      const logsHtml = [...ghn.logs].reverse().map(l => `
-        <div class="trk-log">
-          <div class="trk-log__time">${fmtDateTime(l.updated_date)}</div>
-          <div class="trk-log__status">${l.status}</div>
-        </div>`).join('');
-      ghnLogsHtml = `
-        <div class="trk-logs-title">
-          🔄 Lịch sử vận chuyển GHN
-          ${isActive ? '<div class="trk-polling-dot"></div><span style="font-size:.72rem;color:var(--muted)">Tự động cập nhật</span>' : ''}
-        </div>
-        ${logsHtml}`;
+    const ghnHtml = o.ghn_order_code?`<div class="trk-ghn-box show"><span style="font-size:1.4rem">🚚</span><div><div class="trk-ghn-label">Mã vận đơn GHN</div><div class="trk-ghn-value">${o.ghn_order_code}</div></div>${o.ghn_expected_delivery?`<div><div class="trk-ghn-label">Dự kiến giao</div><div style="font-weight:700;font-size:.85rem;color:#1b5e20">${fmtDateTime(o.ghn_expected_delivery)}</div></div>`:''}</div>`:'';
+    const isActive=['confirmed','processing','shipping'].includes(o.status);
+    let ghnLogsHtml='';
+    if (ghn?.logs?.length) {
+      ghnLogsHtml=`<div class="trk-logs-title">🔄 Lịch sử GHN${isActive?'<div class="trk-polling-dot"></div><span style="font-size:.72rem;color:var(--muted)">Tự động cập nhật</span>':''}</div>${[...ghn.logs].reverse().map(l=>`<div class="trk-log"><div class="trk-log__time">${fmtDateTime(l.updated_date)}</div><div class="trk-log__status">${l.status}</div></div>`).join('')}`;
     } else if (o.ghn_order_code) {
-      ghnLogsHtml = `
-        <div class="trk-logs-title">
-          🔄 Lịch sử vận chuyển GHN
-          ${isActive ? '<div class="trk-polling-dot"></div><span style="font-size:.72rem;color:var(--muted)">Tự động cập nhật</span>' : ''}
-        </div>
-        <div style="font-size:.82rem;color:var(--muted);padding:8px 0">Chưa có cập nhật từ GHN.</div>`;
+      ghnLogsHtml=`<div class="trk-logs-title">🔄 Lịch sử GHN${isActive?'<div class="trk-polling-dot"></div><span style="font-size:.72rem;color:var(--muted)">Tự động cập nhật</span>':''}</div><div style="font-size:.82rem;color:var(--muted);padding:8px 0">Chưa có cập nhật từ GHN.</div>`;
     }
-
-    $('trkModalBody').innerHTML = `
+    $('trkModalBody').innerHTML=`
       ${ghnHtml}
-      <div style="margin-bottom:20px">
-        <div class="trk-timeline-title">📍 Hành trình đơn hàng</div>
-        ${timelineHtml}
-      </div>
+      <div style="margin-bottom:20px"><div class="trk-timeline-title">📍 Hành trình đơn hàng</div>${timelineHtml}</div>
       <div style="border-top:1px solid var(--border);padding-top:16px;margin-bottom:16px">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:.83rem">
-          <div><div style="color:var(--muted);font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:3px">Khách hàng</div><div style="font-weight:600">${o.full_name}</div><div style="color:var(--muted)">${o.phone}</div></div>
-          <div><div style="color:var(--muted);font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:3px">Địa chỉ giao</div><div style="font-weight:500">${[o.address, o.ward, o.district, o.province].filter(Boolean).join(', ')}</div></div>
-          <div><div style="color:var(--muted);font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:3px">Thanh toán</div><div style="font-weight:600">${o.payment_method?.toUpperCase()}</div></div>
-          <div><div style="color:var(--muted);font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:3px">Tổng tiền</div><div style="font-weight:700;color:var(--primary)">${fmt(o.total)}</div></div>
+          <div><div style="color:var(--muted);font-size:.7rem;text-transform:uppercase;font-weight:700;margin-bottom:3px">Khách hàng</div><div style="font-weight:600">${o.full_name}</div><div style="color:var(--muted)">${o.phone}</div></div>
+          <div><div style="color:var(--muted);font-size:.7rem;text-transform:uppercase;font-weight:700;margin-bottom:3px">Địa chỉ giao</div><div style="font-weight:500">${[o.address,o.ward,o.district,o.province].filter(Boolean).join(', ')}</div></div>
+          <div><div style="color:var(--muted);font-size:.7rem;text-transform:uppercase;font-weight:700;margin-bottom:3px">Thanh toán</div><div style="font-weight:600">${o.payment_method?.toUpperCase()}</div></div>
+          <div><div style="color:var(--muted);font-size:.7rem;text-transform:uppercase;font-weight:700;margin-bottom:3px">Tổng tiền</div><div style="font-weight:700;color:var(--primary)">${fmt(o.total)}</div></div>
         </div>
       </div>
-      ${ghnLogsHtml}
-    `;
-
-    // Polling nếu đơn đang active
+      ${ghnLogsHtml}`;
     clearTimeout(_pollingTimer);
-    if (isActive && o.ghn_order_code) {
-      _pollingTimer = setTimeout(() => fetchTracking(o.order_code), 30000);
-    }
-
+    if (isActive&&o.ghn_order_code) _pollingTimer=setTimeout(()=>fetchTracking(o.order_code),30000);
   } catch {
-    $('trkModalBody').innerHTML = `<div style="text-align:center;padding:32px;color:var(--muted)">❌ Lỗi kết nối. Vui lòng thử lại.</div>`;
+    $('trkModalBody').innerHTML='<div style="text-align:center;padding:32px;color:var(--muted)">❌ Lỗi kết nối.</div>';
   }
 }
 
 function closeTracking() {
   $('trackingModal').classList.remove('show');
-  document.body.style.overflow = '';
+  document.body.style.overflow='';
   clearTimeout(_pollingTimer);
 }
+$('trackingModal').addEventListener('click',e=>{ if(e.target===$('trackingModal')) closeTracking(); });
 
-// Close on overlay click
-$('trackingModal').addEventListener('click', e => { if (e.target === $('trackingModal')) closeTracking(); });
-
-// ══════════════════════════════════════════
-// PASSWORD
-// ══════════════════════════════════════════
+// ── PASSWORD ──
 function checkStrength(v) {
-  const wrap = $('pwStrength'), fill = $('pwFill'), lbl = $('pwLbl');
-  if (!v) { wrap.style.display = 'none'; return; }
-  wrap.style.display = 'block';
-  let score = 0;
-  if (v.length >= 8) score++; if (v.length >= 12) score++;
-  if (/[A-Z]/.test(v)) score++; if (/[0-9]/.test(v)) score++; if (/[^A-Za-z0-9]/.test(v)) score++;
-  const lv = [
-    { w:'20%', c:'#ef5350', t:'Rất yếu' }, { w:'40%', c:'#ff7043', t:'Yếu' },
-    { w:'60%', c:'#ffa726', t:'Trung bình' }, { w:'80%', c:'#66bb6a', t:'Mạnh' }, { w:'100%', c:'#2e7d32', t:'Rất mạnh' },
-  ][Math.min(score - 1, 4)] || { w:'20%', c:'#ef5350', t:'Rất yếu' };
-  fill.style.width = lv.w; fill.style.background = lv.c;
-  lbl.style.color = lv.c; lbl.textContent = lv.t;
+  const wrap=$('pwStrength'),fill=$('pwFill'),lbl=$('pwLbl');
+  if (!v){wrap.style.display='none';return;}
+  wrap.style.display='block';
+  let s=0;
+  if(v.length>=8)s++;if(v.length>=12)s++;if(/[A-Z]/.test(v))s++;if(/[0-9]/.test(v))s++;if(/[^A-Za-z0-9]/.test(v))s++;
+  const lv=[{w:'20%',c:'#ef5350',t:'Rất yếu'},{w:'40%',c:'#ff7043',t:'Yếu'},{w:'60%',c:'#ffa726',t:'Trung bình'},{w:'80%',c:'#66bb6a',t:'Mạnh'},{w:'100%',c:'#2e7d32',t:'Rất mạnh'}][Math.min(s-1,4)]||{w:'20%',c:'#ef5350',t:'Rất yếu'};
+  fill.style.width=lv.w;fill.style.background=lv.c;lbl.style.color=lv.c;lbl.textContent=lv.t;
 }
-
 async function savePassword() {
-  const current = $('pwCurrent').value, newPw = $('pwNew').value, confirm = $('pwConfirm').value;
-  if (!current)          { showAlert('pwAlert', 'Vui lòng nhập mật khẩu hiện tại.'); return; }
-  if (newPw.length < 8)  { showAlert('pwAlert', 'Mật khẩu mới phải có ít nhất 8 ký tự.'); return; }
-  if (newPw !== confirm)  { showAlert('pwAlert', 'Mật khẩu xác nhận không khớp.'); return; }
-  if (current === newPw)  { showAlert('pwAlert', 'Mật khẩu mới phải khác mật khẩu hiện tại.'); return; }
-  setLoading('btnSavePw', true);
+  const cur=$('pwCurrent').value,nw=$('pwNew').value,cf=$('pwConfirm').value;
+  if(!cur){showAlert('pwAlert','Vui lòng nhập mật khẩu hiện tại.');return;}
+  if(nw.length<8){showAlert('pwAlert','Mật khẩu mới phải có ít nhất 8 ký tự.');return;}
+  if(nw!==cf){showAlert('pwAlert','Mật khẩu xác nhận không khớp.');return;}
+  if(cur===nw){showAlert('pwAlert','Mật khẩu mới phải khác mật khẩu hiện tại.');return;}
+  setLoading('btnSavePw',true);
   try {
-    const data = await apiFetch('/auth/change-password', { method: 'PUT', body: JSON.stringify({ current_password: current, new_password: newPw }) });
-    if (!data.success) { showAlert('pwAlert', data.message || 'Đổi mật khẩu thất bại.'); return; }
-    showAlert('pwAlert', 'Đổi mật khẩu thành công! Vui lòng đăng nhập lại.', 'success');
+    const data=await apiFetch('/auth/change-password',{method:'PUT',body:JSON.stringify({current_password:cur,new_password:nw})});
+    if(!data.success){showAlert('pwAlert',data.message||'Đổi mật khẩu thất bại.');return;}
+    showAlert('pwAlert','Đổi mật khẩu thành công! Vui lòng đăng nhập lại.','success');
     toast('Đổi mật khẩu thành công!');
-    $('pwCurrent').value = $('pwNew').value = $('pwConfirm').value = '';
-    $('pwStrength').style.display = 'none';
-    setTimeout(() => { localStorage.removeItem('tsh_token'); localStorage.removeItem('tsh_user'); location.href = 'login.html'; }, 2000);
-  } catch { showAlert('pwAlert', 'Lỗi kết nối.'); }
-  finally { setLoading('btnSavePw', false); }
+    $('pwCurrent').value=$('pwNew').value=$('pwConfirm').value='';
+    $('pwStrength').style.display='none';
+    setTimeout(()=>{localStorage.removeItem('tsh_token');localStorage.removeItem('tsh_user');location.href='login.html';},2000);
+  } catch{showAlert('pwAlert','Lỗi kết nối.');}
+  finally{setLoading('btnSavePw',false);}
 }
 
-// ══════════════════════════════════════════
-// MISC
-// ══════════════════════════════════════════
-function togglePw(id, btn) {
-  const inp = $(id);
-  inp.type = inp.type === 'password' ? 'text' : 'password';
-  btn.textContent = inp.type === 'password' ? '👁️' : '🙈';
-}
-
-function scrollTo(id) {
-  const el = $(id);
-  if (!el) return false;
-  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
-  return false;
-}
-
-function logout() {
-  localStorage.removeItem('tsh_token');
-  localStorage.removeItem('tsh_user');
-  location.href = 'index.html';
-}
-
-const sections = ['info','address','orders','security'];
-window.addEventListener('scroll', () => {
-  let current = sections[0];
-  sections.forEach(id => { const el = $(id); if (el && el.getBoundingClientRect().top < 120) current = id; });
-  document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + current));
-}, { passive: true });
+// ── MISC ──
+function togglePw(id,btn){const i=$(id);i.type=i.type==='password'?'text':'password';btn.textContent=i.type==='password'?'👁️':'🙈';}
+function scrollTo(id){const el=$(id);if(!el)return false;el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.sidebar-menu a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+id));return false;}
+function logout(){localStorage.removeItem('tsh_token');localStorage.removeItem('tsh_user');location.href='index.html';}
+const sections=['info','address','orders','security'];
+window.addEventListener('scroll',()=>{
+  let cur=sections[0];
+  sections.forEach(id=>{const el=$(id);if(el&&el.getBoundingClientRect().top<120)cur=id;});
+  document.querySelectorAll('.sidebar-menu a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));
+},{passive:true});
 </script>
 </body>
 </html>
