@@ -26,281 +26,92 @@
     --radius-sm:     10px;
     --transition:    .22s cubic-bezier(.4,0,.2,1);
   }
-  body {
-    font-family: 'Be Vietnam Pro', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-  }
+  body { font-family: 'Be Vietnam Pro', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
   /* ── NAVBAR ── */
   .navbar {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    background: rgba(255,255,255,.96);
-    backdrop-filter: blur(12px);
+    background: rgba(255,255,255,.96); backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
-    height: 68px;
-    display: flex; align-items: center;
-    padding: 0 24px;
+    height: 68px; display: flex; align-items: center; padding: 0 24px;
   }
-  .navbar__inner {
-    max-width: 1200px; margin: 0 auto; width: 100%;
-    display: flex; align-items: center; justify-content: space-between;
-  }
+  .navbar__inner { max-width: 1200px; margin: 0 auto; width: 100%; display: flex; align-items: center; justify-content: space-between; }
   .navbar__logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
   .navbar__logo img { width: 36px; height: 36px; object-fit: contain; }
-  .navbar__logo-name  { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--dark); font-weight: 700; display: block; }
-  .navbar__logo-sub   { font-size: .63rem; color: var(--primary); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; display: block; }
+  .navbar__logo-name { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--dark); font-weight: 700; display: block; }
+  .navbar__logo-sub  { font-size: .63rem; color: var(--primary); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; display: block; }
   .navbar__links { display: flex; gap: 28px; list-style: none; }
   .navbar__links a { text-decoration: none; color: var(--muted); font-size: .88rem; font-weight: 500; transition: color var(--transition); }
   .navbar__links a:hover, .navbar__links a.active { color: var(--primary); }
 
   /* ── PAGE LAYOUT ── */
-  .page-wrap {
-    max-width: 1060px;
-    margin: 0 auto;
-    padding: 96px 24px 60px;
-    display: grid;
-    grid-template-columns: 260px 1fr;
-    gap: 28px;
-    align-items: start;
-  }
+  .page-wrap { max-width: 1060px; margin: 0 auto; padding: 96px 24px 60px; display: grid; grid-template-columns: 260px 1fr; gap: 28px; align-items: start; }
 
   /* ── SIDEBAR ── */
-  .profile-sidebar {
-    position: sticky;
-    top: 88px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  /* Avatar card */
-  .avatar-card {
-    background: var(--white);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 28px 20px;
-    text-align: center;
-  }
-  .avatar-ring {
-    width: 84px; height: 84px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #a8d87a, var(--primary));
-    display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 14px;
-    font-size: 2.2rem;
-    color: #fff;
-    font-weight: 800;
-    font-family: 'Playfair Display', serif;
-    box-shadow: 0 4px 18px rgba(106,184,42,.35);
-    position: relative;
-  }
-  .avatar-ring .online-dot {
-    position: absolute;
-    bottom: 4px; right: 4px;
-    width: 14px; height: 14px;
-    background: #43a047;
-    border-radius: 50%;
-    border: 2.5px solid var(--white);
-  }
-  .avatar-name { font-family: 'Playfair Display', serif; font-size: 1.15rem; color: var(--dark); font-weight: 700; margin-bottom: 4px; }
+  .profile-sidebar { position: sticky; top: 88px; display: flex; flex-direction: column; gap: 12px; }
+  .avatar-card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); padding: 28px 20px; text-align: center; }
+  .avatar-ring { width: 84px; height: 84px; border-radius: 50%; background: linear-gradient(135deg, #a8d87a, var(--primary)); display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; font-size: 2.2rem; color: #fff; font-weight: 800; font-family: 'Playfair Display', serif; box-shadow: 0 4px 18px rgba(106,184,42,.35); position: relative; }
+  .avatar-ring .online-dot { position: absolute; bottom: 4px; right: 4px; width: 14px; height: 14px; background: #43a047; border-radius: 50%; border: 2.5px solid var(--white); }
+  .avatar-name  { font-family: 'Playfair Display', serif; font-size: 1.15rem; color: var(--dark); font-weight: 700; margin-bottom: 4px; }
   .avatar-email { font-size: .8rem; color: var(--muted); margin-bottom: 14px; }
-  .avatar-role {
-    display: inline-flex; align-items: center; gap: 5px;
-    background: var(--primary-light);
-    color: var(--primary-dark);
-    font-size: .72rem; font-weight: 700;
-    padding: 4px 12px; border-radius: 20px;
-    text-transform: uppercase; letter-spacing: .06em;
-  }
-
-  /* Nav menu */
-  .sidebar-menu {
-    background: var(--white);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    overflow: hidden;
-  }
-  .sidebar-menu a {
-    display: flex; align-items: center; gap: 10px;
-    padding: 13px 18px;
-    text-decoration: none;
-    color: var(--muted);
-    font-size: .875rem;
-    font-weight: 500;
-    border-left: 3px solid transparent;
-    transition: all var(--transition);
-    border-bottom: 1px solid #f4f9f0;
-  }
+  .avatar-role  { display: inline-flex; align-items: center; gap: 5px; background: var(--primary-light); color: var(--primary-dark); font-size: .72rem; font-weight: 700; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: .06em; }
+  .sidebar-menu { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+  .sidebar-menu a { display: flex; align-items: center; gap: 10px; padding: 13px 18px; text-decoration: none; color: var(--muted); font-size: .875rem; font-weight: 500; border-left: 3px solid transparent; transition: all var(--transition); border-bottom: 1px solid #f4f9f0; }
   .sidebar-menu a:last-child { border-bottom: none; }
-  .sidebar-menu a:hover { background: var(--primary-light); color: var(--dark); border-left-color: var(--primary); }
+  .sidebar-menu a:hover  { background: var(--primary-light); color: var(--dark); border-left-color: var(--primary); }
   .sidebar-menu a.active { background: var(--primary-light); color: var(--primary-dark); font-weight: 700; border-left-color: var(--primary); }
   .sidebar-menu a .menu-icon { font-size: 1rem; width: 20px; text-align: center; flex-shrink: 0; }
-
-  /* Logout btn */
-  .btn-logout-side {
-    display: flex; align-items: center; gap: 10px;
-    padding: 12px 18px;
-    background: #fff5f5;
-    border: 1.5px solid #ffd0d0;
-    border-radius: var(--radius-sm);
-    color: var(--danger);
-    font-size: .85rem; font-weight: 600;
-    cursor: pointer;
-    width: 100%;
-    transition: all var(--transition);
-    font-family: 'Be Vietnam Pro', sans-serif;
-  }
+  .btn-logout-side { display: flex; align-items: center; gap: 10px; padding: 12px 18px; background: #fff5f5; border: 1.5px solid #ffd0d0; border-radius: var(--radius-sm); color: var(--danger); font-size: .85rem; font-weight: 600; cursor: pointer; width: 100%; transition: all var(--transition); font-family: 'Be Vietnam Pro', sans-serif; }
   .btn-logout-side:hover { background: var(--danger); color: #fff; border-color: var(--danger); }
 
   /* ── MAIN CONTENT ── */
   .profile-main { display: flex; flex-direction: column; gap: 20px; }
-
-  /* Section card */
-  .card {
-    background: var(--white);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    overflow: hidden;
-  }
-  .card__head {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 18px 24px 14px;
-    border-bottom: 1px solid var(--border);
-  }
+  .card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+  .card__head { display: flex; align-items: center; justify-content: space-between; padding: 18px 24px 14px; border-bottom: 1px solid var(--border); }
   .card__head-left { display: flex; align-items: center; gap: 10px; }
-  .card__head-icon {
-    width: 38px; height: 38px;
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.1rem;
-  }
+  .card__head-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
   .card__head h2 { font-size: .95rem; font-weight: 700; color: var(--dark); }
   .card__head p  { font-size: .78rem; color: var(--muted); margin-top: 1px; }
   .card__body { padding: 22px 24px; }
+  .card__foot { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; border-top: 1px solid var(--border); background: #fafcf8; flex-wrap: wrap; gap: 10px; }
 
-  /* Form */
+  /* ── FORM ── */
   .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   .form-full  { grid-column: 1 / -1; }
   .field { display: flex; flex-direction: column; gap: 6px; }
-  .field label {
-    font-size: .77rem; font-weight: 700;
-    color: var(--text);
-    text-transform: uppercase; letter-spacing: .04em;
-  }
+  .field label { font-size: .77rem; font-weight: 700; color: var(--text); text-transform: uppercase; letter-spacing: .04em; }
   .field label .required { color: var(--danger); margin-left: 2px; }
-  .field input, .field select, .field textarea {
-    width: 100%;
-    padding: 10px 14px;
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm);
-    font-family: 'Be Vietnam Pro', sans-serif;
-    font-size: .88rem;
-    color: var(--text);
-    background: var(--white);
-    outline: none;
-    transition: border-color var(--transition), box-shadow var(--transition);
-  }
-  .field input:focus, .field select:focus, .field textarea:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(106,184,42,.12);
-  }
+  .field input, .field select, .field textarea { width: 100%; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-family: 'Be Vietnam Pro', sans-serif; font-size: .88rem; color: var(--text); background: var(--white); outline: none; transition: border-color var(--transition), box-shadow var(--transition); }
+  .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(106,184,42,.12); }
   .field input:read-only { background: #f9fcf7; color: var(--muted); cursor: not-allowed; }
   .field .hint { font-size: .73rem; color: var(--muted); }
-
-  /* Password toggle */
   .input-wrap { position: relative; }
   .input-wrap input { padding-right: 42px; }
-  .btn-eye {
-    position: absolute; right: 11px; top: 50%; transform: translateY(-50%);
-    background: none; border: none; cursor: pointer;
-    font-size: 1rem; color: var(--muted); padding: 4px;
-    transition: color var(--transition);
-  }
+  .btn-eye { position: absolute; right: 11px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 1rem; color: var(--muted); padding: 4px; transition: color var(--transition); }
   .btn-eye:hover { color: var(--primary); }
 
-  /* Divider */
-  .field-divider { grid-column: 1 / -1; height: 1px; background: var(--border); margin: 4px 0; }
-
-  /* Save button */
-  .btn-save {
-    display: inline-flex; align-items: center; gap: 7px;
-    padding: 10px 24px;
-    background: var(--primary);
-    color: #fff;
-    border: none; border-radius: var(--radius-sm);
-    font-family: 'Be Vietnam Pro', sans-serif;
-    font-size: .88rem; font-weight: 700;
-    cursor: pointer;
-    transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
-  }
-  .btn-save:hover:not(:disabled) {
-    background: var(--primary-dark);
-    transform: translateY(-1px);
-    box-shadow: 0 5px 18px rgba(106,184,42,.3);
-  }
+  /* ── BUTTONS ── */
+  .btn-save { display: inline-flex; align-items: center; gap: 7px; padding: 10px 24px; background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm); font-family: 'Be Vietnam Pro', sans-serif; font-size: .88rem; font-weight: 700; cursor: pointer; transition: background var(--transition), transform var(--transition), box-shadow var(--transition); }
+  .btn-save:hover:not(:disabled) { background: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 5px 18px rgba(106,184,42,.3); }
   .btn-save:disabled { opacity: .6; cursor: not-allowed; }
-  .btn-save .spinner {
-    width: 15px; height: 15px;
-    border: 2px solid rgba(255,255,255,.4);
-    border-top-color: #fff;
-    border-radius: 50%;
-    animation: spin .7s linear infinite;
-    display: none;
-  }
+  .btn-save .spinner { width: 15px; height: 15px; border: 2px solid rgba(255,255,255,.4); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; display: none; }
   .btn-save.loading .lbl { display: none; }
   .btn-save.loading .spinner { display: block; }
 
-  .card__foot {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 24px;
-    border-top: 1px solid var(--border);
-    background: #fafcf8;
-    flex-wrap: wrap; gap: 10px;
-  }
-
-  /* Alert inline */
-  .inline-alert {
-    display: none; align-items: center; gap: 8px;
-    padding: 10px 14px;
-    border-radius: var(--radius-sm);
-    font-size: .83rem; font-weight: 500;
-    margin-bottom: 16px;
-  }
+  /* ── ALERTS ── */
+  .inline-alert { display: none; align-items: center; gap: 8px; padding: 10px 14px; border-radius: var(--radius-sm); font-size: .83rem; font-weight: 500; margin-bottom: 16px; }
   .inline-alert.show { display: flex; }
   .inline-alert.success { background: #e8f5e9; color: var(--success); border: 1px solid #a5d6a7; }
   .inline-alert.error   { background: #ffebee; color: var(--danger);  border: 1px solid #ef9a9a; }
 
-  /* Password strength */
+  /* ── PASSWORD STRENGTH ── */
   .pw-strength { margin-top: 5px; }
-  .pw-strength-bar { height: 3px; border-radius: 3px; background: var(--border); overflow: hidden; margin-bottom: 3px; }
+  .pw-strength-bar  { height: 3px; border-radius: 3px; background: var(--border); overflow: hidden; margin-bottom: 3px; }
   .pw-strength-fill { height: 100%; border-radius: 3px; width: 0%; transition: width .3s, background .3s; }
-  .pw-strength-lbl { font-size: .72rem; }
+  .pw-strength-lbl  { font-size: .72rem; }
 
-  /* Order list */
-  .order-item {
-    display: flex; align-items: center; gap: 14px;
-    padding: 14px 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .order-item:last-child { border-bottom: none; }
-  .order-icon {
-    width: 42px; height: 42px;
-    border-radius: 10px;
-    background: var(--primary-light);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.2rem; flex-shrink: 0;
-  }
-  .order-info { flex: 1; }
-  .order-code { font-weight: 700; color: var(--dark); font-size: .88rem; }
-  .order-date { font-size: .75rem; color: var(--muted); }
-  .order-total { font-weight: 700; color: var(--primary); font-size: .9rem; }
-  .badge {
-    display: inline-flex; align-items: center;
-    padding: 3px 9px; border-radius: 20px;
-    font-size: .7rem; font-weight: 700;
-  }
+  /* ── BADGES ── */
+  .badge { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 20px; font-size: .7rem; font-weight: 700; }
   .badge-pending    { background: #fff8e1; color: #e65100; }
   .badge-confirmed  { background: #e3f2fd; color: #1565c0; }
   .badge-processing { background: #f3e5f5; color: #6a1b9a; }
@@ -308,82 +119,100 @@
   .badge-delivered  { background: #e8f5e9; color: var(--success); }
   .badge-cancelled  { background: #ffebee; color: var(--danger); }
 
-  /* Empty state */
-  .empty-state {
-    text-align: center; padding: 40px 20px;
-    color: var(--muted);
-  }
+  /* ── ORDERS ── */
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 6px; }
+  .stat-mini { background: var(--primary-light); border-radius: var(--radius-sm); padding: 14px; text-align: center; }
+  .stat-mini__val { font-size: 1.5rem; font-weight: 800; color: var(--dark); }
+  .stat-mini__lbl { font-size: .72rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+
+  .order-item { display: flex; align-items: center; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--border); }
+  .order-item:last-child { border-bottom: none; }
+  .order-icon { width: 42px; height: 42px; border-radius: 10px; background: var(--primary-light); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+  .order-info { flex: 1; min-width: 0; }
+  .order-code { font-weight: 700; color: var(--dark); font-size: .88rem; }
+  .order-date { font-size: .75rem; color: var(--muted); }
+  .order-right { text-align: right; flex-shrink: 0; }
+  .order-total { font-weight: 700; color: var(--primary); font-size: .9rem; margin-bottom: 4px; }
+  .btn-track { display: inline-flex; align-items: center; gap: 4px; margin-top: 5px; padding: 4px 10px; background: var(--primary-light); color: var(--primary-dark); border: 1px solid var(--border); border-radius: 20px; font-size: .72rem; font-weight: 700; cursor: pointer; font-family: 'Be Vietnam Pro', sans-serif; transition: all var(--transition); }
+  .btn-track:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+  .empty-state { text-align: center; padding: 40px 20px; color: var(--muted); }
   .empty-state .icon { font-size: 3rem; margin-bottom: 10px; }
   .empty-state p { font-size: .88rem; line-height: 1.6; }
 
-  /* Stats row */
-  .stats-row {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 12px; margin-bottom: 6px;
-  }
-  .stat-mini {
-    background: var(--primary-light);
-    border-radius: var(--radius-sm);
-    padding: 14px;
-    text-align: center;
-  }
-  .stat-mini__val  { font-size: 1.5rem; font-weight: 800; color: var(--dark); }
-  .stat-mini__lbl  { font-size: .72rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+  /* ── TRACKING MODAL ── */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.55); backdrop-filter: blur(4px); z-index: 600; display: none; align-items: center; justify-content: center; padding: 20px; }
+  .modal-overlay.show { display: flex; }
+  .trk-modal { background: var(--white); border-radius: var(--radius); width: 100%; max-width: 580px; max-height: 88vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,.2); animation: slideUp .25s ease; }
+  .trk-modal__head { background: linear-gradient(135deg, #1a2e1a 0%, #2e7d32 60%, #6ab82a 100%); padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1; }
+  .trk-modal__code { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: #fff; font-weight: 600; }
+  .trk-modal__code span { display: block; font-family: 'Be Vietnam Pro', sans-serif; font-size: .68rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.6); margin-bottom: 2px; }
+  .trk-modal__status { padding: 5px 14px; border-radius: 50px; background: rgba(255,255,255,.2); color: #fff; font-weight: 700; font-size: .8rem; border: 1px solid rgba(255,255,255,.3); }
+  .trk-modal__close { width: 30px; height: 30px; border-radius: 50%; border: none; background: rgba(255,255,255,.15); color: #fff; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; transition: background var(--transition); flex-shrink: 0; }
+  .trk-modal__close:hover { background: rgba(255,255,255,.3); }
+  .trk-modal__body { padding: 22px 24px; }
 
-  /* Toast */
-  #toastWrap {
-    position: fixed; bottom: 24px; right: 24px;
-    z-index: 9999; display: flex; flex-direction: column; gap: 8px;
-  }
-  .toast {
-    display: flex; align-items: center; gap: 9px;
-    padding: 11px 16px;
-    background: var(--white);
-    border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(0,0,0,.13);
-    font-size: .85rem; font-weight: 500;
-    min-width: 220px;
-    border-left: 4px solid var(--primary);
-    animation: slideUp .3s ease both;
-  }
+  /* GHN box */
+  .trk-ghn-box { display: none; background: #e8f5e9; border-radius: 10px; padding: 12px 16px; margin-bottom: 18px; border-left: 3px solid #2e7d32; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .trk-ghn-box.show { display: flex; }
+  .trk-ghn-label { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #1b5e20; margin-bottom: 2px; }
+  .trk-ghn-value { font-family: monospace; font-weight: 700; font-size: .92rem; color: #1b5e20; }
+
+  /* Timeline */
+  .trk-timeline-title { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: 14px; }
+  .trk-step { display: flex; gap: 14px; position: relative; padding-bottom: 20px; }
+  .trk-step:last-child { padding-bottom: 0; }
+  .trk-step__line { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+  .trk-step__dot { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .95rem; flex-shrink: 0; transition: all .3s; }
+  .trk-step__dot.done    { background: var(--primary); color: #fff; box-shadow: 0 0 0 4px var(--primary-light); }
+  .trk-step__dot.current { background: #f9a825; color: #fff; box-shadow: 0 0 0 4px #fff8e1; animation: pulse 1.5s ease-in-out infinite; }
+  .trk-step__dot.pending { background: #f0f4f0; color: #aaa; }
+  @keyframes pulse { 0%,100% { box-shadow: 0 0 0 4px #fff8e1; } 50% { box-shadow: 0 0 0 8px #fde8c0; } }
+  .trk-step__connector { width: 2px; flex: 1; min-height: 14px; margin-top: 3px; background: var(--border); border-radius: 1px; }
+  .trk-step__connector.done { background: var(--primary); }
+  .trk-step:last-child .trk-step__connector { display: none; }
+  .trk-step__content { padding-top: 5px; flex: 1; }
+  .trk-step__name { font-weight: 700; font-size: .88rem; color: var(--text); margin-bottom: 1px; }
+  .trk-step__name.pending { color: var(--muted); font-weight: 500; }
+  .trk-step__desc { font-size: .77rem; color: var(--muted); }
+
+  /* GHN logs */
+  .trk-logs-title { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin: 18px 0 10px; display: flex; align-items: center; gap: 8px; }
+  .trk-polling-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--success); animation: blink 1.5s ease-in-out infinite; }
+  @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:.2; } }
+  .trk-log { display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: .82rem; }
+  .trk-log:last-child { border-bottom: none; }
+  .trk-log__time { color: var(--muted); font-size: .76rem; white-space: nowrap; min-width: 110px; }
+  .trk-log__status { font-weight: 600; color: var(--text); }
+
+  /* Loading spinner */
+  .trk-spinner-wrap { text-align: center; padding: 40px 20px; }
+  .trk-spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 12px; }
+
+  /* Cancelled */
+  .trk-cancelled { background: #ffebee; border-radius: 10px; padding: 12px 16px; margin-bottom: 16px; border-left: 3px solid var(--danger); color: #c0392b; font-weight: 600; font-size: .85rem; }
+
+  /* ── TOAST ── */
+  #toastWrap { position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; }
+  .toast { display: flex; align-items: center; gap: 9px; padding: 11px 16px; background: var(--white); border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,.13); font-size: .85rem; font-weight: 500; min-width: 220px; border-left: 4px solid var(--primary); animation: slideUp .3s ease both; }
   .toast.error   { border-left-color: var(--danger); }
   .toast.warning { border-left-color: #f9a825; }
 
-  /* Auth gate */
-  #authGate {
-    position: fixed; inset: 0;
-    background: rgba(26,46,26,.97);
-    z-index: 9999;
-    display: none;
-    align-items: center; justify-content: center;
-    flex-direction: column; gap: 16px;
-    text-align: center; padding: 24px;
-  }
+  /* ── AUTH GATE ── */
+  #authGate { position: fixed; inset: 0; background: rgba(26,46,26,.97); z-index: 9999; display: none; align-items: center; justify-content: center; flex-direction: column; gap: 16px; text-align: center; padding: 24px; }
   #authGate h2 { font-family: 'Playfair Display', serif; color: #fff; font-size: 1.8rem; }
   #authGate p  { color: rgba(255,255,255,.6); }
-  .btn-gate {
-    padding: 12px 32px; background: var(--primary); color: #fff;
-    border-radius: 10px; font-weight: 700; text-decoration: none;
-    font-family: 'Be Vietnam Pro', sans-serif;
-  }
+  .btn-gate { padding: 12px 32px; background: var(--primary); color: #fff; border-radius: 10px; font-weight: 700; text-decoration: none; font-family: 'Be Vietnam Pro', sans-serif; }
 
-  /* Animations */
+  /* ── ANIMATIONS ── */
   @keyframes spin    { to { transform: rotate(360deg); } }
   @keyframes slideUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
   @keyframes fadeIn  { from { opacity:0; } to { opacity:1; } }
   .profile-main { animation: fadeIn .35s ease; }
 
-  /* Responsive */
-  @media (max-width: 860px) {
-    .page-wrap { grid-template-columns: 1fr; }
-    .profile-sidebar { position: static; }
-    .stats-row { grid-template-columns: repeat(3, 1fr); }
-  }
-  @media (max-width: 540px) {
-    .form-grid { grid-template-columns: 1fr; }
-    .page-wrap { padding: 84px 16px 48px; }
-    .stats-row { grid-template-columns: 1fr 1fr; }
-  }
+  /* ── RESPONSIVE ── */
+  @media (max-width: 860px) { .page-wrap { grid-template-columns: 1fr; } .profile-sidebar { position: static; } }
+  @media (max-width: 540px) { .form-grid { grid-template-columns: 1fr; } .page-wrap { padding: 84px 16px 48px; } .stats-row { grid-template-columns: 1fr 1fr; } }
   </style>
 </head>
 <body>
@@ -419,10 +248,8 @@
 <!-- PAGE -->
 <div class="page-wrap" id="pageWrap" style="display:none">
 
-  <!-- ── SIDEBAR ── -->
+  <!-- SIDEBAR -->
   <aside class="profile-sidebar">
-
-    <!-- Avatar -->
     <div class="avatar-card">
       <div class="avatar-ring">
         <span id="avatarInitial">?</span>
@@ -432,29 +259,24 @@
       <div class="avatar-email" id="avatarEmail"></div>
       <span class="avatar-role">🌿 Thành viên</span>
     </div>
-
-    <!-- Menu -->
     <nav class="sidebar-menu">
-      <a href="#info" class="active" onclick="scrollTo('info')">
+      <a href="#info" class="active" onclick="return scrollTo('info')">
         <span class="menu-icon">👤</span> Thông tin cá nhân
       </a>
-      <a href="#address" onclick="scrollTo('address')">
+      <a href="#address" onclick="return scrollTo('address')">
         <span class="menu-icon">📍</span> Địa chỉ giao hàng
       </a>
-      <a href="#orders" onclick="scrollTo('orders')">
+      <a href="#orders" onclick="return scrollTo('orders')">
         <span class="menu-icon">📦</span> Đơn hàng của tôi
       </a>
-      <a href="#security" onclick="scrollTo('security')">
+      <a href="#security" onclick="return scrollTo('security')">
         <span class="menu-icon">🔐</span> Bảo mật
       </a>
     </nav>
-
-    <button class="btn-logout-side" onclick="logout()">
-      ⏻ Đăng xuất
-    </button>
+    <button class="btn-logout-side" onclick="logout()">⏻ Đăng xuất</button>
   </aside>
 
-  <!-- ── MAIN ── -->
+  <!-- MAIN -->
   <main class="profile-main">
 
     <!-- ① THÔNG TIN CÁ NHÂN -->
@@ -462,10 +284,7 @@
       <div class="card__head">
         <div class="card__head-left">
           <div class="card__head-icon" style="background:#e8f5e0">👤</div>
-          <div>
-            <h2>Thông tin cá nhân</h2>
-            <p>Họ tên, email, số điện thoại</p>
-          </div>
+          <div><h2>Thông tin cá nhân</h2><p>Họ tên, email, số điện thoại</p></div>
         </div>
       </div>
       <div class="card__body">
@@ -489,21 +308,17 @@
       <div class="card__foot">
         <span style="font-size:.78rem;color:var(--muted)">Cập nhật lần cuối: <span id="infoUpdated">–</span></span>
         <button class="btn-save" id="btnSaveInfo" onclick="saveInfo()">
-          <span class="lbl">💾 Lưu thay đổi</span>
-          <div class="spinner"></div>
+          <span class="lbl">💾 Lưu thay đổi</span><div class="spinner"></div>
         </button>
       </div>
     </div>
 
-    <!-- ② ĐỊA CHỈ GIAO HÀNG -->
+    <!-- ② ĐỊA CHỈ -->
     <div class="card" id="address">
       <div class="card__head">
         <div class="card__head-left">
           <div class="card__head-icon" style="background:#e3f2fd">📍</div>
-          <div>
-            <h2>Địa chỉ giao hàng</h2>
-            <p>Tự động điền khi thanh toán</p>
-          </div>
+          <div><h2>Địa chỉ giao hàng</h2><p>Tự động điền khi thanh toán</p></div>
         </div>
       </div>
       <div class="card__body">
@@ -511,7 +326,7 @@
         <div class="form-grid">
           <div class="field form-full">
             <label>Địa chỉ cụ thể <span class="required">*</span></label>
-            <input type="text" id="addrStreet" placeholder="Số nhà, tên đường, tòa nhà…" autocomplete="street-address"/>
+            <input type="text" id="addrStreet" placeholder="Số nhà, tên đường…" autocomplete="street-address"/>
           </div>
           <div class="field">
             <label>Phường / Xã</label>
@@ -525,51 +340,38 @@
             <label>Tỉnh / Thành phố</label>
             <select id="addrProvince">
               <option value="">-- Chọn tỉnh / thành phố --</option>
-              <option>An Giang</option><option>Bà Rịa – Vũng Tàu</option>
-              <option>Bắc Giang</option><option>Bắc Kạn</option>
-              <option>Bạc Liêu</option><option>Bắc Ninh</option>
-              <option>Bến Tre</option><option>Bình Định</option>
-              <option>Bình Dương</option><option>Bình Phước</option>
-              <option>Bình Thuận</option><option>Cà Mau</option>
-              <option>Cần Thơ</option><option>Cao Bằng</option>
-              <option>Đà Nẵng</option><option>Đắk Lắk</option>
-              <option>Đắk Nông</option><option>Điện Biên</option>
-              <option>Đồng Nai</option><option>Đồng Tháp</option>
-              <option>Gia Lai</option><option>Hà Giang</option>
-              <option>Hà Nam</option><option>Hà Nội</option>
-              <option>Hà Tĩnh</option><option>Hải Dương</option>
-              <option>Hải Phòng</option><option>Hậu Giang</option>
-              <option>Hòa Bình</option><option>Hưng Yên</option>
-              <option>Khánh Hòa</option><option>Kiên Giang</option>
-              <option>Kon Tum</option><option>Lai Châu</option>
-              <option>Lâm Đồng</option><option>Lạng Sơn</option>
-              <option>Lào Cai</option><option>Long An</option>
-              <option>Nam Định</option><option>Nghệ An</option>
-              <option>Ninh Bình</option><option>Ninh Thuận</option>
-              <option>Phú Thọ</option><option>Phú Yên</option>
-              <option>Quảng Bình</option><option>Quảng Nam</option>
-              <option>Quảng Ngãi</option><option>Quảng Ninh</option>
-              <option>Quảng Trị</option><option>Sóc Trăng</option>
-              <option>Sơn La</option><option>Tây Ninh</option>
-              <option>Thái Bình</option><option>Thái Nguyên</option>
-              <option>Thanh Hóa</option><option>Thừa Thiên Huế</option>
-              <option>Tiền Giang</option><option>TP. Hồ Chí Minh</option>
-              <option>Trà Vinh</option><option>Tuyên Quang</option>
-              <option>Vĩnh Long</option><option>Vĩnh Phúc</option>
-              <option>Yên Bái</option>
+              <option>An Giang</option><option>Bà Rịa – Vũng Tàu</option><option>Bắc Giang</option>
+              <option>Bắc Kạn</option><option>Bạc Liêu</option><option>Bắc Ninh</option>
+              <option>Bến Tre</option><option>Bình Định</option><option>Bình Dương</option>
+              <option>Bình Phước</option><option>Bình Thuận</option><option>Cà Mau</option>
+              <option>Cần Thơ</option><option>Cao Bằng</option><option>Đà Nẵng</option>
+              <option>Đắk Lắk</option><option>Đắk Nông</option><option>Điện Biên</option>
+              <option>Đồng Nai</option><option>Đồng Tháp</option><option>Gia Lai</option>
+              <option>Hà Giang</option><option>Hà Nam</option><option>Hà Nội</option>
+              <option>Hà Tĩnh</option><option>Hải Dương</option><option>Hải Phòng</option>
+              <option>Hậu Giang</option><option>Hòa Bình</option><option>Hưng Yên</option>
+              <option>Khánh Hòa</option><option>Kiên Giang</option><option>Kon Tum</option>
+              <option>Lai Châu</option><option>Lâm Đồng</option><option>Lạng Sơn</option>
+              <option>Lào Cai</option><option>Long An</option><option>Nam Định</option>
+              <option>Nghệ An</option><option>Ninh Bình</option><option>Ninh Thuận</option>
+              <option>Phú Thọ</option><option>Phú Yên</option><option>Quảng Bình</option>
+              <option>Quảng Nam</option><option>Quảng Ngãi</option><option>Quảng Ninh</option>
+              <option>Quảng Trị</option><option>Sóc Trăng</option><option>Sơn La</option>
+              <option>Tây Ninh</option><option>Thái Bình</option><option>Thái Nguyên</option>
+              <option>Thanh Hóa</option><option>Thừa Thiên Huế</option><option>Tiền Giang</option>
+              <option>TP. Hồ Chí Minh</option><option>Trà Vinh</option><option>Tuyên Quang</option>
+              <option>Vĩnh Long</option><option>Vĩnh Phúc</option><option>Yên Bái</option>
             </select>
           </div>
         </div>
         <div style="margin-top:14px;background:var(--primary-light);border-radius:var(--radius-sm);padding:12px 14px;font-size:.82rem;color:var(--muted);display:flex;gap:8px;align-items:flex-start">
-          <span>💡</span>
-          <span>Địa chỉ này sẽ được tự động điền vào trang thanh toán, giúp bạn mua hàng nhanh hơn.</span>
+          <span>💡</span><span>Địa chỉ này sẽ được tự động điền vào trang thanh toán.</span>
         </div>
       </div>
       <div class="card__foot">
         <span style="font-size:.78rem;color:var(--muted)" id="addrPreview"></span>
         <button class="btn-save" id="btnSaveAddr" onclick="saveAddress()">
-          <span class="lbl">📍 Lưu địa chỉ</span>
-          <div class="spinner"></div>
+          <span class="lbl">📍 Lưu địa chỉ</span><div class="spinner"></div>
         </button>
       </div>
     </div>
@@ -579,15 +381,11 @@
       <div class="card__head">
         <div class="card__head-left">
           <div class="card__head-icon" style="background:#fce4ec">📦</div>
-          <div>
-            <h2>Đơn hàng của tôi</h2>
-            <p>Lịch sử mua hàng</p>
-          </div>
+          <div><h2>Đơn hàng của tôi</h2><p>Lịch sử mua hàng</p></div>
         </div>
         <a href="shop.html" style="font-size:.8rem;color:var(--primary);font-weight:700;text-decoration:none">🛒 Mua thêm</a>
       </div>
       <div class="card__body" style="padding:0">
-        <!-- Stats -->
         <div style="padding:18px 24px 0">
           <div class="stats-row" id="orderStats">
             <div class="stat-mini"><div class="stat-mini__val">–</div><div class="stat-mini__lbl">Tổng đơn</div></div>
@@ -606,10 +404,7 @@
       <div class="card__head">
         <div class="card__head-left">
           <div class="card__head-icon" style="background:#f3e5f5">🔐</div>
-          <div>
-            <h2>Đổi mật khẩu</h2>
-            <p>Cập nhật mật khẩu để bảo vệ tài khoản</p>
-          </div>
+          <div><h2>Đổi mật khẩu</h2><p>Cập nhật mật khẩu để bảo vệ tài khoản</p></div>
         </div>
       </div>
       <div class="card__body">
@@ -645,8 +440,7 @@
       <div class="card__foot">
         <span style="font-size:.78rem;color:var(--muted)">Sau khi đổi, bạn sẽ cần đăng nhập lại</span>
         <button class="btn-save" id="btnSavePw" onclick="savePassword()">
-          <span class="lbl">🔑 Đổi mật khẩu</span>
-          <div class="spinner"></div>
+          <span class="lbl">🔑 Đổi mật khẩu</span><div class="spinner"></div>
         </button>
       </div>
     </div>
@@ -657,24 +451,64 @@
 <!-- TOAST -->
 <div id="toastWrap"></div>
 
+<!-- ══ TRACKING MODAL ══ -->
+<div class="modal-overlay" id="trackingModal">
+  <div class="trk-modal">
+    <div class="trk-modal__head">
+      <div class="trk-modal__code">
+        <span>Theo dõi đơn hàng</span>
+        <span id="trkModalCode">–</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="trk-modal__status" id="trkModalStatus">–</div>
+        <button class="trk-modal__close" onclick="closeTracking()">✕</button>
+      </div>
+    </div>
+    <div class="trk-modal__body" id="trkModalBody">
+      <div class="trk-spinner-wrap">
+        <div class="trk-spinner"></div>
+        <p style="color:var(--muted);font-size:.85rem">Đang tải thông tin đơn hàng…</p>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 // ══════════════════════════════════════════
 // CONFIG
 // ══════════════════════════════════════════
 const API = 'https://trasenhong-backend-production.up.railway.app/api';
-// Test local: const API = 'http://localhost:3000/api';
+
+const $  = id => document.getElementById(id);
+const getToken = () => localStorage.getItem('tsh_token');
+const getUser  = () => { try { return JSON.parse(localStorage.getItem('tsh_user')); } catch { return null; } };
+const saveUser = u => localStorage.setItem('tsh_user', JSON.stringify(u));
+const fmt = n => Number(n || 0).toLocaleString('vi-VN') + '₫';
+const fmtDate = s => s ? new Date(s).toLocaleDateString('vi-VN', { day:'2-digit', month:'2-digit', year:'numeric' }) : '–';
+const fmtDateTime = s => s ? new Date(s).toLocaleString('vi-VN', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' }) : '–';
+
+const STATUS_LABEL = {
+  pending:    '⏳ Chờ xác nhận',
+  confirmed:  '✅ Đã xác nhận',
+  processing: '⚙️ Đang xử lý',
+  shipping:   '🚚 Đang giao',
+  delivered:  '✓ Đã giao',
+  cancelled:  '✕ Đã huỷ',
+};
+
+// ── TIMELINE STEPS ──
+const TIMELINE_STEPS = [
+  { key: 'pending',    icon: '📝', name: 'Đặt hàng thành công',  desc: 'Đơn hàng đã được ghi nhận' },
+  { key: 'confirmed',  icon: '✅', name: 'Đã xác nhận',          desc: 'Cửa hàng đã xác nhận và tạo vận đơn GHN' },
+  { key: 'processing', icon: '⚙️', name: 'Đang đóng gói',        desc: 'Sản phẩm đang được chuẩn bị' },
+  { key: 'shipping',   icon: '🚚', name: 'Đang giao hàng',        desc: 'Đơn hàng đang trên đường đến bạn' },
+  { key: 'delivered',  icon: '🎉', name: 'Giao hàng thành công', desc: 'Đơn hàng đã đến tay bạn' },
+];
+const STATUS_ORDER = ['pending','confirmed','processing','shipping','delivered'];
 
 // ══════════════════════════════════════════
 // UTILS
 // ══════════════════════════════════════════
-const $  = id => document.getElementById(id);
-const getToken = () => localStorage.getItem('tsh_token');
-const getUser  = () => { try { return JSON.parse(localStorage.getItem('tsh_user')); } catch { return null; } }
-const saveUser = u => localStorage.setItem('tsh_user', JSON.stringify(u));
-
-const fmt = n => Number(n || 0).toLocaleString('vi-VN') + '₫';
-const fmtDate = s => s ? new Date(s).toLocaleDateString('vi-VN', { day:'2-digit', month:'2-digit', year:'numeric' }) : '–';
-
 function toast(msg, type = 'success') {
   const wrap = $('toastWrap');
   const el = document.createElement('div');
@@ -701,13 +535,9 @@ async function apiFetch(endpoint, options = {}) {
   const headers = { 'Content-Type': 'application/json', ...options.headers };
   const token = getToken();
   if (token) headers['Authorization'] = `Bearer ${token}`;
-  const res = await fetch(`${API}${endpoint}`, { ...options, headers });
+  const res  = await fetch(`${API}${endpoint}`, { ...options, headers });
   const data = await res.json();
-  if (res.status === 401) {
-    localStorage.clear();
-    location.href = 'login.html?return=profile.html';
-    throw new Error('Unauthorized');
-  }
+  if (res.status === 401) { localStorage.clear(); location.href = 'login.html?return=profile.html'; throw new Error('Unauthorized'); }
   return data;
 }
 
@@ -715,32 +545,21 @@ async function apiFetch(endpoint, options = {}) {
 // AUTH GUARD & INIT
 // ══════════════════════════════════════════
 (async function init() {
-  const user = getUser();
+  const user  = getUser();
   const token = getToken();
-  if (!user || !token) {
-    $('authGate').style.display = 'flex';
-    return;
-  }
+  if (!user || !token) { $('authGate').style.display = 'flex'; return; }
   $('pageWrap').style.display = 'grid';
 
-  // Set sidebar info
   const name = user.full_name || user.email || 'Bạn';
   $('avatarInitial').textContent = name.charAt(0).toUpperCase();
-  $('avatarName').textContent = name;
-  $('avatarEmail').textContent = user.email || '';
+  $('avatarName').textContent    = name;
+  $('avatarEmail').textContent   = user.email || '';
 
-  // Load fresh profile from API
   try {
     const data = await apiFetch('/auth/me');
-    if (data.success) {
-      const u = data.user;
-      saveUser(u); // update cache
-      fillInfo(u);
-      fillAddress(u);
-    }
+    if (data.success) { saveUser(data.user); fillInfo(data.user); fillAddress(data.user); }
   } catch {}
 
-  // Load orders
   loadOrders();
 })();
 
@@ -748,11 +567,10 @@ async function apiFetch(endpoint, options = {}) {
 // FILL FORMS
 // ══════════════════════════════════════════
 function fillInfo(u) {
-  $('infoName').value   = u.full_name || '';
-  $('infoEmail').value  = u.email || '';
-  $('infoPhone').value  = u.phone || '';
+  $('infoName').value  = u.full_name || '';
+  $('infoEmail').value = u.email || '';
+  $('infoPhone').value = u.phone || '';
   $('infoUpdated').textContent = fmtDate(u.updated_at || u.created_at);
-  // Update sidebar
   const name = u.full_name || u.email || 'Bạn';
   $('avatarInitial').textContent = name.charAt(0).toUpperCase();
   $('avatarName').textContent    = name;
@@ -763,11 +581,8 @@ function fillAddress(u) {
   $('addrStreet').value   = u.address  || '';
   $('addrWard').value     = u.ward     || '';
   $('addrDistrict').value = u.district || '';
-  // Set province select
   const sel = $('addrProvince');
-  for (let opt of sel.options) {
-    if (opt.value === u.province) { opt.selected = true; break; }
-  }
+  for (let opt of sel.options) { if (opt.value === u.province) { opt.selected = true; break; } }
   updateAddrPreview(u);
 }
 
@@ -782,26 +597,17 @@ function updateAddrPreview(u) {
 async function saveInfo() {
   const full_name = $('infoName').value.trim();
   const phone     = $('infoPhone').value.trim();
-  if (!full_name || full_name.length < 2) {
-    showAlert('infoAlert', 'Họ tên phải có ít nhất 2 ký tự.');
-    return;
-  }
-  if (phone && !/^(0|\+84)[0-9]{9}$/.test(phone.replace(/\s/g,''))) {
-    showAlert('infoAlert', 'Số điện thoại không hợp lệ (10 số, bắt đầu bằng 0).');
-    return;
-  }
+  if (!full_name || full_name.length < 2) { showAlert('infoAlert', 'Họ tên phải có ít nhất 2 ký tự.'); return; }
+  if (phone && !/^(0|\+84)[0-9]{9}$/.test(phone.replace(/\s/g,''))) { showAlert('infoAlert', 'Số điện thoại không hợp lệ.'); return; }
   setLoading('btnSaveInfo', true);
   try {
-    const data = await apiFetch('/auth/me', {
-      method: 'PUT',
-      body: JSON.stringify({ full_name, phone: phone || undefined }),
-    });
+    const data = await apiFetch('/auth/me', { method: 'PUT', body: JSON.stringify({ full_name, phone: phone || undefined }) });
     if (!data.success) { showAlert('infoAlert', data.message || 'Cập nhật thất bại.'); return; }
     saveUser({ ...getUser(), full_name, phone });
     fillInfo(data.user || { ...getUser(), full_name, phone });
     showAlert('infoAlert', 'Cập nhật thông tin thành công!', 'success');
     toast('Đã lưu thông tin cá nhân!');
-  } catch { showAlert('infoAlert', 'Lỗi kết nối. Vui lòng thử lại.'); }
+  } catch { showAlert('infoAlert', 'Lỗi kết nối.'); }
   finally { setLoading('btnSaveInfo', false); }
 }
 
@@ -813,56 +619,32 @@ async function saveAddress() {
   const ward     = $('addrWard').value.trim();
   const district = $('addrDistrict').value.trim();
   const province = $('addrProvince').value;
-  if (!address) {
-    showAlert('addrAlert', 'Vui lòng nhập địa chỉ cụ thể.');
-    return;
-  }
+  if (!address) { showAlert('addrAlert', 'Vui lòng nhập địa chỉ cụ thể.'); return; }
   setLoading('btnSaveAddr', true);
   try {
-    const data = await apiFetch('/auth/me', {
-      method: 'PUT',
-      body: JSON.stringify({ address, ward: ward || undefined, district: district || undefined, province: province || undefined }),
-    });
+    const data = await apiFetch('/auth/me', { method: 'PUT', body: JSON.stringify({ address, ward: ward || undefined, district: district || undefined, province: province || undefined }) });
     if (!data.success) { showAlert('addrAlert', data.message || 'Cập nhật thất bại.'); return; }
     const updated = { ...getUser(), address, ward, district, province };
     saveUser(updated);
     updateAddrPreview(updated);
     showAlert('addrAlert', 'Lưu địa chỉ thành công!', 'success');
     toast('Đã lưu địa chỉ giao hàng!');
-  } catch { showAlert('addrAlert', 'Lỗi kết nối. Vui lòng thử lại.'); }
+  } catch { showAlert('addrAlert', 'Lỗi kết nối.'); }
   finally { setLoading('btnSaveAddr', false); }
 }
 
-// Live preview địa chỉ
 ['addrStreet','addrWard','addrDistrict','addrProvince'].forEach(id => {
-  $(id).addEventListener('input', () => {
-    updateAddrPreview({
-      address:  $('addrStreet').value,
-      ward:     $('addrWard').value,
-      district: $('addrDistrict').value,
-      province: $('addrProvince').value,
-    });
-  });
+  $(id).addEventListener('input', () => updateAddrPreview({ address: $('addrStreet').value, ward: $('addrWard').value, district: $('addrDistrict').value, province: $('addrProvince').value }));
 });
 
 // ══════════════════════════════════════════
 // ORDERS
 // ══════════════════════════════════════════
-const orderStatusLabel = {
-  pending:    '⏳ Chờ xác nhận',
-  confirmed:  '✅ Đã xác nhận',
-  processing: '⚙️ Đang xử lý',
-  shipping:   '🚚 Đang giao',
-  delivered:  '✓ Đã giao',
-  cancelled:  '✕ Đã huỷ',
-};
-
 async function loadOrders() {
   try {
     const data = await apiFetch('/orders/my');
     const orders = data.orders || [];
 
-    // Stats
     const total     = orders.length;
     const delivered = orders.filter(o => o.status === 'delivered').length;
     const active    = orders.filter(o => ['confirmed','processing','shipping'].includes(o.status)).length;
@@ -887,101 +669,212 @@ async function loadOrders() {
         <div class="order-icon">📦</div>
         <div class="order-info">
           <div class="order-code">${o.order_code}</div>
-          <div class="order-date">${fmtDate(o.created_at)} · ${o.items_count || 0} sản phẩm</div>
+          <div class="order-date">${fmtDate(o.created_at)}</div>
         </div>
-        <div style="text-align:right">
+        <div class="order-right">
           <div class="order-total">${fmt(o.total)}</div>
-          <span class="badge badge-${o.status}">${orderStatusLabel[o.status]||o.status}</span>
+          <span class="badge badge-${o.status}">${STATUS_LABEL[o.status] || o.status}</span>
+          ${o.status !== 'cancelled'
+            ? `<br><button class="btn-track" onclick="openTracking('${o.order_code}')">📍 Theo dõi</button>`
+            : ''}
         </div>
       </div>`).join('');
 
     if (orders.length > 10) {
       $('orderList').innerHTML += `<div style="text-align:center;margin-top:10px;font-size:.82rem;color:var(--muted)">Hiển thị 10 đơn gần nhất</div>`;
     }
-
   } catch {
     $('orderList').innerHTML = '<div style="padding:20px;text-align:center;color:var(--muted);font-size:.85rem">Không tải được đơn hàng</div>';
   }
 }
 
 // ══════════════════════════════════════════
-// CHANGE PASSWORD
+// TRACKING MODAL
+// ══════════════════════════════════════════
+let _pollingTimer = null;
+
+async function openTracking(orderCode) {
+  // Reset modal
+  $('trkModalCode').textContent   = orderCode;
+  $('trkModalStatus').textContent = '…';
+  $('trkModalBody').innerHTML = `
+    <div class="trk-spinner-wrap">
+      <div class="trk-spinner"></div>
+      <p style="color:var(--muted);font-size:.85rem">Đang tải thông tin đơn hàng…</p>
+    </div>`;
+  $('trackingModal').classList.add('show');
+  document.body.style.overflow = 'hidden';
+
+  await fetchTracking(orderCode);
+}
+
+async function fetchTracking(orderCode) {
+  try {
+    const data = await apiFetch(`/orders/track/${orderCode}`);
+    if (!data.success) {
+      $('trkModalBody').innerHTML = `<div style="text-align:center;padding:32px;color:var(--muted)">❌ Không tìm thấy đơn hàng.</div>`;
+      return;
+    }
+
+    const o   = data.order;
+    const ghn = data.ghn_status;
+
+    $('trkModalCode').textContent   = o.order_code;
+    $('trkModalStatus').textContent = STATUS_LABEL[o.status] || o.status;
+
+    // Render body
+    const currentIdx = STATUS_ORDER.indexOf(o.status);
+    const isCancelled = o.status === 'cancelled';
+
+    // Timeline HTML
+    const timelineHtml = isCancelled
+      ? `<div class="trk-cancelled">✕ Đơn hàng này đã bị huỷ. Liên hệ cửa hàng nếu cần hỗ trợ.</div>`
+      : TIMELINE_STEPS.map((step, i) => {
+          const stepIdx = STATUS_ORDER.indexOf(step.key);
+          const isDone    = stepIdx < currentIdx;
+          const isCurrent = stepIdx === currentIdx;
+          const dotClass  = isDone ? 'done' : isCurrent ? 'current' : 'pending';
+          const connClass = isDone ? 'done' : '';
+          return `
+            <div class="trk-step">
+              <div class="trk-step__line">
+                <div class="trk-step__dot ${dotClass}">${step.icon}</div>
+                <div class="trk-step__connector ${connClass}"></div>
+              </div>
+              <div class="trk-step__content">
+                <div class="trk-step__name ${dotClass === 'pending' ? 'pending' : ''}">${step.name}</div>
+                <div class="trk-step__desc">${step.desc}</div>
+              </div>
+            </div>`;
+        }).join('');
+
+    // GHN box
+    const ghnHtml = o.ghn_order_code ? `
+      <div class="trk-ghn-box show">
+        <span style="font-size:1.4rem">🚚</span>
+        <div>
+          <div class="trk-ghn-label">Mã vận đơn GHN</div>
+          <div class="trk-ghn-value">${o.ghn_order_code}</div>
+        </div>
+        ${o.ghn_expected_delivery ? `
+        <div>
+          <div class="trk-ghn-label">Dự kiến giao</div>
+          <div style="font-weight:700;font-size:.85rem;color:#1b5e20">${fmtDateTime(o.ghn_expected_delivery)}</div>
+        </div>` : ''}
+      </div>` : '';
+
+    // GHN realtime logs
+    const isActive = ['confirmed','processing','shipping'].includes(o.status);
+    let ghnLogsHtml = '';
+    if (ghn && ghn.logs && ghn.logs.length) {
+      const logsHtml = [...ghn.logs].reverse().map(l => `
+        <div class="trk-log">
+          <div class="trk-log__time">${fmtDateTime(l.updated_date)}</div>
+          <div class="trk-log__status">${l.status}</div>
+        </div>`).join('');
+      ghnLogsHtml = `
+        <div class="trk-logs-title">
+          🔄 Lịch sử vận chuyển GHN
+          ${isActive ? '<div class="trk-polling-dot"></div><span style="font-size:.72rem;color:var(--muted)">Tự động cập nhật</span>' : ''}
+        </div>
+        ${logsHtml}`;
+    } else if (o.ghn_order_code) {
+      ghnLogsHtml = `
+        <div class="trk-logs-title">
+          🔄 Lịch sử vận chuyển GHN
+          ${isActive ? '<div class="trk-polling-dot"></div><span style="font-size:.72rem;color:var(--muted)">Tự động cập nhật</span>' : ''}
+        </div>
+        <div style="font-size:.82rem;color:var(--muted);padding:8px 0">Chưa có cập nhật từ GHN.</div>`;
+    }
+
+    $('trkModalBody').innerHTML = `
+      ${ghnHtml}
+      <div style="margin-bottom:20px">
+        <div class="trk-timeline-title">📍 Hành trình đơn hàng</div>
+        ${timelineHtml}
+      </div>
+      <div style="border-top:1px solid var(--border);padding-top:16px;margin-bottom:16px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:.83rem">
+          <div><div style="color:var(--muted);font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:3px">Khách hàng</div><div style="font-weight:600">${o.full_name}</div><div style="color:var(--muted)">${o.phone}</div></div>
+          <div><div style="color:var(--muted);font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:3px">Địa chỉ giao</div><div style="font-weight:500">${[o.address, o.ward, o.district, o.province].filter(Boolean).join(', ')}</div></div>
+          <div><div style="color:var(--muted);font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:3px">Thanh toán</div><div style="font-weight:600">${o.payment_method?.toUpperCase()}</div></div>
+          <div><div style="color:var(--muted);font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:3px">Tổng tiền</div><div style="font-weight:700;color:var(--primary)">${fmt(o.total)}</div></div>
+        </div>
+      </div>
+      ${ghnLogsHtml}
+    `;
+
+    // Polling nếu đơn đang active
+    clearTimeout(_pollingTimer);
+    if (isActive && o.ghn_order_code) {
+      _pollingTimer = setTimeout(() => fetchTracking(o.order_code), 30000);
+    }
+
+  } catch {
+    $('trkModalBody').innerHTML = `<div style="text-align:center;padding:32px;color:var(--muted)">❌ Lỗi kết nối. Vui lòng thử lại.</div>`;
+  }
+}
+
+function closeTracking() {
+  $('trackingModal').classList.remove('show');
+  document.body.style.overflow = '';
+  clearTimeout(_pollingTimer);
+}
+
+// Close on overlay click
+$('trackingModal').addEventListener('click', e => { if (e.target === $('trackingModal')) closeTracking(); });
+
+// ══════════════════════════════════════════
+// PASSWORD
 // ══════════════════════════════════════════
 function checkStrength(v) {
-  const wrap = $('pwStrength');
-  const fill = $('pwFill');
-  const lbl  = $('pwLbl');
+  const wrap = $('pwStrength'), fill = $('pwFill'), lbl = $('pwLbl');
   if (!v) { wrap.style.display = 'none'; return; }
   wrap.style.display = 'block';
   let score = 0;
-  if (v.length >= 8)            score++;
-  if (v.length >= 12)           score++;
-  if (/[A-Z]/.test(v))         score++;
-  if (/[0-9]/.test(v))         score++;
-  if (/[^A-Za-z0-9]/.test(v)) score++;
-  const levels = [
-    { w:'20%', c:'#ef5350', t:'Rất yếu' },
-    { w:'40%', c:'#ff7043', t:'Yếu' },
-    { w:'60%', c:'#ffa726', t:'Trung bình' },
-    { w:'80%', c:'#66bb6a', t:'Mạnh' },
-    { w:'100%',c:'#2e7d32', t:'Rất mạnh' },
-  ];
-  const lv = levels[Math.min(score - 1, 4)] || levels[0];
-  fill.style.width = lv.w;
-  fill.style.background = lv.c;
-  lbl.style.color = lv.c;
-  lbl.textContent = lv.t;
+  if (v.length >= 8) score++; if (v.length >= 12) score++;
+  if (/[A-Z]/.test(v)) score++; if (/[0-9]/.test(v)) score++; if (/[^A-Za-z0-9]/.test(v)) score++;
+  const lv = [
+    { w:'20%', c:'#ef5350', t:'Rất yếu' }, { w:'40%', c:'#ff7043', t:'Yếu' },
+    { w:'60%', c:'#ffa726', t:'Trung bình' }, { w:'80%', c:'#66bb6a', t:'Mạnh' }, { w:'100%', c:'#2e7d32', t:'Rất mạnh' },
+  ][Math.min(score - 1, 4)] || { w:'20%', c:'#ef5350', t:'Rất yếu' };
+  fill.style.width = lv.w; fill.style.background = lv.c;
+  lbl.style.color = lv.c; lbl.textContent = lv.t;
 }
 
 async function savePassword() {
-  const current  = $('pwCurrent').value;
-  const newPw    = $('pwNew').value;
-  const confirm  = $('pwConfirm').value;
-  if (!current)           { showAlert('pwAlert', 'Vui lòng nhập mật khẩu hiện tại.'); return; }
-  if (newPw.length < 8)   { showAlert('pwAlert', 'Mật khẩu mới phải có ít nhất 8 ký tự.'); return; }
+  const current = $('pwCurrent').value, newPw = $('pwNew').value, confirm = $('pwConfirm').value;
+  if (!current)          { showAlert('pwAlert', 'Vui lòng nhập mật khẩu hiện tại.'); return; }
+  if (newPw.length < 8)  { showAlert('pwAlert', 'Mật khẩu mới phải có ít nhất 8 ký tự.'); return; }
   if (newPw !== confirm)  { showAlert('pwAlert', 'Mật khẩu xác nhận không khớp.'); return; }
   if (current === newPw)  { showAlert('pwAlert', 'Mật khẩu mới phải khác mật khẩu hiện tại.'); return; }
-
   setLoading('btnSavePw', true);
   try {
-    const data = await apiFetch('/auth/change-password', {
-      method: 'PUT',
-      body: JSON.stringify({ current_password: current, new_password: newPw }),
-    });
+    const data = await apiFetch('/auth/change-password', { method: 'PUT', body: JSON.stringify({ current_password: current, new_password: newPw }) });
     if (!data.success) { showAlert('pwAlert', data.message || 'Đổi mật khẩu thất bại.'); return; }
     showAlert('pwAlert', 'Đổi mật khẩu thành công! Vui lòng đăng nhập lại.', 'success');
     toast('Đổi mật khẩu thành công!');
-    $('pwCurrent').value = '';
-    $('pwNew').value = '';
-    $('pwConfirm').value = '';
+    $('pwCurrent').value = $('pwNew').value = $('pwConfirm').value = '';
     $('pwStrength').style.display = 'none';
-    // Logout sau 2s
-    setTimeout(() => {
-      localStorage.removeItem('tsh_token');
-      localStorage.removeItem('tsh_user');
-      location.href = 'login.html';
-    }, 2000);
-  } catch { showAlert('pwAlert', 'Lỗi kết nối. Vui lòng thử lại.'); }
+    setTimeout(() => { localStorage.removeItem('tsh_token'); localStorage.removeItem('tsh_user'); location.href = 'login.html'; }, 2000);
+  } catch { showAlert('pwAlert', 'Lỗi kết nối.'); }
   finally { setLoading('btnSavePw', false); }
 }
 
 // ══════════════════════════════════════════
-// HELPERS
+// MISC
 // ══════════════════════════════════════════
 function togglePw(id, btn) {
   const inp = $(id);
-  if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
-  else { inp.type = 'password'; btn.textContent = '👁️'; }
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  btn.textContent = inp.type === 'password' ? '👁️' : '🙈';
 }
 
 function scrollTo(id) {
   const el = $(id);
-  if (!el) return;
+  if (!el) return false;
   el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  // Active sidebar link
-  document.querySelectorAll('.sidebar-menu a').forEach(a => {
-    a.classList.toggle('active', a.getAttribute('href') === '#' + id);
-  });
+  document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
   return false;
 }
 
@@ -991,17 +884,11 @@ function logout() {
   location.href = 'index.html';
 }
 
-// Sync sidebar active on scroll
 const sections = ['info','address','orders','security'];
 window.addEventListener('scroll', () => {
   let current = sections[0];
-  sections.forEach(id => {
-    const el = $(id);
-    if (el && el.getBoundingClientRect().top < 120) current = id;
-  });
-  document.querySelectorAll('.sidebar-menu a').forEach(a => {
-    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
-  });
+  sections.forEach(id => { const el = $(id); if (el && el.getBoundingClientRect().top < 120) current = id; });
+  document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + current));
 }, { passive: true });
 </script>
 </body>
