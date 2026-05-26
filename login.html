@@ -412,6 +412,15 @@
       .auth-form-box { max-width: 100%; }
     }
   </style>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <style>
+      .material-symbols-outlined {
+        font-size: 1.1em;
+        vertical-align: -0.15em;
+        line-height: 1;
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+    </style>
 </head>
 <body>
 
@@ -444,7 +453,7 @@
       <div class="auth-panel__bg"></div>
       <div class="auth-panel__overlay"></div>
       <div class="auth-panel__content">
-        <div class="auth-panel__badge">🌿 Thành Viên Trà Sen Hồng</div>
+        <div class="auth-panel__badge"><span class="material-symbols-outlined" aria-hidden="true">eco</span> Thành Viên Trà Sen Hồng</div>
         <h2 class="auth-panel__title">
           Tài Khoản<br/>
           <em>Của Bạn</em>
@@ -454,19 +463,19 @@
         </p>
         <div class="auth-panel__features">
           <div class="auth-panel__feature">
-            <div class="auth-panel__feature-icon">📦</div>
+            <div class="auth-panel__feature-icon"><span class="material-symbols-outlined" aria-hidden="true">inventory_2</span></div>
             <span>Theo dõi đơn hàng theo thời gian thực</span>
           </div>
           <div class="auth-panel__feature">
-            <div class="auth-panel__feature-icon">📍</div>
+            <div class="auth-panel__feature-icon"><span class="material-symbols-outlined" aria-hidden="true">location_on</span></div>
             <span>Lưu địa chỉ, không cần nhập lại khi thanh toán</span>
           </div>
           <div class="auth-panel__feature">
-            <div class="auth-panel__feature-icon">🎁</div>
+            <div class="auth-panel__feature-icon"><span class="material-symbols-outlined" aria-hidden="true">card_giftcard</span></div>
             <span>Nhận ưu đãi & mã giảm giá thành viên</span>
           </div>
           <div class="auth-panel__feature">
-            <div class="auth-panel__feature-icon">⭐</div>
+            <div class="auth-panel__feature-icon"><span class="material-symbols-outlined" aria-hidden="true">star</span></div>
             <span>Lịch sử mua hàng và đánh giá sản phẩm</span>
           </div>
         </div>
@@ -501,7 +510,7 @@
               <label class="form-label" for="loginPassword">Mật khẩu</label>
               <div class="input-wrap">
                 <input class="form-input" type="password" id="loginPassword" name="password" placeholder="••••••••" autocomplete="current-password" required />
-                <button type="button" class="btn-eye" onclick="togglePw('loginPassword', this)" aria-label="Hiện/ẩn mật khẩu">👁️</button>
+                <button type="button" class="btn-eye" onclick="togglePw('loginPassword', this)" aria-label="Hiện/ẩn mật khẩu"><span class="material-symbols-outlined" aria-hidden="true">visibility</span></button>
               </div>
               <span class="field-error" id="loginPasswordErr">Vui lòng nhập mật khẩu</span>
             </div>
@@ -524,7 +533,7 @@
         <!-- ── REGISTER FORM ── -->
         <div id="registerPanel" style="display:none">
           <h1 class="auth-heading">Tạo tài khoản</h1>
-          <p class="auth-subheading">Tham gia cộng đồng yêu trà Sen Hồng 🌿</p>
+          <p class="auth-subheading">Tham gia cộng đồng yêu trà Sen Hồng</p>
 
           <form id="registerForm" novalidate>
             <div class="form-group">
@@ -548,7 +557,7 @@
               <label class="form-label" for="regPassword">Mật khẩu</label>
               <div class="input-wrap">
                 <input class="form-input" type="password" id="regPassword" placeholder="Ít nhất 8 ký tự" autocomplete="new-password" required />
-                <button type="button" class="btn-eye" onclick="togglePw('regPassword', this)" aria-label="Hiện/ẩn mật khẩu">👁️</button>
+                <button type="button" class="btn-eye" onclick="togglePw('regPassword', this)" aria-label="Hiện/ẩn mật khẩu"><span class="material-symbols-outlined" aria-hidden="true">visibility</span></button>
               </div>
               <div class="pw-strength" id="pwStrength" style="display:none">
                 <div class="pw-strength-bar"><div class="pw-strength-fill" id="pwFill"></div></div>
@@ -560,7 +569,7 @@
               <label class="form-label" for="regConfirm">Xác nhận mật khẩu</label>
               <div class="input-wrap">
                 <input class="form-input" type="password" id="regConfirm" placeholder="Nhập lại mật khẩu" autocomplete="new-password" required />
-                <button type="button" class="btn-eye" onclick="togglePw('regConfirm', this)" aria-label="Hiện/ẩn mật khẩu">👁️</button>
+                <button type="button" class="btn-eye" onclick="togglePw('regConfirm', this)" aria-label="Hiện/ẩn mật khẩu"><span class="material-symbols-outlined" aria-hidden="true">visibility</span></button>
               </div>
               <span class="field-error" id="regConfirmErr">Mật khẩu xác nhận không khớp</span>
             </div>
@@ -588,9 +597,9 @@
           <div class="auth-success-icon">✓</div>
           <h3 id="successTitle">Đăng nhập thành công!</h3>
           <p id="successDesc">Chào mừng bạn trở lại với Trà Sen Hồng 🍵</p>
-          <a href="index.html" class="btn-goto">🏠 Về Trang Chủ</a>
+          <a href="index.html" class="btn-goto"><span class="material-symbols-outlined" aria-hidden="true">home</span> Về Trang Chủ</a>
           &nbsp;
-          <a href="shop.html" class="btn-goto" style="background:var(--clr-dark)">🛒 Mua Sắm</a>
+          <a href="shop.html" class="btn-goto" style="background:var(--clr-dark)"><span class="material-symbols-outlined" aria-hidden="true">shopping_cart</span> Mua Sắm</a>
         </div>
 
       </div>
@@ -793,14 +802,14 @@
       const s = $('successScreen');
       s.classList.add('show');
       $('successTitle').textContent = `Chào mừng, ${data.user.full_name}!`;
-      $('successDesc').textContent  = 'Tài khoản đã được tạo thành công. Hãy cập nhật địa chỉ giao hàng để thanh toán nhanh hơn nhé 🎉';
+      $('successDesc').textContent  = 'Tài khoản đã được tạo thành công. Hãy cập nhật địa chỉ giao hàng để thanh toán nhanh hơn nhé';
       // Thêm nút profile
       const btnWrap = s.querySelector('a[href="index.html"]').parentNode;
       const profileBtn = document.createElement('a');
       profileBtn.href = 'profile.html';
       profileBtn.className = 'btn-goto';
       profileBtn.style.cssText = 'background:#2c5f2e;margin-left:8px';
-      profileBtn.textContent = '👤 Cập Nhật Hồ Sơ';
+      profileBtn.innerHTML = '<span class="material-symbols-outlined" aria-hidden="true">person</span> Cập Nhật Hồ Sơ';
       btnWrap.appendChild(profileBtn);
 
     } catch (err) {

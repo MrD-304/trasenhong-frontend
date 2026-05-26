@@ -79,7 +79,7 @@
 
   /* Loading select */
   .select-loading { position: relative; }
-  .select-loading::after { content: '⏳'; position: absolute; right: 32px; top: 50%; transform: translateY(-50%); font-size: .8rem; pointer-events: none; }
+  .select-loading::after { content: ''; position: absolute; right: 32px; top: 50%; transform: translateY(-50%); font-size: .8rem; pointer-events: none; }
 
   .input-wrap { position: relative; }
   .input-wrap input { padding-right: 42px; }
@@ -190,11 +190,20 @@
   @media (max-width: 860px) { .page-wrap { grid-template-columns: 1fr; } .profile-sidebar { position: static; } }
   @media (max-width: 540px) { .form-grid { grid-template-columns: 1fr; } .page-wrap { padding: 84px 16px 48px; } .stats-row { grid-template-columns: 1fr 1fr; } }
   </style>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <style>
+      .material-symbols-outlined {
+        font-size: 1.1em;
+        vertical-align: -0.15em;
+        line-height: 1;
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+    </style>
 </head>
 <body>
 
 <div id="authGate">
-  <div style="font-size:3.5rem">🔒</div>
+  <div style="font-size:3.5rem"><span class="material-symbols-outlined" aria-hidden="true">lock</span></div>
   <h2>Vui lòng đăng nhập</h2>
   <p>Bạn cần đăng nhập để xem trang này.</p>
   <a href="login.html?return=profile.html" class="btn-gate">Đăng Nhập Ngay</a>
@@ -226,15 +235,15 @@
       </div>
       <div class="avatar-name" id="avatarName">Đang tải…</div>
       <div class="avatar-email" id="avatarEmail"></div>
-      <span class="avatar-role">🌿 Thành viên</span>
+      <span class="avatar-role"><span class="material-symbols-outlined" aria-hidden="true">verified_user</span> Thành viên</span>
     </div>
     <nav class="sidebar-menu">
-      <a href="#info" class="active" onclick="return scrollTo('info')"><span class="menu-icon">👤</span> Thông tin cá nhân</a>
-      <a href="#address" onclick="return scrollTo('address')"><span class="menu-icon">📍</span> Địa chỉ giao hàng</a>
-      <a href="#orders" onclick="return scrollTo('orders')"><span class="menu-icon">📦</span> Đơn hàng của tôi</a>
-      <a href="#security" onclick="return scrollTo('security')"><span class="menu-icon">🔐</span> Bảo mật</a>
+      <a href="#info" class="active" onclick="return scrollTo('info')"><span class="menu-icon"><span class="material-symbols-outlined" aria-hidden="true">person</span></span> Thông tin cá nhân</a>
+      <a href="#address" onclick="return scrollTo('address')"><span class="menu-icon"><span class="material-symbols-outlined" aria-hidden="true">location_on</span></span> Địa chỉ giao hàng</a>
+      <a href="#orders" onclick="return scrollTo('orders')"><span class="menu-icon"><span class="material-symbols-outlined" aria-hidden="true">inventory_2</span></span> Đơn hàng của tôi</a>
+      <a href="#security" onclick="return scrollTo('security')"><span class="menu-icon"><span class="material-symbols-outlined" aria-hidden="true">lock</span></span> Bảo mật</a>
     </nav>
-    <button class="btn-logout-side" onclick="logout()">⏻ Đăng xuất</button>
+    <button class="btn-logout-side" onclick="logout()"><span class="material-symbols-outlined" aria-hidden="true">power_settings_new</span> Đăng xuất</button>
   </aside>
 
   <main class="profile-main">
@@ -243,7 +252,7 @@
     <div class="card" id="info">
       <div class="card__head">
         <div class="card__head-left">
-          <div class="card__head-icon" style="background:#e8f5e0">👤</div>
+          <div class="card__head-icon" style="background:#e8f5e0"><span class="material-symbols-outlined" aria-hidden="true">person</span></div>
           <div><h2>Thông tin cá nhân</h2><p>Họ tên, email, số điện thoại</p></div>
         </div>
       </div>
@@ -277,7 +286,7 @@
     <div class="card" id="address">
       <div class="card__head">
         <div class="card__head-left">
-          <div class="card__head-icon" style="background:#e3f2fd">📍</div>
+          <div class="card__head-icon" style="background:#e3f2fd"><span class="material-symbols-outlined" aria-hidden="true">location_on</span></div>
           <div><h2>Địa chỉ giao hàng</h2><p>Tự động điền khi thanh toán</p></div>
         </div>
       </div>
@@ -328,7 +337,7 @@
       <div class="card__foot">
         <span style="font-size:.78rem;color:var(--muted)" id="addrPreview">Chưa có địa chỉ</span>
         <button class="btn-save" id="btnSaveAddr" onclick="saveAddress()">
-          <span class="lbl">📍 Lưu địa chỉ</span><div class="spinner"></div>
+          <span class="lbl"><span class="material-symbols-outlined" aria-hidden="true">save</span> Lưu địa chỉ</span><div class="spinner"></div>
         </button>
       </div>
     </div>
@@ -337,10 +346,10 @@
     <div class="card" id="orders">
       <div class="card__head">
         <div class="card__head-left">
-          <div class="card__head-icon" style="background:#fce4ec">📦</div>
+          <div class="card__head-icon" style="background:#fce4ec"><span class="material-symbols-outlined" aria-hidden="true">inventory_2</span></div>
           <div><h2>Đơn hàng của tôi</h2><p>Lịch sử mua hàng</p></div>
         </div>
-        <a href="shop.html" style="font-size:.8rem;color:var(--primary);font-weight:700;text-decoration:none">🛒 Mua thêm</a>
+        <a href="shop.html" style="font-size:.8rem;color:var(--primary);font-weight:700;text-decoration:none"><span class="material-symbols-outlined" aria-hidden="true">add_shopping_cart</span> Mua thêm</a>
       </div>
       <div class="card__body" style="padding:0">
         <div style="padding:18px 24px 0">
@@ -351,7 +360,7 @@
           </div>
         </div>
         <div id="orderList" style="padding:6px 24px 18px">
-          <div style="text-align:center;padding:32px;color:var(--muted);font-size:.88rem">⏳ Đang tải đơn hàng…</div>
+          <div style="text-align:center;padding:32px;color:var(--muted);font-size:.88rem"><span class="material-symbols-outlined" aria-hidden="true">hourglass_empty</span> Đang tải đơn hàng…</div>
         </div>
       </div>
     </div>
@@ -360,7 +369,7 @@
     <div class="card" id="security">
       <div class="card__head">
         <div class="card__head-left">
-          <div class="card__head-icon" style="background:#f3e5f5">🔐</div>
+          <div class="card__head-icon" style="background:#f3e5f5"><span class="material-symbols-outlined" aria-hidden="true">lock</span></div>
           <div><h2>Đổi mật khẩu</h2><p>Cập nhật mật khẩu để bảo vệ tài khoản</p></div>
         </div>
       </div>
@@ -371,14 +380,14 @@
             <label>Mật khẩu hiện tại <span class="required">*</span></label>
             <div class="input-wrap">
               <input type="password" id="pwCurrent" placeholder="Nhập mật khẩu hiện tại" autocomplete="current-password"/>
-              <button class="btn-eye" type="button" onclick="togglePw('pwCurrent',this)">👁️</button>
+              <button class="btn-eye" type="button" onclick="togglePw('pwCurrent',this)"><span class="material-symbols-outlined" aria-hidden="true">visibility</span></button>
             </div>
           </div>
           <div class="field">
             <label>Mật khẩu mới <span class="required">*</span></label>
             <div class="input-wrap">
               <input type="password" id="pwNew" placeholder="Ít nhất 8 ký tự" autocomplete="new-password" oninput="checkStrength(this.value)"/>
-              <button class="btn-eye" type="button" onclick="togglePw('pwNew',this)">👁️</button>
+              <button class="btn-eye" type="button" onclick="togglePw('pwNew',this)"><span class="material-symbols-outlined" aria-hidden="true">visibility</span></button>
             </div>
             <div class="pw-strength" id="pwStrength" style="display:none">
               <div class="pw-strength-bar"><div class="pw-strength-fill" id="pwFill"></div></div>
@@ -389,7 +398,7 @@
             <label>Xác nhận mật khẩu mới <span class="required">*</span></label>
             <div class="input-wrap">
               <input type="password" id="pwConfirm" placeholder="Nhập lại mật khẩu mới" autocomplete="new-password"/>
-              <button class="btn-eye" type="button" onclick="togglePw('pwConfirm',this)">👁️</button>
+              <button class="btn-eye" type="button" onclick="togglePw('pwConfirm',this)"><span class="material-symbols-outlined" aria-hidden="true">visibility</span></button>
             </div>
           </div>
         </div>
@@ -438,13 +447,13 @@ const fmt      = n => Number(n || 0).toLocaleString('vi-VN') + '₫';
 const fmtDate  = s => s ? new Date(s).toLocaleDateString('vi-VN', { day:'2-digit', month:'2-digit', year:'numeric' }) : '–';
 const fmtDateTime = s => s ? new Date(s).toLocaleString('vi-VN', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' }) : '–';
 
-const STATUS_LABEL = { pending:'⏳ Chờ xác nhận', confirmed:'✅ Đã xác nhận', processing:'⚙️ Đang xử lý', shipping:'🚚 Đang giao', delivered:'✓ Đã giao', cancelled:'✕ Đã huỷ' };
+const STATUS_LABEL = { pending:'<span class="material-symbols-outlined" aria-hidden="true">hourglass_empty</span> Chờ xác nhận', confirmed:'<span class="material-symbols-outlined" aria-hidden="true">check_circle</span> Đã xác nhận', processing:'<span class="material-symbols-outlined" aria-hidden="true">settings</span> Đang xử lý', shipping:'<span class="material-symbols-outlined" aria-hidden="true">local_shipping</span> Đang giao', delivered:'✓ Đã giao', cancelled:'✕ Đã huỷ' };
 const TIMELINE_STEPS = [
   { key:'pending',    icon:'📝', name:'Đặt hàng thành công',  desc:'Đơn hàng đã được ghi nhận' },
   { key:'confirmed',  icon:'✅', name:'Đã xác nhận',          desc:'Cửa hàng đã xác nhận và tạo vận đơn GHN' },
-  { key:'processing', icon:'⚙️', name:'Đang đóng gói',        desc:'Sản phẩm đang được chuẩn bị' },
-  { key:'shipping',   icon:'🚚', name:'Đang giao hàng',        desc:'Đơn hàng đang trên đường đến bạn' },
-  { key:'delivered',  icon:'🎉', name:'Giao hàng thành công', desc:'Đơn hàng đã đến tay bạn' },
+  { key:'processing', icon:'<span class="material-symbols-outlined" aria-hidden="true">settings</span>', name:'Đang đóng gói',        desc:'Sản phẩm đang được chuẩn bị' },
+  { key:'shipping',   icon:'<span class="material-symbols-outlined" aria-hidden="true">local_shipping</span>', name:'Đang giao hàng',        desc:'Đơn hàng đang trên đường đến bạn' },
+  { key:'delivered',  icon:'<span class="material-symbols-outlined" aria-hidden="true">celebration</span>', name:'Giao hàng thành công', desc:'Đơn hàng đã đến tay bạn' },
 ];
 const STATUS_ORDER = ['pending','confirmed','processing','shipping','delivered'];
 
@@ -567,7 +576,7 @@ function updateAddrPreview() {
   const district = $('addrDistrict').options[$('addrDistrict').selectedIndex]?.text || '';
   const province = $('addrProvince').options[$('addrProvince').selectedIndex]?.text || '';
   const parts = [street, ward, district, province].filter(v => v && v !== '— Chọn tỉnh / thành phố —' && !v.startsWith('—'));
-  $('addrPreview').textContent = parts.length ? '📍 ' + parts.join(', ') : 'Chưa có địa chỉ';
+  $('addrPreview').textContent = parts.length ? '<span class="material-symbols-outlined" aria-hidden="true">location_on</span> ' + parts.join(', ') : 'Chưa có địa chỉ';
 }
 
 // Fill địa chỉ đã lưu — khôi phục dropdown theo tên
@@ -694,12 +703,12 @@ async function loadOrders() {
       <div class="stat-mini"><div class="stat-mini__val">${delivered}</div><div class="stat-mini__lbl">Đã giao</div></div>
       <div class="stat-mini"><div class="stat-mini__val">${active}</div><div class="stat-mini__lbl">Đang giao</div></div>`;
     if (!orders.length) {
-      $('orderList').innerHTML = `<div class="empty-state"><div class="icon">📭</div><p>Bạn chưa có đơn hàng nào.<br/>Hãy khám phá cửa hàng và đặt hàng ngay!</p><a href="shop.html" style="display:inline-block;margin-top:14px;padding:10px 22px;background:var(--primary);color:#fff;border-radius:8px;text-decoration:none;font-weight:700;font-size:.85rem">🛒 Mua sắm ngay</a></div>`;
+      $('orderList').innerHTML = `<div class="empty-state"><div class="icon"><span class="material-symbols-outlined" aria-hidden="true">inbox</span></div><p>Bạn chưa có đơn hàng nào.<br/>Hãy khám phá cửa hàng và đặt hàng ngay!</p><a href="shop.html" style="display:inline-block;margin-top:14px;padding:10px 22px;background:var(--primary);color:#fff;border-radius:8px;text-decoration:none;font-weight:700;font-size:.85rem"><span class="material-symbols-outlined" aria-hidden="true">shopping_cart</span> Mua sắm ngay</a></div>`;
       return;
     }
     $('orderList').innerHTML = orders.slice(0,10).map(o=>`
       <div class="order-item">
-        <div class="order-icon">📦</div>
+        <div class="order-icon"><span class="material-symbols-outlined" aria-hidden="true">inventory_2</span></div>
         <div class="order-info">
           <div class="order-code">${o.order_code}</div>
           <div class="order-date">${fmtDate(o.created_at)}</div>
@@ -707,7 +716,7 @@ async function loadOrders() {
         <div class="order-right">
           <div class="order-total">${fmt(o.total)}</div>
           <span class="badge badge-${o.status}">${STATUS_LABEL[o.status]||o.status}</span>
-          ${o.status!=='cancelled'?`<br><button class="btn-track" onclick="openTracking('${o.order_code}')">📍 Theo dõi</button>`:''}
+          ${o.status!=='cancelled'?`<br><button class="btn-track" onclick="openTracking('${o.order_code}')"><span class="material-symbols-outlined" aria-hidden="true">location_on</span> Theo dõi</button>`:''}
         </div>
       </div>`).join('');
     if (orders.length>10) $('orderList').innerHTML+=`<div style="text-align:center;margin-top:10px;font-size:.82rem;color:var(--muted)">Hiển thị 10 đơn gần nhất</div>`;
@@ -743,7 +752,7 @@ async function fetchTracking(orderCode) {
           const dc=si<currentIdx?'done':si===currentIdx?'current':'pending';
           return `<div class="trk-step"><div class="trk-step__line"><div class="trk-step__dot ${dc}">${step.icon}</div><div class="trk-step__connector ${si<currentIdx?'done':''}"></div></div><div class="trk-step__content"><div class="trk-step__name ${dc==='pending'?'pending':''}">${step.name}</div><div class="trk-step__desc">${step.desc}</div></div></div>`;
         }).join('');
-    const ghnHtml = o.ghn_order_code?`<div class="trk-ghn-box show"><span style="font-size:1.4rem">🚚</span><div><div class="trk-ghn-label">Mã vận đơn GHN</div><div class="trk-ghn-value">${o.ghn_order_code}</div></div>${o.ghn_expected_delivery?`<div><div class="trk-ghn-label">Dự kiến giao</div><div style="font-weight:700;font-size:.85rem;color:#1b5e20">${fmtDateTime(o.ghn_expected_delivery)}</div></div>`:''}</div>`:'';
+    const ghnHtml = o.ghn_order_code?`<div class="trk-ghn-box show"><span class="material-symbols-outlined" aria-hidden="true">local_shipping</span><div><div class="trk-ghn-label">Mã vận đơn GHN</div><div class="trk-ghn-value">${o.ghn_order_code}</div></div>${o.ghn_expected_delivery?`<div><div class="trk-ghn-label">Dự kiến giao</div><div style="font-weight:700;font-size:.85rem;color:#1b5e20">${fmtDateTime(o.ghn_expected_delivery)}</div></div>`:''}</div>`:'';
     const isActive=['confirmed','processing','shipping'].includes(o.status);
     let ghnLogsHtml='';
     if (ghn?.logs?.length) {
@@ -807,7 +816,7 @@ async function savePassword() {
 }
 
 // ── MISC ──
-function togglePw(id,btn){const i=$(id);i.type=i.type==='password'?'text':'password';btn.textContent=i.type==='password'?'👁️':'🙈';}
+function togglePw(id,btn){const i=$(id);i.type=i.type==='password'?'text':'password';btn.innerHTML=i.type==='password'?'<span class="material-symbols-outlined" aria-hidden="true">visibility</span>':'<span class="material-symbols-outlined" aria-hidden="true">visibility_off</span>';}
 function scrollTo(id){const el=$(id);if(!el)return false;el.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.sidebar-menu a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+id));return false;}
 function logout(){localStorage.removeItem('tsh_token');localStorage.removeItem('tsh_user');location.href='index.html';}
 const sections=['info','address','orders','security'];

@@ -154,27 +154,27 @@
         promoCode = code;
         promoType = data.type || "percent";
         const label = promoType === "percent" ? `Giảm ${promoDiscount}%` : `Giảm ${fmt(promoDiscount)}`;
-        promoMsg.textContent = `✅ Áp dụng thành công! ${label}`;
+        promoMsg.textContent = `<span class="material-symbols-outlined" aria-hidden="true">check_circle</span> Áp dụng thành công! ${label}`;
         promoMsg.className = "co-promo__msg success";
         renderSummary();
         return;
       }
       promoDiscount = 0;
       promoCode = "";
-      promoMsg.textContent = `❌ ${data.message || "Mã không hợp lệ hoặc đã hết hạn."}`;
+      promoMsg.textContent = `<span class="material-symbols-outlined" aria-hidden="true">cancel</span> ${data.message || 'Mã không hợp lệ hoặc đã hết hạn.'}`;
       promoMsg.className = "co-promo__msg error";
     } catch {
       if (LOCAL_PROMOS[code]) {
         promoDiscount = LOCAL_PROMOS[code];
         promoCode = code;
         promoType = "percent";
-        promoMsg.textContent = `✅ Áp dụng thành công! Giảm ${promoDiscount}%`;
+        promoMsg.textContent = `<span class="material-symbols-outlined" aria-hidden="true">check_circle</span> Áp dụng thành công! Giảm ${promoDiscount}%`;
         promoMsg.className = "co-promo__msg success";
         renderSummary();
       } else {
         promoDiscount = 0;
         promoCode = "";
-        promoMsg.textContent = "❌ Không thể kết nối server.";
+        promoMsg.textContent = "<span class="material-symbols-outlined" aria-hidden="true">cancel</span> Không thể kết nối server.";
         promoMsg.className = "co-promo__msg error";
       }
     }

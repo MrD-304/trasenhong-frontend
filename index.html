@@ -217,10 +217,19 @@
         padding: 40px 0;
       }
     </style>
-  </head>
+      <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <style>
+      .material-symbols-outlined {
+        font-size: 1.1em;
+        vertical-align: -0.15em;
+        line-height: 1;
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+    </style>
+</head>
   <body>
     <div class="page-loader" aria-hidden="true">
-      <div class="loader__logo">🌿 Trà Sen Hồng</div>
+      <div class="loader__logo">Trà Sen Hồng</div>
       <div class="loader__bar-wrap"><div class="loader__bar"></div></div>
     </div>
 
@@ -277,7 +286,7 @@
           href="shop.html"
           class="navbar__link"
           style="color: var(--clr-primary)"
-          >🛒 Mua Ngay</a
+          ><span class="material-symbols-outlined" aria-hidden="true">shopping_cart</span> Mua Ngay</a
         >
         <div id="navUserAreaMobile"></div>
       </nav>
@@ -315,7 +324,7 @@
           </p>
           <div class="hero__actions">
             <a href="shop.html" class="btn btn-primary ripple-wrap"
-              >🛒 Mua Sản Phẩm</a
+              ><span class="material-symbols-outlined" aria-hidden="true">shopping_cart</span> Mua Sản Phẩm</a
             >
             <a href="#about" class="btn btn-outline">Tìm Hiểu Thêm</a>
           </div>
@@ -459,7 +468,7 @@
           </p>
         </div>
         <div class="hp-product-grid" id="hpProductGrid">
-          <div class="hp-products-loading">🍃 Đang tải sản phẩm…</div>
+          <div class="hp-products-loading"><span class="material-symbols-outlined" aria-hidden="true">hourglass_empty</span> Đang tải sản phẩm…</div>
         </div>
         <div class="text-center" style="margin-top: 40px">
           <a
@@ -540,7 +549,7 @@
           </h2>
         </div>
         <div class="review-grid" id="reviewGrid">
-          <div class="reviews-loading">🍃 Đang tải đánh giá…</div>
+          <div class="reviews-loading"><span class="material-symbols-outlined" aria-hidden="true">hourglass_empty</span> Đang tải đánh giá…</div>
         </div>
       </div>
     </section>
@@ -559,7 +568,7 @@
           </div>
           <div class="cta-banner__actions">
             <a href="shop.html" class="btn btn-dark ripple-wrap"
-              >🛒 Đặt Hàng Ngay</a
+              ><span class="material-symbols-outlined" aria-hidden="true">shopping_cart</span> Đặt Hàng Ngay</a
             >
             <a
               href="contact.html"
@@ -608,19 +617,19 @@
                 class="footer__social-link"
                 target="_blank"
                 rel="noopener"
-                ><span>📘</span> Facebook</a
+                ><span class="material-symbols-outlined" aria-hidden="true">groups</span> Facebook</a
               >
               <a
                 href="https://www.tiktok.com/@trasenhongloan"
                 class="footer__social-link"
                 target="_blank"
                 rel="noopener"
-                ><span>🎵</span> TikTok</a
+                ><span class="material-symbols-outlined" aria-hidden="true">music_note</span> TikTok</a
               >
               <a
                 href="mailto:trasenhong9999@gmail.com"
                 class="footer__social-link"
-                ><span>✉️</span> Gmail</a
+                ><span class="material-symbols-outlined" aria-hidden="true">mail</span> Gmail</a
               >
             </div>
           </div>
@@ -662,17 +671,17 @@
             <h3 class="footer__col-title">Liên Hệ</h3>
             <ul class="footer__contact-items">
               <li class="footer__contact-item">
-                <span class="footer__contact-icon">📍</span
+                <span class="footer__contact-icon"><span class="material-symbols-outlined" aria-hidden="true">location_on</span></span
                 ><span>243, Ấp Lộc Thuận, Xã An Ninh, Tỉnh Tây Ninh</span>
               </li>
               <li class="footer__contact-item">
-                <span class="footer__contact-icon">📞</span
+                <span class="footer__contact-icon"><span class="material-symbols-outlined" aria-hidden="true">phone</span></span
                 ><a href="tel:+840916224350" style="color: inherit"
                   >0916 224 350</a
                 >
               </li>
               <li class="footer__contact-item">
-                <span class="footer__contact-icon">✉️</span
+                <span class="footer__contact-icon"><span class="material-symbols-outlined" aria-hidden="true">mail</span></span
                 ><a
                   href="mailto:trasenhong9999@gmail.com"
                   style="color: inherit"
@@ -680,7 +689,7 @@
                 >
               </li>
               <li class="footer__contact-item">
-                <span class="footer__contact-icon">🕐</span
+                <span class="footer__contact-icon"><span class="material-symbols-outlined" aria-hidden="true">schedule</span></span
                 ><span>T2–T7: 08:00 – 17:00</span>
               </li>
             </ul>
@@ -753,7 +762,7 @@
                 ${p.original_price ? `<span class="hp-card__price-old">${fmt(p.original_price)}</span>` : ""}
                 ${discount ? `<span style="background:#e8f5e9;color:#2d6a2d;font-size:.72rem;padding:2px 8px;border-radius:20px;font-weight:700">-${discount}%</span>` : ""}
               </div>
-              <button class="hp-card__btn" onclick="event.stopPropagation();location.href='shop.html'">🛒 Mua Ngay</button>
+              <button class="hp-card__btn" onclick="event.stopPropagation();location.href='shop.html'"><span class="material-symbols-outlined" aria-hidden="true">shopping_cart</span> Mua Ngay</button>
             </div>
           </div>`;
               })
