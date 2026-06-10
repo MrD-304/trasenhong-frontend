@@ -63,10 +63,17 @@ a.contact-card:hover {
   font-weight: 700;
   color: var(--clr-text-dark);
   margin-bottom: 0.15rem;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 .contact-card__sub {
   font-size: var(--fs-xs);
   color: var(--clr-text-muted);
+}
+
+.contact-card__text {
+  min-width: 0;
+  flex: 1;
 }
 
 /* ─── WORKING HOURS ──────────────────────────────────────────── */
