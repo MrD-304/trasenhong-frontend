@@ -5,14 +5,12 @@
   const FREE_SHIP_MIN = 200000;
   const SHIP_FEE = 30000;
 
-  // ── EmailJS config ──
   const EMAILJS_SERVICE_ID  = "service_wg68jbu";
   const EMAILJS_TEMPLATE_ID = "template_amdl8zr";
   const EMAILJS_PUBLIC_KEY  = "BptJ9xxzyF5SdCKDw";
 
   const ADMIN_SITE_URL = "https://starlit-tartufo-1d180f.netlify.app/admin.html";
 
-  // ── Init EmailJS một lần khi load ──
   emailjs.init(EMAILJS_PUBLIC_KEY);
 
   let cart = JSON.parse(localStorage.getItem("tsh_cart") || "[]");
@@ -154,27 +152,27 @@
         promoCode = code;
         promoType = data.type || "percent";
         const label = promoType === "percent" ? `Giảm ${promoDiscount}%` : `Giảm ${fmt(promoDiscount)}`;
-        promoMsg.textContent = `<span class="material-symbols-outlined" aria-hidden="true">check_circle</span> Áp dụng thành công! ${label}`;
+        promoMsg.innerHTML = `<span class="material-symbols-outlined" aria-hidden="true">check_circle</span> Áp dụng thành công! ${label}`;
         promoMsg.className = "co-promo__msg success";
         renderSummary();
         return;
       }
       promoDiscount = 0;
       promoCode = "";
-      promoMsg.textContent = `<span class="material-symbols-outlined" aria-hidden="true">cancel</span> ${data.message || 'Mã không hợp lệ hoặc đã hết hạn.'}`;
+      promoMsg.innerHTML = `<span class="material-symbols-outlined" aria-hidden="true">cancel</span> ${data.message || 'Mã không hợp lệ hoặc đã hết hạn.'}`;
       promoMsg.className = "co-promo__msg error";
     } catch {
       if (LOCAL_PROMOS[code]) {
         promoDiscount = LOCAL_PROMOS[code];
         promoCode = code;
         promoType = "percent";
-        promoMsg.textContent = `<span class="material-symbols-outlined" aria-hidden="true">check_circle</span> Áp dụng thành công! Giảm ${promoDiscount}%`;
+        promoMsg.innerHTML = `<span class="material-symbols-outlined" aria-hidden="true">check_circle</span> Áp dụng thành công! Giảm ${promoDiscount}%`;
         promoMsg.className = "co-promo__msg success";
         renderSummary();
       } else {
         promoDiscount = 0;
         promoCode = "";
-        promoMsg.textContent = "<span class="material-symbols-outlined" aria-hidden="true">cancel</span> Không thể kết nối server.";
+        promoMsg.innerHTML = '<span class="material-symbols-outlined" aria-hidden="true">cancel</span> Không thể kết nối server.';
         promoMsg.className = "co-promo__msg error";
       }
     }
@@ -231,7 +229,6 @@
     };
   }
 
-  // ── EMAIL CHO ADMIN ──
   async function sendAdminEmail(orderData, orderCode, orderId) {
     try {
       const paymentLabel = {
@@ -280,7 +277,6 @@
     }
   }
 
-  // ── ĐẶT HÀNG ──
   $("submitOrder")?.addEventListener("click", async () => {
     if (cart.length === 0) {
       alert("Giỏ hàng của bạn đang trống. Vui lòng thêm sản phẩm trước khi đặt hàng.");
@@ -307,7 +303,6 @@
 
     const orderPayload = collectFormData();
 
-    // ── Gắn token nếu đang đăng nhập để backend tự gán user_id ──
     const token = localStorage.getItem("tsh_token");
     const headers = { "Content-Type": "application/json" };
     if (token) headers["Authorization"] = `Bearer ${token}`;
@@ -324,7 +319,6 @@
       const orderCode = data.order_code || data.order?.order_code || "TSH" + Date.now().toString().slice(-6);
       const orderId   = data.order?.id || "";
 
-      // Gửi email thông báo admin (không await — không block UI)
       sendAdminEmail(orderPayload, orderCode, orderId);
 
       $("successOrderId").textContent = `Mã đơn hàng: #${orderCode}`;
