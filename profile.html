@@ -576,7 +576,7 @@ function updateAddrPreview() {
   const district = $('addrDistrict').options[$('addrDistrict').selectedIndex]?.text || '';
   const province = $('addrProvince').options[$('addrProvince').selectedIndex]?.text || '';
   const parts = [street, ward, district, province].filter(v => v && v !== '— Chọn tỉnh / thành phố —' && !v.startsWith('—'));
-  $('addrPreview').textContent = parts.length ? '<span class="material-symbols-outlined" aria-hidden="true">location_on</span> ' + parts.join(', ') : 'Chưa có địa chỉ';
+  $('addrPreview').innerHTML = parts.length ? '<span class="material-symbols-outlined" aria-hidden="true">location_on</span> ' + parts.join(', ') : 'Chưa có địa chỉ';
 }
 
 // Fill địa chỉ đã lưu — khôi phục dropdown theo tên
@@ -729,7 +729,7 @@ async function loadOrders() {
 let _pollingTimer = null;
 async function openTracking(orderCode) {
   $('trkModalCode').textContent='…';
-  $('trkModalStatus').textContent='…';
+  $('trkModalStatus').innerHTML='…';
   $('trkModalBody').innerHTML='<div class="trk-spinner-wrap"><div class="trk-spinner"></div><p style="color:var(--muted);font-size:.85rem">Đang tải…</p></div>';
   $('trackingModal').classList.add('show');
   document.body.style.overflow='hidden';
@@ -742,7 +742,7 @@ async function fetchTracking(orderCode) {
     if (!data.success) { $('trkModalBody').innerHTML='<div style="text-align:center;padding:32px;color:var(--muted)">❌ Không tìm thấy đơn hàng.</div>'; return; }
     const o=data.order, ghn=data.ghn_status;
     $('trkModalCode').textContent=o.order_code;
-    $('trkModalStatus').textContent=STATUS_LABEL[o.status]||o.status;
+    $('trkModalStatus').innerHTML=STATUS_LABEL[o.status]||o.status;
     const currentIdx=STATUS_ORDER.indexOf(o.status);
     const isCancelled=o.status==='cancelled';
     const timelineHtml = isCancelled
