@@ -1,4 +1,4 @@
-const API_URL = "https://trasenhong-production.up.railway.app/api";
+const API_URL = "https://backend-production-ad956.up.railway.app/api";
 
 const api = {
   async getProducts(params = {}) {
