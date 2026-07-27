@@ -38,6 +38,63 @@
   .navbar__links a { text-decoration: none; color: var(--muted); font-size: .88rem; font-weight: 500; transition: color var(--transition); }
   .navbar__links a:hover, .navbar__links a.active { color: var(--primary); }
 
+  /* ── HAMBURGER (chỉ hiện trên mobile) ── */
+  .navbar__hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 38px; height: 38px;
+    padding: 4px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    border-radius: 8px;
+    z-index: 101;
+  }
+  .navbar__hamburger:hover { background: var(--primary-light); }
+  .navbar__hamburger .line {
+    display: block; width: 100%; height: 2px;
+    background: var(--dark);
+    border-radius: 2px;
+    transition: transform var(--transition), opacity var(--transition);
+    transform-origin: center;
+  }
+  .navbar__hamburger.open .line:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .navbar__hamburger.open .line:nth-child(2) { opacity: 0; }
+  .navbar__hamburger.open .line:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+  /* ── DRAWER MOBILE ── */
+  .navbar__drawer {
+    display: none;
+    position: fixed;
+    top: 68px; left: 0; right: 0;
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 12px 24px rgba(26,46,26,.08);
+    z-index: 99;
+    flex-direction: column;
+    padding: 8px 24px 16px;
+    transform: translateY(-8px);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform var(--transition), opacity var(--transition);
+  }
+  .navbar__drawer.open { transform: translateY(0); opacity: 1; pointer-events: all; }
+  .navbar__drawer a {
+    display: block; padding: 14px 4px; text-decoration: none;
+    color: var(--text); font-size: 1rem; font-weight: 500;
+    border-bottom: 1px solid var(--border);
+  }
+  .navbar__drawer a:last-child { border-bottom: none; }
+  .navbar__drawer a:hover, .navbar__drawer a.active { color: var(--primary); }
+
+  @media (max-width: 768px) {
+    .navbar__links { display: none; }
+    .navbar__hamburger { display: flex; }
+    .navbar__logo-sub { display: none; }
+  }
+
   .page-wrap { max-width: 1060px; margin: 0 auto; padding: 96px 24px 60px; display: grid; grid-template-columns: 260px 1fr; gap: 28px; align-items: start; }
 
   .profile-sidebar { position: sticky; top: 88px; display: flex; flex-direction: column; gap: 12px; }
@@ -222,7 +279,19 @@
       <li><a href="contact.html">Liên Hệ</a></li>
       <li><a href="profile.html" class="active">Tài Khoản</a></li>
     </ul>
+    <button class="navbar__hamburger" id="navHamburger" aria-label="Mở menu" aria-expanded="false">
+      <span class="line"></span>
+      <span class="line"></span>
+      <span class="line"></span>
+    </button>
   </div>
+  <nav class="navbar__drawer" id="navDrawer" aria-label="Menu di động">
+    <a href="index.html">Trang Chủ</a>
+    <a href="shop.html">Cửa Hàng</a>
+    <a href="about.html">Về Chúng Tôi</a>
+    <a href="contact.html">Liên Hệ</a>
+    <a href="profile.html" class="active">Tài Khoản</a>
+  </nav>
 </header>
 
 <div class="page-wrap" id="pageWrap" style="display:none">
@@ -436,6 +505,34 @@
 </div>
 
 <script>
+// ── NAVBAR MOBILE (hamburger + drawer) ──
+(function () {
+  const hamburger = document.getElementById('navHamburger');
+  const drawer = document.getElementById('navDrawer');
+  if (!hamburger || !drawer) return;
+
+  const toggleDrawer = (open) => {
+    hamburger.classList.toggle('open', open);
+    drawer.classList.toggle('open', open);
+    hamburger.setAttribute('aria-expanded', open);
+    hamburger.setAttribute('aria-label', open ? 'Đóng menu' : 'Mở menu');
+  };
+
+  hamburger.addEventListener('click', () => {
+    toggleDrawer(!drawer.classList.contains('open'));
+  });
+
+  drawer.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => toggleDrawer(false));
+  });
+
+  document.addEventListener('click', (e) => {
+    if (drawer.classList.contains('open') && !drawer.contains(e.target) && !hamburger.contains(e.target)) {
+      toggleDrawer(false);
+    }
+  });
+})();
+
 const API     = 'https://backend-production-ad956.up.railway.app/api';
 const GHN_URL = 'https://backend-production-ad956.up.railway.app/api/ghn';
 
