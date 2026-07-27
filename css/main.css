@@ -406,10 +406,22 @@ select {
   background: transparent;
 }
 .navbar.scrolled {
+  background: transparent;
+  box-shadow: 0 2px 24px rgba(0, 0, 0, 0.3);
+}
+/* Dùng ::before để áp backdrop-filter thay vì áp trực tiếp lên .navbar.
+   Lý do: backdrop-filter/filter/transform trên .navbar sẽ tạo ra một
+   "containing block" mới cho các phần tử con có position:fixed (như
+   .navbar__drawer), khiến menu mobile bị "fixed" theo khung .navbar
+   thay vì theo toàn màn hình khi trang đã cuộn (có class .scrolled). */
+.navbar.scrolled::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
   background: rgba(26, 34, 8, 0.92);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 2px 24px rgba(0, 0, 0, 0.3);
 }
 .navbar__inner {
   display: flex;
