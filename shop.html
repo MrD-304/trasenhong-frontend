@@ -3,13 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cửa Hàng – Trà Sen Hồng | Mua Trà Mộc Thiên Nhiên</title>
+    <title>Sản Phẩm – Trà Sen Hồng | Trà Mộc Thiên Nhiên</title>
     <meta
       name="description"
-      content="Mua trà sen hồng chính hãng – Trà lá, Trà túi lọc, Bộ quà tặng, Phụ kiện trà. Giao toàn quốc, miễn phí từ 200.000₫."
+      content="Giới thiệu sản phẩm Trà Sen Hồng – Trà mộc, Trà túi lọc, Bộ quà tặng, Thành phần. Đặt mua nhanh chóng trên TikTok Shop."
     />
     <link rel="canonical" href="https://trasenhong.vn/shop.html" />
-    <meta property="og:title" content="Cửa Hàng – Trà Sen Hồng" />
+    <meta property="og:title" content="Sản Phẩm – Trà Sen Hồng" />
     <meta property="og:type" content="website" />
     <link rel="icon" type="image/png" href="./assets/icon/lono_notext.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -54,20 +54,10 @@
         <nav class="navbar__menu" aria-label="Menu chính">
           <a href="index.html" class="navbar__link">Trang Chủ</a>
           <a href="about.html" class="navbar__link">Về Chúng Tôi</a>
-          <a href="shop.html" class="navbar__link active">Cửa Hàng</a>
+          <a href="shop.html" class="navbar__link active">Sản Phẩm</a>
           <a href="contact.html" class="navbar__link">Liên Hệ</a>
-          <a href="shop.html" class="navbar__link navbar__cta ripple-wrap"
-            >Mua Ngay</a
-          >
-          <div
-            id="navUserArea"
-            style="display: flex; align-items: center; margin-left: 6px"
-          ></div>
-        </nav>
-        <button class="shop-cart-btn" id="cartToggle" aria-label="Giỏ hàng">
-          <span class="material-symbols-outlined" aria-hidden="true">shopping_bag</span>
-          <span class="cart-count" id="cartCount">0</span>
-        </button>
+          <a href="https://www.tiktok.com/@trasenhongloan" class="navbar__link navbar__cta ripple-wrap js-tiktok-shop" target="_blank" rel="noopener">Mua Trên TikTok</a>
+          </nav>
         <button
           class="navbar__hamburger"
           aria-label="Mở menu"
@@ -86,16 +76,10 @@
       >
         <a href="index.html" class="navbar__link">Trang Chủ</a>
         <a href="about.html" class="navbar__link">Về Chúng Tôi</a>
-        <a href="shop.html" class="navbar__link">Cửa Hàng</a>
+        <a href="shop.html" class="navbar__link">Sản Phẩm</a>
         <a href="contact.html" class="navbar__link">Liên Hệ</a>
-        <a
-          href="shop.html"
-          class="navbar__link"
-          style="color: var(--clr-primary)"
-          ><span class="material-symbols-outlined" aria-hidden="true">shopping_cart</span> Mua Ngay</a
-        >
-        <div id="navUserAreaMobile"></div>
-      </nav>
+        <a href="https://www.tiktok.com/@trasenhongloan" class="navbar__link js-tiktok-shop" style="color: var(--clr-primary)" target="_blank" rel="noopener"><span class="material-symbols-outlined" aria-hidden="true">shopping_bag</span> Mua Trên TikTok</a>
+        </nav>
     </header>
 
     <section class="shop-hero" aria-label="Cửa hàng Trà Sen Hồng">
@@ -108,7 +92,7 @@
         <p class="shop-hero__eyebrow">
           <span class="shop-hero__line"></span> TINH HOA TỪ THIÊN NHIÊN
         </p>
-        <h1 class="shop-hero__title">Cửa Hàng <em>Trà Sen Hồng</em></h1>
+        <h1 class="shop-hero__title">Sản Phẩm <em>Trà Sen Hồng</em></h1>
         <p class="shop-hero__desc">
           Khám phá bộ sưu tập trà thuần tự nhiên – từ trà lá, trà túi lọc đến bộ
           quà tặng cao cấp.
@@ -116,7 +100,7 @@
         <nav class="shop-breadcrumb" aria-label="Breadcrumb">
           <a href="index.html">Trang chủ</a>
           <span aria-hidden="true">›</span>
-          <span aria-current="page">Cửa Hàng</span>
+          <span aria-current="page">Sản Phẩm</span>
         </nav>
       </div>
     </section>
@@ -277,8 +261,7 @@
           </div>
           <div class="shop-topbar__right">
             <label for="sortSelect" class="sort-label"
-              ><i class="fa-solid fa-arrow-up-wide-short"></i
-            ></label>
+              ><span class="material-symbols-outlined" aria-hidden="true">sort</span></label>
             <select
               id="sortSelect"
               class="sort-select"
@@ -351,55 +334,6 @@
       </div>
     </div>
 
-    <div class="cart-overlay" id="cartOverlay" aria-hidden="true"></div>
-    <aside
-      class="cart-drawer"
-      id="cartDrawer"
-      role="complementary"
-      aria-label="Giỏ hàng"
-      aria-hidden="true"
-    >
-      <div class="cart-drawer__header">
-        <h2><span class="material-symbols-outlined" aria-hidden="true">shopping_bag</span> Giỏ Hàng</h2>
-        <button
-          class="cart-drawer__close"
-          id="cartClose"
-          aria-label="Đóng giỏ hàng"
-        >
-          <span class="material-symbols-outlined" aria-hidden="true">close</span>
-        </button>
-      </div>
-      <div class="cart-drawer__items" id="cartItems">
-        <div class="cart-empty" id="cartEmpty">
-          <span class="material-symbols-outlined" aria-hidden="true">shopping_cart</span>
-          <p>Giỏ hàng đang trống</p>
-        </div>
-      </div>
-      <div class="cart-drawer__footer" id="cartFooter" hidden>
-        <div class="cart-subtotal">
-          <span>Tạm tính:</span>
-          <strong id="cartSubtotal">0₫</strong>
-        </div>
-        <p class="cart-shipping-note">
-          <span class="material-symbols-outlined" aria-hidden="true">local_shipping</span> Miễn phí vận chuyển từ 200.000₫
-        </p>
-        <a href="checkout.html" class="btn-primary-full"
-          >Thanh Toán <i class="fa-solid fa-arrow-right"></i
-        ></a>
-        <button class="btn-ghost-full" id="continueShop">
-          ← Tiếp tục mua sắm
-        </button>
-      </div>
-    </aside>
-
-    <div
-      class="toast"
-      id="toast"
-      role="alert"
-      aria-live="assertive"
-      aria-atomic="true"
-    ></div>
-
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
     <footer class="footer" role="contentinfo">
@@ -458,7 +392,7 @@
               <li>
                 <a href="about.html" class="footer__link">Về Chúng Tôi</a>
               </li>
-              <li><a href="shop.html" class="footer__link">Cửa Hàng</a></li>
+              <li><a href="shop.html" class="footer__link">Sản Phẩm</a></li>
               <li><a href="contact.html" class="footer__link">Liên Hệ</a></li>
             </ul>
           </nav>
@@ -527,10 +461,9 @@
       </div>
     </footer>
 
-    <script src="js/auth.js"></script>
     <script src="js/main.js" defer></script>
     <script src="js/navbar.js" defer></script>
-    <script src="js/api.js"></script>
+    <script src="js/products-data.js"></script>
     <script src="js/shop.js"></script>
   </body>
 </html>
