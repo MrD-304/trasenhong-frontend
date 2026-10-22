@@ -256,16 +256,10 @@
         <nav class="navbar__menu" aria-label="Menu chính">
           <a href="index.html" class="navbar__link active">Trang Chủ</a>
           <a href="about.html" class="navbar__link">Về Chúng Tôi</a>
-          <a href="shop.html" class="navbar__link">Cửa Hàng</a>
+          <a href="shop.html" class="navbar__link">Sản Phẩm</a>
           <a href="contact.html" class="navbar__link">Liên Hệ</a>
-          <a href="shop.html" class="navbar__link navbar__cta ripple-wrap"
-            >Mua Ngay</a
-          >
-          <div
-            id="navUserArea"
-            style="display: flex; align-items: center; margin-left: 6px"
-          ></div>
-        </nav>
+          <a href="https://www.tiktok.com/@trasenhongloan" class="navbar__link navbar__cta ripple-wrap js-tiktok-shop" target="_blank" rel="noopener">Mua Trên TikTok</a>
+          </nav>
         <button
           class="navbar__hamburger"
           aria-label="Mở menu"
@@ -280,16 +274,10 @@
       <nav class="navbar__drawer" id="mobile-drawer" aria-label="Menu di động">
         <a href="index.html" class="navbar__link">Trang Chủ</a>
         <a href="about.html" class="navbar__link">Về Chúng Tôi</a>
-        <a href="shop.html" class="navbar__link">Cửa Hàng</a>
+        <a href="shop.html" class="navbar__link">Sản Phẩm</a>
         <a href="contact.html" class="navbar__link">Liên Hệ</a>
-        <a
-          href="shop.html"
-          class="navbar__link"
-          style="color: var(--clr-primary)"
-          ><span class="material-symbols-outlined" aria-hidden="true">shopping_cart</span> Mua Ngay</a
-        >
-        <div id="navUserAreaMobile"></div>
-      </nav>
+        <a href="https://www.tiktok.com/@trasenhongloan" class="navbar__link js-tiktok-shop" style="color: var(--clr-primary)" target="_blank" rel="noopener"><span class="material-symbols-outlined" aria-hidden="true">shopping_bag</span> Mua Trên TikTok</a>
+        </nav>
     </header>
 
     <!-- HERO -->
@@ -324,7 +312,7 @@
           </p>
           <div class="hero__actions">
             <a href="shop.html" class="btn btn-primary ripple-wrap"
-              ><span class="material-symbols-outlined" aria-hidden="true">shopping_cart</span> Mua Sản Phẩm</a
+              ><span class="material-symbols-outlined" aria-hidden="true">inventory_2</span> Xem Sản Phẩm</a
             >
             <a href="#about" class="btn btn-outline">Tìm Hiểu Thêm</a>
           </div>
@@ -447,7 +435,7 @@
       </div>
     </section>
 
-    <!-- SẢN PHẨM TỪ API -->
+    <!-- SẢN PHẨM (dữ liệu tĩnh trong js/products-data.js) -->
     <section
       class="hp-products"
       id="products"
@@ -468,7 +456,7 @@
           </p>
         </div>
         <div class="hp-product-grid" id="hpProductGrid">
-          <div class="hp-products-loading"><span class="material-symbols-outlined" aria-hidden="true">hourglass_empty</span> Đang tải sản phẩm…</div>
+          
         </div>
         <div class="text-center" style="margin-top: 40px">
           <a
@@ -536,24 +524,6 @@
     </section>
 
     <!-- ĐÁNH GIÁ TỪ DATABASE -->
-    <section
-      class="reviews-section"
-      id="reviews"
-      aria-labelledby="reviews-heading"
-    >
-      <div class="container">
-        <div class="text-center" data-reveal>
-          <p class="section-label">Khách Hàng Nói Gì</p>
-          <h2 class="section-heading" id="reviews-heading">
-            Phản Hồi Từ<br /><span>Người Thưởng Trà</span>
-          </h2>
-        </div>
-        <div class="review-grid" id="reviewGrid">
-          <div class="reviews-loading"><span class="material-symbols-outlined" aria-hidden="true">hourglass_empty</span> Đang tải đánh giá…</div>
-        </div>
-      </div>
-    </section>
-
     <!-- CTA -->
     <section class="cta-banner" id="cta" aria-labelledby="cta-heading">
       <div class="container">
@@ -563,13 +533,11 @@
               Thưởng Thức Trà Sen Hồng Ngay Hôm Nay
             </h2>
             <p class="cta-banner__desc">
-              Miễn phí vận chuyển cho đơn hàng từ 200.000₫ · Giao toàn quốc
+              Đặt mua nhanh chóng trên TikTok Shop · Giao toàn quốc
             </p>
           </div>
           <div class="cta-banner__actions">
-            <a href="shop.html" class="btn btn-dark ripple-wrap"
-              ><span class="material-symbols-outlined" aria-hidden="true">shopping_cart</span> Đặt Hàng Ngay</a
-            >
+            <a href="https://www.tiktok.com/@trasenhongloan" class="btn btn-dark ripple-wrap js-tiktok-shop" target="_blank" rel="noopener"><span class="material-symbols-outlined" aria-hidden="true">shopping_bag</span> Mua Trên TikTok Shop</a>
             <a
               href="contact.html"
               class="btn"
@@ -640,7 +608,7 @@
               <li>
                 <a href="about.html" class="footer__link">Về Chúng Tôi</a>
               </li>
-              <li><a href="shop.html" class="footer__link">Cửa Hàng</a></li>
+              <li><a href="shop.html" class="footer__link">Sản Phẩm</a></li>
               <li><a href="contact.html" class="footer__link">Liên Hệ</a></li>
             </ul>
           </nav>
@@ -708,108 +676,52 @@
         </div>
       </div>
     </footer>
-    <script src="js/auth.js"></script>
     <script src="js/main.js"></script>
     <script src="js/navbar.js"></script>
-    <script src="js/api.js"></script>
+    <script src="js/products-data.js"></script>
     <script>
       (function () {
-        const BASE_URL = "https://backend-production-ad956.up.railway.app/api";
-        const API_URL = BASE_URL + "/api";
+        const { PRODUCTS, CATEGORIES, TIKTOK_SHOP_URL, SHOW_PRICE } = window.TSH;
         const fmt = (n) => n.toLocaleString("vi-VN") + "₫";
         const emojis = ["🍵", "🌿", "🎁", "🌸", "🫖", "🌺", "🏆", "🫙"];
         const getEmoji = (id) => emojis[(id - 1) % emojis.length] || "🍵";
-        const catMap = {
-          "tra-moc": "Trà Mộc",
-          "tra-tui-loc": "Trà Túi Lọc",
-          "qua-tang": "Bộ Quà Tặng",
-          "thanh-phan": "Thành Phần",
-        };
 
-        // ── Load sản phẩm ──
-        async function loadProducts() {
-          const grid = document.getElementById("hpProductGrid");
-          try {
-            const res = await fetch(`${API_URL}/products?limit=4&sort=newest`);
-            const data = await res.json();
-            if (!data.success || !data.rows.length) {
-              grid.innerHTML =
-                "<p style='color:#aaa;text-align:center'>Chưa có sản phẩm</p>";
-              return;
-            }
-            grid.innerHTML = data.rows
-              .map((p) => {
-                const imgSrc = p.images?.length
-                  ? p.images[0].startsWith("http")
-                    ? p.images[0]
-                    : BASE_URL + p.images[0]
-                  : null;
-
-                const discount = p.original_price
-                  ? Math.round((1 - p.price / p.original_price) * 100)
-                  : 0;
-                const imgBlock = imgSrc
-                  ? `<div class="hp-card__img-wrap"><img src="${imgSrc}" alt="${p.name}" loading="lazy"></div>`
-                  : `<div class="hp-card__img-wrap"><div class="hp-card__emoji">${getEmoji(p.id)}</div></div>`;
-                return `
+        const grid = document.getElementById("hpProductGrid");
+        grid.innerHTML = PRODUCTS.slice(0, 4)
+          .map((p) => {
+            const discount = p.originalPrice
+              ? Math.round((1 - p.price / p.originalPrice) * 100)
+              : 0;
+            const imgBlock = p.images && p.images.length
+              ? `<div class="hp-card__img-wrap"><img src="${p.images[0]}" alt="${p.name}" loading="lazy"></div>`
+              : `<div class="hp-card__img-wrap"><div class="hp-card__emoji">${getEmoji(p.id)}</div></div>`;
+            const priceBlock = SHOW_PRICE
+              ? `<div class="hp-card__price">
+                  <span class="hp-card__price-cur">${fmt(p.price)}</span>
+                  ${p.originalPrice ? `<span class="hp-card__price-old">${fmt(p.originalPrice)}</span>` : ""}
+                  ${discount ? `<span style="background:#e8f5e9;color:#2d6a2d;font-size:.72rem;padding:2px 8px;border-radius:20px;font-weight:700">-${discount}%</span>` : ""}
+                </div>`
+              : "";
+            return `
           <div class="hp-card" onclick="location.href='shop.html'">
             ${imgBlock}
             <div class="hp-card__body">
-              <p class="hp-card__cat">${catMap[p.category_slug] || p.category_slug}</p>
+              <p class="hp-card__cat">${CATEGORIES[p.category] || p.category}</p>
               <h3 class="hp-card__name">${p.name}</h3>
-              <div class="hp-card__price">
-                <span class="hp-card__price-cur">${fmt(p.price)}</span>
-                ${p.original_price ? `<span class="hp-card__price-old">${fmt(p.original_price)}</span>` : ""}
-                ${discount ? `<span style="background:#e8f5e9;color:#2d6a2d;font-size:.72rem;padding:2px 8px;border-radius:20px;font-weight:700">-${discount}%</span>` : ""}
-              </div>
-              <button class="hp-card__btn" onclick="event.stopPropagation();location.href='shop.html'"><span class="material-symbols-outlined" aria-hidden="true">shopping_cart</span> Mua Ngay</button>
+              ${priceBlock}
+              <button class="hp-card__btn" data-buy="${p.id}"><span class="material-symbols-outlined" aria-hidden="true">shopping_bag</span> Mua trên TikTok Shop</button>
             </div>
           </div>`;
-              })
-              .join("");
-          } catch (e) {
-            grid.innerHTML =
-              "<p style='color:rgba(255,255,255,.4);text-align:center'>Không thể tải sản phẩm</p>";
-          }
-        }
+          })
+          .join("");
 
-        // ── Load đánh giá ──
-        async function loadReviews() {
-          const grid = document.getElementById("reviewGrid");
-          try {
-            const res = await fetch(`${API_URL}/reviews?limit=5`);
-            const data = await res.json();
-            if (!data.success || !data.reviews.length) {
-              grid.innerHTML =
-                "<p style='color:#999;text-align:center'>Chưa có đánh giá</p>";
-              return;
-            }
-            grid.innerHTML = data.reviews
-              .map((r) => {
-                const stars = "★".repeat(r.rating) + "☆".repeat(5 - r.rating);
-                const initial = r.name.trim().charAt(0).toUpperCase();
-                return `
-          <div class="review-card">
-            <div class="review-card__stars">${stars}</div>
-            <p class="review-card__text">${r.content}</p>
-            <div class="review-card__author">
-              <div class="review-card__avatar">${initial}</div>
-              <div>
-                <p class="review-card__name">${r.name}</p>
-                <p class="review-card__loc">${r.location || ""}</p>
-              </div>
-            </div>
-          </div>`;
-              })
-              .join("");
-          } catch (e) {
-            grid.innerHTML =
-              "<p style='color:#999;text-align:center'>Không thể tải đánh giá</p>";
-          }
-        }
-
-        loadProducts();
-        loadReviews();
+        grid.addEventListener("click", (e) => {
+          const btn = e.target.closest("[data-buy]");
+          if (!btn) return;
+          e.stopPropagation();
+          const p = PRODUCTS.find((x) => x.id === +btn.dataset.buy);
+          window.open((p && p.tiktok) || TIKTOK_SHOP_URL, "_blank", "noopener");
+        });
       })();
     </script>
   </body>
