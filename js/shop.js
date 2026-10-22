@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  const API_URL = "https://backend-production-ad956.up.railway.app/api";
+  const { PRODUCTS, CATEGORIES, TIKTOK_SHOP_URL, SHOW_PRICE } = window.TSH;
   const PAGE_SIZE = 9;
 
   const state = {
@@ -11,124 +11,84 @@
     search: "",
     sort: "default",
     page: 1,
-    total: 0,
   };
 
-  let productsCache = [];
-  let cart = JSON.parse(localStorage.getItem("tsh_cart") || "[]");
-
   const $ = (id) => document.getElementById(id);
-
   const productGrid = $("productGrid");
   const noResults = $("noResults");
   const resultCount = $("resultCount");
   const pagination = $("pagination");
   const activeFilters = $("activeFilters");
-  const cartCount = $("cartCount");
-  const cartItems = $("cartItems");
-  const cartFooter = $("cartFooter");
-  const cartSubtotal = $("cartSubtotal");
-  const cartEmpty = $("cartEmpty");
-  const toast = $("toast");
 
   const fmt = (n) => n.toLocaleString("vi-VN") + "₫";
-  const stars = (r) => "★".repeat(r) + "☆".repeat(5 - r);
-  const catName = (slug) =>
-    ({
-      "tra-moc": "Trà Mộc",
-      "tra-tui-loc": "Trà Túi Lọc",
-      "qua-tang": "Bộ Quà Tặng",
-      "thanh-phan": "Thành Phần",
-    })[slug] || slug;
-  const emojis = [
-    "🍵",
-    "🌿",
-    "🎁",
-    "🌸",
-    "🫖",
-    "🌺",
-    "🏆",
-    "🫙",
-    "🥢",
-    "💚",
-    "🧧",
-    "🍯",
-  ];
+  const catName = (slug) => CATEGORIES[slug] || slug;
+  const emojis = ["🍵", "🌿", "🎁", "🌸", "🫖", "🌺", "🏆", "🫙"];
   const getEmoji = (id) => emojis[(id - 1) % emojis.length] || "🍵";
+  const buyLink = (p) => p.tiktok || TIKTOK_SHOP_URL;
+  const normalize = (s) =>
+    s
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/đ/g, "d");
 
-  function showLoading() {
-    productGrid.innerHTML = `
-      <div style="grid-column:1/-1;text-align:center;padding:60px 0;color:var(--shop-text-muted)">
-        <div style="font-size:2.5rem;margin-bottom:12px;animation:pulse 1.5s infinite">🍃</div>
-        <p>Đang tải sản phẩm…</p>
+  // Ẩn bộ lọc giá nếu tắt hiển thị giá
+  if (!SHOW_PRICE) $("priceRange")?.closest(".sidebar-block")?.remove();
+
+  /* ---------- Lọc / sắp xếp / phân trang (chạy hoàn toàn trên trình duyệt) ---------- */
+  function getFiltered() {
+    const q = normalize(state.search);
+    const list = PRODUCTS.filter(
+      (p) =>
+        (state.category === "all" || p.category === state.category) &&
+        (state.tag === "all" || p.tags.includes(state.tag)) &&
+        p.price <= state.maxPrice &&
+        (!q || normalize(p.name + " " + p.desc).includes(q)),
+    );
+    if (state.sort === "price-asc") list.sort((a, b) => a.price - b.price);
+    else if (state.sort === "price-desc") list.sort((a, b) => b.price - a.price);
+    else if (state.sort === "newest") list.sort((a, b) => b.id - a.id);
+    else if (state.sort === "popular")
+      list.sort(
+        (a, b) =>
+          b.tags.includes("bestseller") - a.tags.includes("bestseller") ||
+          a.id - b.id,
+      );
+    return list;
+  }
+
+  function update() {
+    const all = getFiltered();
+    const rows = all.slice((state.page - 1) * PAGE_SIZE, state.page * PAGE_SIZE);
+    render(rows, all.length);
+    renderActiveFilters();
+  }
+
+  function updateCounts() {
+    const allEl = $("count-all");
+    if (allEl) allEl.textContent = PRODUCTS.length;
+    Object.keys(CATEGORIES).forEach((slug) => {
+      const el = $(`count-${slug}`);
+      if (el)
+        el.textContent = PRODUCTS.filter((p) => p.category === slug).length;
+    });
+  }
+
+  /* ---------- Hiển thị ---------- */
+  function priceHtml(p) {
+    if (!SHOW_PRICE) return "";
+    const discount = p.originalPrice
+      ? Math.round((1 - p.price / p.originalPrice) * 100)
+      : 0;
+    return `
+      <div class="product-card__price">
+        <span class="price-current">${fmt(p.price)}</span>
+        ${p.originalPrice ? `<span class="price-original">${fmt(p.originalPrice)}</span>${discount ? `<span class="price-discount">-${discount}%</span>` : ""}` : ""}
       </div>`;
-  }
-
-  function showError() {
-    productGrid.innerHTML = `
-      <div style="grid-column:1/-1;text-align:center;padding:60px 0;color:var(--shop-text-muted)">
-        <div style="font-size:2.5rem;margin-bottom:12px">⚠️</div>
-        <p>Không thể tải sản phẩm. Kiểm tra backend đang chạy chưa?</p>
-        <button onclick="location.reload()" style="margin-top:14px;padding:9px 22px;background:var(--shop-primary);border:none;border-radius:8px;cursor:pointer;color:#fff;font-weight:600">Thử lại</button>
-      </div>`;
-  }
-
-  async function fetchProducts() {
-    showLoading();
-    const params = new URLSearchParams();
-    params.set("page", state.page);
-    params.set("limit", PAGE_SIZE);
-    if (state.category !== "all") params.set("category", state.category);
-    if (state.tag !== "all") params.set("tag", state.tag);
-    if (state.search) params.set("search", state.search);
-    if (state.maxPrice < 1000000) params.set("maxPrice", state.maxPrice);
-    if (state.sort !== "default") params.set("sort", state.sort);
-
-    try {
-      const res = await fetch(`${API_URL}/products?${params}`);
-      const data = await res.json();
-      if (!data.success) throw new Error(data.message);
-
-      productsCache = data.rows;
-      state.total = data.total;
-      render(data.rows, data.total);
-      renderActiveFilters();
-      updateCounts();
-    } catch (err) {
-      console.error("[shop] fetchProducts:", err);
-      showError();
-    }
-  }
-
-  async function updateCounts() {
-    try {
-      const res = await fetch(`${API_URL}/products/categories`);
-      const data = await res.json();
-      if (!data.success) return;
-
-      const allEl = $("count-all");
-      if (allEl) allEl.textContent = state.total;
-
-      for (const cat of data.categories) {
-        const el = $(`count-${cat.slug}`);
-        if (!el) continue;
-        const r = await fetch(
-          `${API_URL}/products?category=${cat.slug}&limit=1`,
-        );
-        const d = await r.json();
-        el.textContent = d.total || 0;
-      }
-    } catch {}
   }
 
   function renderCard(p) {
-    const tags = Array.isArray(p.tags) ? p.tags : [];
-    const origPrice = p.original_price;
-    const discount = origPrice
-      ? Math.round((1 - p.price / origPrice) * 100)
-      : 0;
-
-    const badges = tags
+    const badges = p.tags
       .map((t) => {
         if (t === "bestseller")
           return `<span class="badge badge--ban-chay">🔥 Bán chạy</span>`;
@@ -148,28 +108,19 @@
         <div class="product-card__img-wrap">
           ${imgHtml}
           ${badges ? `<div class="product-card__badges">${badges}</div>` : ""}
-          <button class="product-card__wish" aria-label="Yêu thích" data-wish="${p.id}">
-            <i class="fa-regular fa-heart"></i>
-          </button>
           <button class="product-card__quick" data-quick="${p.id}">
-            <i class="fa-regular fa-eye"></i> Xem nhanh
+            <span class="material-symbols-outlined" aria-hidden="true">visibility</span> Xem nhanh
           </button>
         </div>
         <div class="product-card__body">
-          <p class="product-card__cat">${catName(p.category_slug)}</p>
+          <p class="product-card__cat">${catName(p.category)}</p>
           <h3 class="product-card__name">${p.name}</h3>
-          <p class="product-card__desc">${p.description || ""}</p>
-          <div class="product-card__stars">
-            <span class="stars">${stars(5)}</span>
-            <span class="rating-count">(${p.stock > 0 ? "Còn hàng" : "Hết hàng"})</span>
-          </div>
-          <div class="product-card__price">
-            <span class="price-current">${fmt(p.price)}</span>
-            ${origPrice ? `<span class="price-original">${fmt(origPrice)}</span><span class="price-discount">-${discount}%</span>` : ""}
-          </div>
-          <button class="btn-add-cart" data-add="${p.id}" ${p.stock === 0 ? "disabled" : ""}>
-            <i class="fa-solid fa-bag-shopping"></i>
-            ${p.stock === 0 ? "Hết hàng" : "Thêm vào giỏ"}
+          <p class="product-card__desc">${p.desc}</p>
+          <div class="product-card__stars"><span class="rating-count">${p.unit}</span></div>
+          ${priceHtml(p)}
+          <button class="btn-add-cart" data-buy="${p.id}">
+            <span class="material-symbols-outlined" aria-hidden="true">shopping_bag</span>
+            Mua trên TikTok Shop
           </button>
         </div>
       </div>`;
@@ -205,13 +156,10 @@
   function renderActiveFilters() {
     const tags = [];
     if (state.category !== "all")
-      tags.push({
-        label: `Danh mục: ${catName(state.category)}`,
-        key: "category",
-      });
+      tags.push({ label: `Danh mục: ${catName(state.category)}`, key: "category" });
     if (state.tag !== "all")
       tags.push({ label: `Nhãn: ${state.tag}`, key: "tag" });
-    if (state.maxPrice < 1000000)
+    if (SHOW_PRICE && state.maxPrice < 1000000)
       tags.push({ label: `Giá ≤ ${fmt(state.maxPrice)}`, key: "price" });
     if (state.search)
       tags.push({ label: `Tìm: "${state.search}"`, key: "search" });
@@ -223,81 +171,23 @@
       .join("");
   }
 
-  function showToast(msg, type = "success") {
-    toast.textContent = msg;
-    toast.className = `toast toast--${type} show`;
-    setTimeout(() => toast.classList.remove("show"), 2800);
-  }
-
-  function saveCart() {
-    localStorage.setItem("tsh_cart", JSON.stringify(cart));
-    updateCartUI();
-  }
-
-  function addToCart(id) {
-    const p = productsCache.find((x) => x.id === id);
-    if (!p) return;
-    const existing = cart.find((i) => i.id === id);
-    if (existing) {
-      existing.qty++;
-    } else {
-      cart.push({
-        id,
-        qty: 1,
-        name: p.name,
-        price: p.price,
-        emoji: getEmoji(p.id),
-      });
-    }
-    saveCart();
-    showToast(`✅ Đã thêm "${p.name}" vào giỏ hàng`);
-  }
-
-  function updateCartUI() {
-    const total = cart.reduce((s, i) => s + i.qty, 0);
-    cartCount.textContent = total;
-    cartCount.classList.add("bump");
-    setTimeout(() => cartCount.classList.remove("bump"), 300);
-
-    if (!cart.length) {
-      cartItems.innerHTML = "";
-      cartItems.appendChild(cartEmpty);
-      cartFooter.hidden = true;
-      return;
-    }
-
-    if (cartEmpty.parentNode) cartEmpty.remove();
-    cartItems.innerHTML = cart
-      .map(
-        (item) => `
-      <div class="cart-item">
-        <div class="cart-item__thumb">${item.emoji || "🍵"}</div>
-        <div class="cart-item__info">
-          <p class="cart-item__name">${item.name}</p>
-          <p class="cart-item__price">${fmt(item.price)}</p>
-          <div class="cart-item__controls">
-            <button class="cart-qty-btn" data-dec="${item.id}">−</button>
-            <span class="cart-item__qty">${item.qty}</span>
-            <button class="cart-qty-btn" data-inc="${item.id}">+</button>
-            <button class="cart-item__remove" data-rem="${item.id}"><i class="fa-solid fa-trash"></i></button>
-          </div>
-        </div>
-      </div>`,
-      )
-      .join("");
-
-    const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
-    cartSubtotal.textContent = fmt(subtotal);
-    cartFooter.hidden = false;
+  /* ---------- Xem nhanh ---------- */
+  function closeModal() {
+    $("quickViewOverlay").hidden = true;
+    document.body.style.overflow = "";
   }
 
   function openModal(id) {
-    const p = productsCache.find((x) => x.id === id);
+    const p = PRODUCTS.find((x) => x.id === id);
     if (!p) return;
-    const origPrice = p.original_price;
-    const discount = origPrice
-      ? Math.round((1 - p.price / origPrice) * 100)
+    const discount = p.originalPrice
+      ? Math.round((1 - p.price / p.originalPrice) * 100)
       : 0;
+    const detail = (p.detail || "")
+      .split("\n")
+      .filter(Boolean)
+      .map((l) => `<li>${l}</li>`)
+      .join("");
 
     $("modalContent").innerHTML = `
       <div class="modal-img-wrap">${
@@ -306,112 +196,48 @@
           : getEmoji(p.id)
       }</div>
       <div class="modal-info">
-        <p class="modal-cat">${catName(p.category_slug)}</p>
+        <p class="modal-cat">${catName(p.category)}</p>
         <h2 class="modal-name">${p.name}</h2>
-        <div class="product-card__stars">
-          <span class="stars">${stars(5)}</span>
-          <span class="rating-count">${p.stock > 0 ? `Còn ${p.stock} sản phẩm` : "Hết hàng"}</span>
-        </div>
-        <p class="modal-price">
-          ${fmt(p.price)}
-          ${origPrice ? `<del>${fmt(origPrice)}</del> <span class="price-discount">-${discount}%</span>` : ""}
-        </p>
-        <p class="modal-desc">${p.description || ""}</p>
-        <div class="modal-qty">
-          <label>Số lượng:</label>
-          <div class="qty-wrap">
-            <button class="qty-btn" id="qtyDec">−</button>
-            <input class="qty-input" type="number" id="qtyInput" value="1" min="1" max="${p.stock}">
-            <button class="qty-btn" id="qtyInc">+</button>
-          </div>
-        </div>
-        <button class="modal-add-btn" id="modalAddBtn" ${p.stock === 0 ? "disabled" : ""}>
-          <i class="fa-solid fa-bag-shopping"></i>
-          ${p.stock === 0 ? "Hết hàng" : "Thêm vào giỏ hàng"}
+        <p class="rating-count" style="margin-bottom:10px">${p.unit}</p>
+        ${
+          SHOW_PRICE
+            ? `<p class="modal-price">${fmt(p.price)}
+          ${p.originalPrice ? `<del>${fmt(p.originalPrice)}</del> ${discount ? `<span class="price-discount">-${discount}%</span>` : ""}` : ""}
+        </p>`
+            : ""
+        }
+        <p class="modal-desc">${p.desc}</p>
+        ${detail ? `<ul style="margin:0 0 16px;padding-left:18px;line-height:1.6;font-size:.92rem">${detail}</ul>` : ""}
+        <button class="modal-add-btn" data-buy="${p.id}">
+          <span class="material-symbols-outlined" aria-hidden="true">shopping_bag</span>
+          Mua trên TikTok Shop
         </button>
       </div>`;
 
     $("quickViewOverlay").hidden = false;
     document.body.style.overflow = "hidden";
-
-    $("qtyDec").onclick = () => {
-      const i = $("qtyInput");
-      i.value = Math.max(1, +i.value - 1);
-    };
-    $("qtyInc").onclick = () => {
-      const i = $("qtyInput");
-      i.value = Math.min(p.stock || 99, +i.value + 1);
-    };
-    $("modalAddBtn").onclick = () => {
-      const qty = +$("qtyInput").value;
-      for (let i = 0; i < qty; i++) addToCart(id);
-      $("quickViewOverlay").hidden = true;
-      document.body.style.overflow = "";
-    };
   }
 
-  function openCart() {
-    $("cartDrawer").classList.add("open");
-    $("cartOverlay").classList.add("open");
-    $("cartDrawer").setAttribute("aria-hidden", "false");
-    document.body.style.overflow = "hidden";
-  }
-  function closeCart() {
-    $("cartDrawer").classList.remove("open");
-    $("cartOverlay").classList.remove("open");
-    $("cartDrawer").setAttribute("aria-hidden", "true");
-    document.body.style.overflow = "";
-  }
-
+  /* ---------- Sự kiện ---------- */
   document.addEventListener("click", (e) => {
-    const t = e.target.closest("[data-add]");
+    const buy = e.target.closest("[data-buy]");
     const q = e.target.closest("[data-quick]");
-    const w = e.target.closest("[data-wish]");
     const pg = e.target.closest("[data-page]");
-    const rm = e.target.closest("[data-rem]");
-    const inc = e.target.closest("[data-inc]");
-    const dec = e.target.closest("[data-dec]");
     const rmFilter = e.target.closest("[data-remove]");
 
-    if (t) {
+    if (buy) {
       e.stopPropagation();
-      addToCart(+t.dataset.add);
+      const p = PRODUCTS.find((x) => x.id === +buy.dataset.buy);
+      if (p) window.open(buyLink(p), "_blank", "noopener");
     }
     if (q) {
       e.stopPropagation();
       openModal(+q.dataset.quick);
     }
-    if (w) {
-      e.stopPropagation();
-      w.classList.toggle("active");
-      w.querySelector("i").className = w.classList.contains("active")
-        ? "fa-solid fa-heart"
-        : "fa-regular fa-heart";
-    }
     if (pg && !e.target.disabled) {
       state.page = +pg.dataset.page;
-      fetchProducts();
+      update();
       window.scrollTo({ top: $("shop").offsetTop - 100, behavior: "smooth" });
-    }
-    if (rm) {
-      cart = cart.filter((i) => i.id !== +rm.dataset.rem);
-      saveCart();
-    }
-    if (inc) {
-      const item = cart.find((i) => i.id === +inc.dataset.inc);
-      if (item) {
-        item.qty++;
-        saveCart();
-      }
-    }
-    if (dec) {
-      const item = cart.find((i) => i.id === +dec.dataset.dec);
-      if (item) {
-        item.qty > 1
-          ? item.qty--
-          : (cart = cart.filter((i) => i.id !== item.id));
-        saveCart();
-      }
     }
     if (rmFilter) {
       const key = rmFilter.dataset.remove;
@@ -419,17 +245,13 @@
         state.category = "all";
         document
           .querySelectorAll(".category-btn")
-          .forEach((b) =>
-            b.classList.toggle("active", b.dataset.category === "all"),
-          );
+          .forEach((b) => b.classList.toggle("active", b.dataset.category === "all"));
       }
       if (key === "tag") {
         state.tag = "all";
         document
           .querySelectorAll(".tag-filter")
-          .forEach((b) =>
-            b.classList.toggle("active", b.dataset.tag === "all"),
-          );
+          .forEach((b) => b.classList.toggle("active", b.dataset.tag === "all"));
       }
       if (key === "price") {
         state.maxPrice = 1000000;
@@ -441,7 +263,7 @@
         $("searchInput").value = "";
       }
       state.page = 1;
-      fetchProducts();
+      update();
     }
   });
 
@@ -455,41 +277,37 @@
       btn.setAttribute("aria-pressed", "true");
       state.category = btn.dataset.category;
       state.page = 1;
-      fetchProducts();
+      update();
     });
   });
 
   document.querySelectorAll(".tag-filter").forEach((btn) => {
     btn.addEventListener("click", () => {
-      document
-        .querySelectorAll(".tag-filter")
-        .forEach((b) => b.classList.remove("active"));
+      document.querySelectorAll(".tag-filter").forEach((b) => b.classList.remove("active"));
       btn.classList.add("active");
       state.tag = btn.dataset.tag;
       state.page = 1;
-      fetchProducts();
+      update();
     });
   });
 
   document.querySelectorAll(".price-quick").forEach((btn) => {
     btn.addEventListener("click", () => {
-      document
-        .querySelectorAll(".price-quick")
-        .forEach((b) => b.classList.remove("active"));
+      document.querySelectorAll(".price-quick").forEach((b) => b.classList.remove("active"));
       btn.classList.add("active");
       state.maxPrice = +btn.dataset.max;
       $("priceRange").value = state.maxPrice;
       $("priceDisplay").textContent = fmt(state.maxPrice);
       state.page = 1;
-      fetchProducts();
+      update();
     });
   });
 
-  $("priceRange").addEventListener("input", (e) => {
+  $("priceRange")?.addEventListener("input", (e) => {
     state.maxPrice = +e.target.value;
     $("priceDisplay").textContent = fmt(state.maxPrice);
     state.page = 1;
-    fetchProducts();
+    update();
   });
 
   let searchTimer;
@@ -498,14 +316,14 @@
     searchTimer = setTimeout(() => {
       state.search = e.target.value.trim();
       state.page = 1;
-      fetchProducts();
-    }, 400);
+      update();
+    }, 250);
   });
 
   $("sortSelect").addEventListener("change", (e) => {
     state.sort = e.target.value;
     state.page = 1;
-    fetchProducts();
+    update();
   });
 
   $("resetFilter").addEventListener("click", () => {
@@ -515,19 +333,19 @@
     state.search = "";
     state.sort = "default";
     state.page = 1;
-    $("priceRange").value = 1000000;
-    $("priceDisplay").textContent = "1.000.000₫";
+    if ($("priceRange")) {
+      $("priceRange").value = 1000000;
+      $("priceDisplay").textContent = "1.000.000₫";
+    }
     $("searchInput").value = "";
     $("sortSelect").value = "default";
     document
       .querySelectorAll(".category-btn")
-      .forEach((b) =>
-        b.classList.toggle("active", b.dataset.category === "all"),
-      );
+      .forEach((b) => b.classList.toggle("active", b.dataset.category === "all"));
     document
       .querySelectorAll(".tag-filter")
       .forEach((b) => b.classList.toggle("active", b.dataset.tag === "all"));
-    fetchProducts();
+    update();
   });
 
   $("gridView").addEventListener("click", () => {
@@ -545,20 +363,9 @@
     $("gridView").setAttribute("aria-pressed", "false");
   });
 
-  $("cartToggle").addEventListener("click", openCart);
-  $("cartClose").addEventListener("click", closeCart);
-  $("cartOverlay").addEventListener("click", closeCart);
-  $("continueShop")?.addEventListener("click", closeCart);
-
-  $("modalClose").addEventListener("click", () => {
-    $("quickViewOverlay").hidden = true;
-    document.body.style.overflow = "";
-  });
+  $("modalClose").addEventListener("click", closeModal);
   $("quickViewOverlay").addEventListener("click", (e) => {
-    if (e.target === $("quickViewOverlay")) {
-      $("quickViewOverlay").hidden = true;
-      document.body.style.overflow = "";
-    }
+    if (e.target === $("quickViewOverlay")) closeModal();
   });
 
   const filterToggle = $("filterToggle");
@@ -584,25 +391,20 @@
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
-      if (!$("quickViewOverlay").hidden) {
-        $("quickViewOverlay").hidden = true;
-        document.body.style.overflow = "";
-      }
-      if ($("cartDrawer").classList.contains("open")) closeCart();
+      if (!$("quickViewOverlay").hidden) closeModal();
       if (shopSidebar.classList.contains("open")) closeSidebar();
     }
   });
 
-  const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.get("cat")) {
-    state.category = urlParams.get("cat");
+  // Hỗ trợ link từ footer: shop.html?cat=tra-moc
+  const cat = new URLSearchParams(window.location.search).get("cat");
+  if (cat && CATEGORIES[cat]) {
+    state.category = cat;
     document
       .querySelectorAll(".category-btn")
-      .forEach((b) =>
-        b.classList.toggle("active", b.dataset.category === state.category),
-      );
+      .forEach((b) => b.classList.toggle("active", b.dataset.category === cat));
   }
 
-  fetchProducts();
-  updateCartUI();
+  updateCounts();
+  update();
 })();
